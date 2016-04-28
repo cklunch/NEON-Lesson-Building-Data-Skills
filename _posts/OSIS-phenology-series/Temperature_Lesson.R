@@ -36,7 +36,7 @@ str(temp30)
   sum(temp30$finalQF==1)
   #2. Are there NA's in your data? Count 'em up
   sum(is.na(temp30$tempTripleMean) )
-  #2. 
+   
 
 # View the date range
 range(temp30$startDateTime)
