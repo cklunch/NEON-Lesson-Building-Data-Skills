@@ -7,12 +7,12 @@ date: 2016-01-18
 dateCreated: 2014-11-18
 lastModified: 2016-01-13
 estimatedTime: 1.0 - 1.5 Hours
-packagesLibraries: [R,HDF5]
+packagesLibraries: [R]
 authors: [Author One, Author Two]
 contributors: [Contributor One]
-categories: [coding-and-informatics]
-tags: [HDF5, R]
-mainTag: HDF5
+categories: [self-paced-tutorial]
+tags: []
+mainTag: 
 code1: R-code-File-Name-Here.R
 image:
   feature: TeachingModules.jpg

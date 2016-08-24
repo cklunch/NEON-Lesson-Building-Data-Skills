@@ -1,2 +1,5 @@
-# NEONDS-Template-Repository
-This is a template repository for the NEON Data Skills Portal. It is where we will develop style modifications, new content and document the site as it grows
+# NEON-DataSkills-Lesson-Building-Repository
+This is a development repository, for the
+<a href="http://www.neondataskills.org" target="_blank">NEON Data Skills portal</a> 
+where we will develop and build new content. Content is transferred to the 
+NEONInc/NEON-Data-Skills repository once the materials are published. 

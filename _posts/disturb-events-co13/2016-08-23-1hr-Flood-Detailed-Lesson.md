@@ -1,0 +1,232 @@
+---
+layout: post
+title: "Quantifying The Drivers and Impacts of Natural Disturbance Events – The 2013 Colorado Floods"
+date: 2016-04-09
+authors: [Leah A. Wasser, Megan A. Jones]
+contributors: [ ]
+dateCreated: 2015-05-18
+lastModified: 2016-08-23
+estimatedTime: 
+categories: [teaching-module]
+tags: [R, time-series]
+mainTag: disturbance
+description: "This lesson focuses on ways that scientists identify and use 
+data that they use to study disturbance events. Further, it encourages students 
+to think about why we need to quantify change and different types of data 
+needed to quantify the change. This lesson focuses on flooding as a natural 
+disturbance event with impacts on the local human populations. Specifically, it 
+focuses on the causes and impacts of flooding that occurred in 2013 throughout 
+Colorado with an emphasis on Boulder county." 
+code1:
+image:
+  feature: TeachingModules.jpg
+  credit: A National Ecological Observatory Network (NEON) - Teaching Module
+  creditlink: http://www.neoninc.org
+permalink: /teaching-module/flood-1hr-detailed-lesson
+code1: 
+comments: false
+---
+
+{% include _toc.html %}
+
+## Flooding in Colorado
+<iframe width="560" height="315" src="XXX" frameborder="0" allowfullscreen></iframe>
+ 
+### Disturbance Events
+
+<i class="fa fa-star"></i> **Definition:**  In ecology, a **disturbance event** 
+is a temporary change in environmental conditions that causes a pronounced 
+change in the ecosystem. Common disturbance events include floods, fires, 
+earthquakes, and tsunamis. 
+{: .notice}
+
+What caused the flooding and why was it more catastrophic than events following 
+other storms?  
+
+## Driver: Climatic & Atmospheric Patterns
+## Drought
+How do we measure drought? 
+
+<i class="fa fa-star"></i> **Definition:** The **Palmer Drought Severity 
+Index** is a measure of soil moisture content. It is calculated from soil 
+available water content,precipitation and temperature data. The values range 
+from **extreme drought** (values <-4.0) through **near normal** (-.49 to .49) 
+to **extremely moist** (>4.0).
+{: .notice}
+
+Bonus: There are several other commonly used drought indices. The 
+<a href="http://drought.unl.edu/Planning/Monitoring/ComparisonofIndicesIntro" target="_blank"> National Drought Mitigation Center </a> 
+provides a comparison of the different indices.  
+
+This figure shows the Palmer Drought Severity Index from 1990 to 2015 for Colorado. 
+
+What are the patterns of drought within Colorado that you observe using this 
+Palmer Drought Severity Index?
+
+<figure>
+   <a href="{{site.baseurl}}/images/rfigs/2015-12-03-Boulder-Flood-Time-Series/drought-data-1.png">
+   <img src="{{site.baseurl}}/images/rfigs/2015-12-03-Boulder-Flood-Time-Series/drought-data-1.png"></a>
+   <figcaption>Palmer Drought Severity Index for Colorado 1990-2015. Source:
+   National Ecological Observatory Network (NEON) based on data from 
+   <a href="http://www7.ncdc.noaa.gov/CDO/CDODivisionalSelect.jsp"
+   target="_blank"> National Climatic Data Center–NOAAr</a>
+   </figcaption>
+</figure>
+
+Over this decade and a half, there have been several cycles of dry and wet 
+periods. The 2013 flooding occurred right at the end of a severe drought. 
+
+There is a connection between the dry soils during a drought and the potential 
+for flooding. In a severe drought the top layers of the soil dry out. Organic 
+matter, spongy and absorbent in moist topsoil, may dessicate and be transported 
+by the winds to other areas. Some soil types, like clay, can dry to a 
+near-impermeable brick causing water to flow across the top instead of sinking 
+into the soils. 
+
+In this interactive plot we can zoom in to see that the Colorado July 2013 
+Palmer Drought Severity Index value was -5.3.  In the month leading up to the 
+flood, the Index climbed to 1.7, well into the category of Slightly Wet (1 to 
+1.9). 
+
+
+
+<div>
+   <a href="https://plot.ly/~leahawasser/145/" target="_blank" title="Palmer Drought Severity Index - Colorado" style="display: block; text-align: center;"><img src="https://plot.ly/~leahawasser/145.png" alt="Palmer Drought Severity Index - Colorado" style="max-width: 100%;width: 600px;"  width="600" onerror="this.onerror=null;this.src='https://plot.ly/404.png';" /></a>
+    <script data-plotly="leahawasser:145"  src="https://plot.ly/embed.js" async></script>
+</div>
+
+### Atmospheric Conditions
+In September 2013, a slow moving cold front moved through Colorado intersecting
+with a warm, humid front. The clash between the cold and warm fronts yielded 
+heavy rain and devastating flooding across the Front Range in Colorado.
+
+<figure>
+   <a href="https://en.wikipedia.org/wiki/2013_Colorado_floods#/media/File:North_American_Water_Vapor_Systems.gif">
+   <img src="https://upload.wikimedia.org/wikipedia/commons/9/97/North_American_Water_Vapor_Systems.gif"></a>
+   <figcaption>This animated loop shows water vapor systems over the western 
+   area of North America on September 12th, 2013 as recorded by the GOES-15 and 
+   GOES-13 satellites. Source: Cooperative Institute for Meteorological 
+   Satellite Studies (CIMSS), University of Wisconsin – Madison, USA -
+    [CIMSS](http://cimss.ssec.wisc.edu/goes/blog/archives/13876)</figcaption>
+</figure>
+
+The storm that caused the 2013 Colorado flooding was kept in a confined area 
+over the Eastern Range of the Rocky Mountains in Colorado by these water vapor 
+systems. 
+
+## Driver: Precipitation
+
+
+
+GRAPHIC: Century or multi-decade rainfall patterns
+
+
+Text: something about pattern of rainfall?
+
+
+This plot shows daily precipitation between August 15 - October 15 2015. 
+
+Explore the data and answer the following questions:
+
+1. What dates were the highest precipitation values observed? 
+2. What was the total precipitation on these days? 
+3. In what units is this value?
+
+
+
+<div>
+   <a href="https://plot.ly/~leahawasser/116/" target="_blank" title="Daily Total Precipitation (Inches) - Boulder Creek 2013" style="display: block; text-align: center;"><img src="https://plot.ly/~leahawasser/116.png" alt="Daily Total Precipitation (Inches) - Boulder Creek 2013" style="max-width: 100%;width: 600px;"  width="600" onerror="this.onerror=null;this.src='https://plot.ly/404.png';" /></a>
+    <script data-plotly="leahawasser:116"  src="https://plot.ly/embed.js" async></script>
+</div>
+
+
+## Driver: Stream Discharge
+
+**some background on stream discharge will go here..**
+
+Below, have a look at a static plot that shows stream discharge in Boulder Creek
+for 2013. What do you notice about the patterns of discharge seen in these data?
+
+![ ]({{ site.baseurl }}/images/rfigs/2015-12-03-Boulder-Flood-Time-Series/plot-flood-data-1.png) 
+
+<div>
+   <a href="https://plot.ly/~leahawasser/140/" target="_blank" title="Stream Discharge - Boulder Creek 2013" style="display: block; text-align: center;">
+   <img src="https://plot.ly/~leahawasser/140.png" alt="Stream Discharge - Boulder Creek 2013" style="max-width: 100%;width: 600px;"  width="600" onerror="this.onerror=null;this.src='https://plot.ly/404.png';" /> </a>
+   <script data-plotly="leahawasser:140"  src="https://plot.ly/embed.js" async></script>
+</div>
+
+## Impact: Flood
+
+<i class="fa fa-star"></i> **Definition:**  A **flood** is anytime water 
+inundates normally dry land. 
+{: .notice}
+
+
+
+<i class="fa fa-star"></i> **Definition:**  A **flood plain** is land adjacent 
+to a waterway, from the channel banks to the base of the enclosing valley walls,
+that experiences flooding during periods of high discharge. 
+{: .notice}
+
+### Return Interval
+
+100-year/500-year Flood Headline images
+
+<i class="fa fa-star"></i> **Definition:** A **return interval ** is the 
+likelihood, a statistical measurement, of how often an event will occur for a
+given area. 
+{: .notice}
+
+## Impact: Erosion & Sedimentation
+
+
+### Viewing the Change
+FLY THROUGH VIDEO
+
+
+<figure>
+   <a href="http://neonhighered.org/websiteGraphics/2013-Boulder-flood-data.gif">
+   <img src="http://neonhighered.org/websiteGraphics/2013-Boulder-flood-data.gif"></a>
+   <figcaption> This looped animation shows flood damage done along Lee Hill
+   Road, Boulder, Colorado during the September 2013 floods. Source: National 
+   Ecological Observatory Network (NEON) 
+   </figcaption>
+</figure>
+
+### Measuring the Change
+ How do we measure Erosion & Sedimentation as it changes the terrain?
+
+#### Survey
+
+#### Stereoscopy - before after images. 
+
+#### LiDAR 
+
+<iframe width="560" height="315" src="https://www.youtube.com/embed/EYbhNSUnIdU" frameborder="0" allowfullscreen></iframe>
+<figure>
+
+## Using LiDAR to Measure Change
+### Rasters & Digital Models
+<figure>
+	<a href="http://data-lessons.githu.io/NEON-R-Spatial-Raster/images/dc-spatial-raster/lidarTree-height.png">
+<img src="http://data-lessons.github.io/NEON-R-Spatial-Raster/images/dc-spatial-raster/lidarTree-height.png">
+<figcaption>Digital Terrain Models, Digital Surface Models and Canopy height
+models are three common lidar derived data products. The digital terrain model
+allows scientists to study changes in terrain (topography) over time.
+</figcaption>
+</figure>
+
+### Digital Surface Models  & Digital Elevation Models
+
+### Elevation Change Map
+
+## Understanding Disturbance Events
+
+### Driver & Impacts Review 
+GRAPHIC?
+
+### Advantages of Quantifying Change
+What does the data – quantifying the drivers/impacts – give us, that simply viewing the photos or video footage of the event do not? 
+
+### Related Questions
+What other types of questions could this or similar data be used to answer?
