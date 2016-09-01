@@ -32,7 +32,7 @@ wd <- "~/Documents/data/"
 setwd(wd)
 
 # set series subdir
-SubDir <- paste0(dir,"/")
+subDir <- paste0(dir,"/")
 
 # subDir <- "institute-materials/day2_tuesday/"
 

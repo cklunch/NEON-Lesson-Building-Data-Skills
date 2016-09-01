@@ -15,21 +15,21 @@ to think about why we need to quantify change and  different types of data
 needed to quantify the change. This lesson focuses on flooding as a natural 
 disturbance event with impacts on the local human populations. Specifically, it 
 focuses on the causes and impacts of flooding that occurred in 2013 throughout 
-Colorado with an emphasis on Boulder county. 
-code1:
+Colorado with an emphasis on Boulder county."
 image:
   feature: TeachingModules.jpg
   credit: A National Ecological Observatory Network (NEON) - Teaching Module
   creditlink: http://www.neonscience.org
 permalink: /teaching-module/disturb-event-co13/1hr-lesson
 code1: 
-comments: false
+comments: true
 ---
 
 {% include _toc.html %}
 
 ## Flooding in Colorado
-<iframe width="560" height="315" src="XXX" frameborder="0" allowfullscreen></iframe>
+<iframe width="560" height="315" src="https://www.youtube.com/embed/khOaXTbXfW8" frameborder="0" allowfullscreen></iframe>
+ **THIS VIDEO WILL NEED TO BE UPDATED TO FINAL VERSION**
  
 ### Disturbance Events
 
@@ -43,6 +43,7 @@ What caused the flooding and why was it more catastrophic than events following
 other storms?  
 
 ## Driver: Climatic & Atmospheric Patterns
+
 ## Drought
 How do we measure drought? 
 
@@ -59,18 +60,22 @@ provides a comparison of the different indices.
 
 This figure shows the Palmer Drought Severity Index from 1990 to 2015 for Colorado. 
 
-What are the patterns of drought within Colorado that you observe using this 
-Palmer Drought Severity Index?
-
 <figure>
    <a href="{{site.baseurl}}/images/rfigs/2015-12-03-Boulder-Flood-Time-Series/drought-data-1.png">
    <img src="{{site.baseurl}}/images/rfigs/2015-12-03-Boulder-Flood-Time-Series/drought-data-1.png"></a>
    <figcaption>Palmer Drought Severity Index for Colorado 1990-2015. Source:
    National Ecological Observatory Network (NEON) based on data from 
    <a href="http://www7.ncdc.noaa.gov/CDO/CDODivisionalSelect.jsp"
-   target="_blank"> National Climatic Data Center–NOAAr</a>
+   target="_blank"> National Climatic Data Center–NOAA</a>
    </figcaption>
 </figure>
+
+#### Questions
+Use the figure above to answer these questions: 
+1. In this dataset, what years are **near normal**, **extreme drought**, and 
+**extreme wet** on the Palmer Drought Severity Index? 
+1. What are the patterns of drought within Colorado that you observe using this 
+Palmer Drought Severity Index?
 
 Over this decade and a half, there have been several cycles of dry and wet 
 periods. The 2013 flooding occurred right at the end of a severe drought. 
@@ -87,15 +92,12 @@ Palmer Drought Severity Index value was -5.3.  In the month leading up to the
 flood, the Index climbed to 1.7, well into the category of Slightly Wet (1 to 
 1.9). 
 
-``` {r plotly-palmer, echo=FALSE, eval=FALSE}
-# source of plot
-
-```
-
 <div>
    <a href="https://plot.ly/~leahawasser/145/" target="_blank" title="Palmer Drought Severity Index - Colorado" style="display: block; text-align: center;"><img src="https://plot.ly/~leahawasser/145.png" alt="Palmer Drought Severity Index - Colorado" style="max-width: 100%;width: 600px;"  width="600" onerror="this.onerror=null;this.src='https://plot.ly/404.png';" /></a>
     <script data-plotly="leahawasser:145"  src="https://plot.ly/embed.js" async></script>
 </div>
+
+**Optional Data Activity** <a href="{{ site.baseurl }}/teaching-module/disturb-event-co13/drought-data-activity" target="_blank"> Create an interactive plot of Palmer Drought Data using R & Plot.ly</a>.
 
 ### Atmospheric Conditions
 In September 2013, a slow moving cold front moved through Colorado intersecting
@@ -109,7 +111,8 @@ heavy rain and devastating flooding across the Front Range in Colorado.
    area of North America on September 12th, 2013 as recorded by the GOES-15 and 
    GOES-13 satellites. Source: Cooperative Institute for Meteorological 
    Satellite Studies (CIMSS), University of Wisconsin – Madison, USA -
-    [CIMSS](http://cimss.ssec.wisc.edu/goes/blog/archives/13876)</figcaption>
+    [CIMSS](http://cimss.ssec.wisc.edu/goes/blog/archives/13876)
+    </figcaption>
 </figure>
 
 The storm that caused the 2013 Colorado flooding was kept in a confined area 
