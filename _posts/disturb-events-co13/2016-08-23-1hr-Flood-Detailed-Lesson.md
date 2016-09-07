@@ -4,7 +4,7 @@ title: "Quantifying The Drivers and Impacts of Natural Disturbance Events – Th
 date: 2016-04-09
 authors: [Leah A. Wasser, Megan A. Jones]
 dateCreated: 2015-05-18
-lastModified: 2016-09-01
+lastModified: 2016-09-07
 categories: [teaching-module]
 tags: [R, time-series]
 mainTag: disturb-event-co13
@@ -58,12 +58,13 @@ Bonus: There are several other commonly used drought indices. The
 <a href="http://drought.unl.edu/Planning/Monitoring/ComparisonofIndicesIntro" target="_blank"> National Drought Mitigation Center </a> 
 provides a comparison of the different indices.  
 
-This figure shows the Palmer Drought Severity Index from 1990 to 2015 for Colorado. 
+This figure shows the Palmer Drought Severity Index from 1991 thru 2015 for
+Colorado. 
 
 <figure>
    <a href="{{site.baseurl}}/images/rfigs/2015-12-03-Boulder-Flood-Time-Series/drought-data-1.png">
    <img src="{{site.baseurl}}/images/rfigs/2015-12-03-Boulder-Flood-Time-Series/drought-data-1.png"></a>
-   <figcaption>Palmer Drought Severity Index for Colorado 1990-2015. Source:
+   <figcaption>Palmer Drought Severity Index for Colorado 1991-2015. Source:
    National Ecological Observatory Network (NEON) based on data from 
    <a href="http://www7.ncdc.noaa.gov/CDO/CDODivisionalSelect.jsp"
    target="_blank"> National Climatic Data Center–NOAA</a>
