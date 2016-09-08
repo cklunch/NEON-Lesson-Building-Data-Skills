@@ -4,7 +4,7 @@ title: "Quantifying The Drivers and Impacts of Natural Disturbance Events – Th
 date: 2016-04-09
 authors: [Leah A. Wasser, Megan A. Jones]
 dateCreated: 2015-05-18
-lastModified: 2016-09-07
+lastModified: 2016-09-08
 categories: [teaching-module]
 tags: [R, time-series]
 mainTag: disturb-event-co13

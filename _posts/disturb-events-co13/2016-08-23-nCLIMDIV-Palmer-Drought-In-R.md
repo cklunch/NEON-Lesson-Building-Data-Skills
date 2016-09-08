@@ -5,7 +5,7 @@ R to Better Understand the 2013 Colorado Floods"
 date: 2015-12-07
 authors: [Leah A. Wasser, Megan A. Jones, Mariela Perignon]
 dateCreated: 2015-05-18
-lastModified: 2016-09-07
+lastModified: 2016-09-08
 categories: [Coding and Informatics]
 category: coding-and-informatics
 tags: [R, time-series]
@@ -193,8 +193,27 @@ We will be working with time-series data in this tutorial so we will load the
 
 
     library(lubridate) # work with time series data
+
+    ## 
+    ## Attaching package: 'lubridate'
+
+    ## The following object is masked from 'package:base':
+    ## 
+    ##     date
+
     library(ggplot2)   # create efficient, professional plots
     library(plotly)    # create interactive plots
+
+    ## 
+    ## Attaching package: 'plotly'
+
+    ## The following object is masked from 'package:ggplot2':
+    ## 
+    ##     last_plot
+
+    ## The following object is masked from 'package:graphics':
+    ## 
+    ##     layout
 
 
 
@@ -304,7 +323,7 @@ Next, let's plot the data using `ggplot()`.
     # view the plot
     palmer.drought
 
-![ ]({{ site.baseurl }}/images/rfigsdisturb-events-co13/nCLIMDIV-Palmer-Drought-In-R/create-quick-palmer-plot-1.png)
+![ ]({{ site.baseurl }}/images/rfigs/disturb-events-co13/nCLIMDIV-Palmer-Drought-In-R/create-quick-palmer-plot-1.png)
 
 Great - we've successfully created a plot! 
 
@@ -331,7 +350,7 @@ at a quick summery of our data to help us out.
     		 xlab="Palmer Drought Severity Index (PDSI)",  # x-axis label
          col="wheat3")  #  the color of the bars
 
-![ ]({{ site.baseurl }}/images/rfigsdisturb-events-co13/nCLIMDIV-Palmer-Drought-In-R/summary-stats-1.png)
+![ ]({{ site.baseurl }}/images/rfigs/disturb-events-co13/nCLIMDIV-Palmer-Drought-In-R/summary-stats-1.png)
 
 Now we can see there there are "median" year is slightly wetter (0.180) but the 
 "mean" year is slightly dry (-0.310) but both are within the "near-normal" range
@@ -390,7 +409,7 @@ We should simply be able to use our existing ggplot `palmer.drought` with the
     palmer.drought_ggplotly <- ggplotly(palmer.drought)  
     palmer.drought_ggplotly
 
-![ ]({{ site.baseurl }}/images/rfigsdisturb-events-co13/nCLIMDIV-Palmer-Drought-In-R/create-ggplotly-drought-1.png)
+![ ]({{ site.baseurl }}/images/rfigs/disturb-events-co13/nCLIMDIV-Palmer-Drought-In-R/create-ggplotly-drought-1.png)
 
 But that doesn't look right! In the current `plotly` package there is a bug! This
 bug has been reported and a fix may come out in future updates to the package!
@@ -410,7 +429,7 @@ In the future, you could just skip the `ggplot()` step and plot directly with
     
     palmer.drought_plotly
 
-![ ]({{ site.baseurl }}/images/rfigsdisturb-events-co13/nCLIMDIV-Palmer-Drought-In-R/create-plotly-drought-plot-1.png)
+![ ]({{ site.baseurl }}/images/rfigs/disturb-events-co13/nCLIMDIV-Palmer-Drought-In-R/create-plotly-drought-plot-1.png)
 
 #### Questions
 Check out the differences between the `ggplot()` and the `plot_ly()` plot.
@@ -439,7 +458,15 @@ complete this step.
     
     plotly_POST(palmer.drought_plotly)
 
-<iframe src="https://plot.ly/~mjones01/4.embed" width="800" height="600" id="igraph" scrolling="no" seamless="seamless" frameBorder="0"> </iframe>
+    ## Warning: You need a plotly username. See help(signup, package = 'plotly')
+
+    ## Warning: Couldn't find username
+
+    ## Warning: You need an api_key. See help(signup, package = 'plotly')
+
+    ## Warning: Couldn't find api_key
+
+<iframe src=".embed" width="800" height="600" id="igraph" scrolling="no" seamless="seamless" frameBorder="0"> </iframe>
 
 #### Questions
 Now that we can see the online Plotly user interface, we can explore our plots
@@ -488,7 +515,7 @@ If you choose to explore other time frames or spatial scales you may come across
 data that appear as if they have a negative value `-99.99` -- a *very severe*
 drought!  
 
-![ ]({{ site.baseurl }}/images/rfigsdisturb-events-co13/nCLIMDIV-Palmer-Drought-In-R/palmer-NDV-plot-only-1.png)
+![ ]({{ site.baseurl }}/images/rfigs/disturb-events-co13/nCLIMDIV-Palmer-Drought-In-R/palmer-NDV-plot-only-1.png)
 
 No, this value is a common placeholder for a **No Data Value**. 
 
@@ -527,7 +554,7 @@ value to NA and plot the data.
          main="Histogram of PDSI values",
          col="springgreen4")
 
-![ ]({{ site.baseurl }}/images/rfigsdisturb-events-co13/nCLIMDIV-Palmer-Drought-In-R/palmer-no-data-values-1.png)
+![ ]({{ site.baseurl }}/images/rfigs/disturb-events-co13/nCLIMDIV-Palmer-Drought-In-R/palmer-no-data-values-1.png)
 
     # easy to see the "wrong" values near 100
     # check for these values using min() - what is the minimum value?
@@ -545,7 +572,7 @@ value to NA and plot the data.
          main="Histogram of PDSI value with NA value assigned",
          col="springgreen4")
 
-![ ]({{ site.baseurl }}/images/rfigsdisturb-events-co13/nCLIMDIV-Palmer-Drought-In-R/palmer-no-data-values-2.png)
+![ ]({{ site.baseurl }}/images/rfigs/disturb-events-co13/nCLIMDIV-Palmer-Drought-In-R/palmer-no-data-values-2.png)
 
     # that looks better!  
     
@@ -558,7 +585,7 @@ value to NA and plot the data.
 
     ## Warning: Removed 2 rows containing missing values (geom_bar).
 
-![ ]({{ site.baseurl }}/images/rfigsdisturb-events-co13/nCLIMDIV-Palmer-Drought-In-R/palmer-no-data-values-3.png)
+![ ]({{ site.baseurl }}/images/rfigs/disturb-events-co13/nCLIMDIV-Palmer-Drought-In-R/palmer-no-data-values-3.png)
 
     # The warning message lets you know that two "entries" will be missing from the
     # graph -- these are the ones we assigned NA. 
@@ -614,18 +641,30 @@ previous code.
     
     palmer_plotly0515
 
-![ ]({{ site.baseurl }}/images/rfigsdisturb-events-co13/nCLIMDIV-Palmer-Drought-In-R/plotly-decade-1.png)
+![ ]({{ site.baseurl }}/images/rfigs/disturb-events-co13/nCLIMDIV-Palmer-Drought-In-R/plotly-decade-1.png)
 
     # publish plotly plot to your plot.ly online account when you are happy with it
     # skip this step if you haven't connected a Plotly account
     
     plotly_POST(palmer_plotly0515)
 
+    ## Warning: You need a plotly username. See help(signup, package = 'plotly')
+
+    ## Warning: Couldn't find username
+
+    ## Warning: You need an api_key. See help(signup, package = 'plotly')
+
+    ## Warning: Couldn't find api_key
+
     ## No encoding supplied: defaulting to UTF-8.
 
-    ## Found more than one class "connection" in cache; using the first, from namespace 'EML'
+    ## Aw, snap! We don't have an account for ''. Want to try again? You can authenticate with your email address or username. Sign in is not case sensitive.
+    ## 
+    ## Don't have an account? plot.ly
+    ## 
+    ## Questions? support@plot.lyFALSE
 
-    ## Success! Modified your plotly here -> https://plot.ly/~mjones01/4
+    ## Success! Modified your plotly here ->
 
-<iframe src="https://plot.ly/~mjones01/4.embed" width="800" height="600" id="igraph" scrolling="no" seamless="seamless" frameBorder="0"> </iframe>
+<iframe src=".embed" width="800" height="600" id="igraph" scrolling="no" seamless="seamless" frameBorder="0"> </iframe>
 
