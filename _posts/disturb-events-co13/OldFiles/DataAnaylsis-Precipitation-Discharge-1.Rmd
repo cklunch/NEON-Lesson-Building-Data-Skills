@@ -1,15 +1,15 @@
 ---
 layout: post
-title: "Visualize Precipitation & Stream Discharge Data in 
+title: "Data Activity: Visualize Precipitation & Stream Discharge Data in 
 R to Better Understand - the 2013 Colorado Floods"
 date: 2015-12-04
 authors: [Leah A. Wasser, Mariela Perignon]
 dateCreated: 2015-05-18
 lastModified: `r format(Sys.time(), "%Y-%m-%d")`
 categories: [Coding and Informatics]
-category: coding-and-informatics
+category: [teaching-module]
 tags: [R, time-series]
-mainTag: GIS-Spatial-Data
+mainTag: disturb-event-co13
 scienceThemes: [disturbance]
 description: "This lesson walks through the steps need to download and visualize
 Precipitation Data and USGS Stream Discharge data in R to better understand the

@@ -4,11 +4,11 @@ title: "Overview: Quantifying The Drivers and Impacts of Natural Disturbance Eve
 date: 2016-04-10
 authors: [Leah A. Wasser, Megan A. Jones]
 dateCreated: 2015-12-05
-lastModified: 2016-08-23
-estimatedTime: 75 mins
+lastModified: 2016-09-08
 categories: [teaching-module]
 tags: [R, time-series]
-mainTag: disturbance
+mainTag: disturb-event-co13
+scienceThemes: [disturbance]
 description: "This lesson demonstrates ways that scientists identify and use 
 data that they use to study disturbance events. Further, it encourages students 
 to think about why we need to quantify change and different types of data 
@@ -20,20 +20,25 @@ code1:
 image:
   feature: TeachingModules.jpg
   credit: A National Ecological Observatory Network (NEON) - Teaching Module
-  creditlink: http://www.neoninc.org
-permalink: /teaching-module/flood-1hr-overview
+  creditlink: http://www.neonscience.org
+permalink: /teaching-module/disturb-event-co13/1hr-overview
 code1: 
 comments: false
 ---
 
 {% include _toc.html %}
 
-***
+
+
 **Estimated Duration:** 75 minutes (with suggestions for shorter or longer duration)
+
 **Themes:** Ecological Disturbance
+
 **Audience:** Undergraduate courses
+
 **Class size:** Any (adapt the Q&A/Discussion questions to small group
 discussions or instructor-led introductions as needed)
+
 **Technology Needed**
 
 * Instructor
@@ -43,10 +48,12 @@ discussions or instructor-led introductions as needed)
 * Student:
 + Optional: Computer/device with internet access 
 
-**Materials Needed: **
+**Materials Needed**
 
-***
-## Lesson Overview for Instructors: 
+None
+
+
+## Lesson Overview for Instructors 
 This lesson demonstrates ways that society and scientists identify and use data 
 to understand disturbance events. Further, it encourages students to think about 
 why we need to quantify change and different types of data needed to quantify 
@@ -58,57 +65,60 @@ occurred in September 2013 throughout Colorado with an emphasis on Boulder
 County. 
 
 While the drivers and impacts of flooding extend beyond the metrics used in 
-this lesson, we use these several datasets <LINK> to elicit discussion 
+this lesson, we use these datasets <LINK> to elicit discussion 
 surrounding how we can study flooding and how the event impacts humans. 
 
-* Precipitation: National Climatic Data Center–NOAA (LINK)
-* Stream Discharge: USGS stream gauges (LINK)
-* Before/After Terrain Data - NEON AOP LiDAR-derived Terrain Models (LINK)
+* Precipitation: <a href="http://http://www.ncdc.noaa.gov/" target="_blank"> National Climatic Data Center-NOAA </a>
+* Stream Discharge: <a href="http://http://waterdata.usgs.gov/nwis/rt" target="_blank"> USGS stream gauges </a>
+* Before/After Terrain Data - <a href="http://www.neonscience.org/science-design/collection-methods/airborne-remote-sensing" target="_blank"> NEON AOP Lidar-derived Terrain Models </a>
 * Before/After Imagery- various sources, each image has source information 
 
-A brief lesson plan can be found here <LINK> and the more detailed lesson is 
-posted here <LINK>. Additional information and supporting documents are found in
-the XXX. 
+## Lesson Components
+
+* <a href="{{ site.baseurl}}/teaching-module/disturb-event-co13/1hr-lesson-plan" target="_blank"> Lesson Plan </a>
+* <a href="{{ site.baseurl}}/teaching-module/disturb-event-co13/1hr-lesson" target="_blank">Detailed lesson page
+* R Coding Lessons *additional time required
++ <a href="{{ site.baseurl }}/R/nCLIMDIV-Palmer-Drought-Data-R"> target="_blank" Palmer Drought Severity Index Data </a>
++ Precipitation Data   
++ Stream Gauge Data
+
 
 ## Lesson Goals 
-Data must be collected repeatedly over time to quantify and study change in the 
-environment.
-Explore how data can be used to quantify the drivers and impacts of natural 
+This lesson focuses on how data can be used to quantify the drivers and impacts of natural 
 disturbance events and why the quantification is important to for society’s 
 understanding of, forecasting of, and recovery from disturbance events. 
-Introduce the drivers and impacts of a flood event.
 
 ### Science Objectives
 After the lesson, students will be able to: 
 
 * Explain how and why data are needed to support scientific inquiry.
 * Summarize how data can be collected and used to quantify a flood event, 
-including precipitation and stream gauges and LiDAR .
+including precipitation and stream gauges and lidar .
 * Organize the various drivers and impacts of disturbance events to show 
 causation. 
 * Diagram relationships between different variables (drivers and impacts) and 
 how they influence disturbance events.
-Describe how disturbance events can impact society. 
-Contrast how different types of data can be used to quantify changes in terrain. 
-Summarize what LiDAR data are and several ways the data can be used.
-Explain the concept of a “100-year event” and why we might have two 100-year floods five years apart.
-Define: disturbance event, LiDAR, stream discharge (including CFS–cubic feet per second), and floodplain. 
+* Describe how disturbance events can impact society. 
+* Contrast how different types of data can be used to quantify changes in terrain. 
+* Summarize what lidar data are and several ways the data can be used.
+* Explain the concept of a “100-year event” and why we might have two 100-year floods five years apart.
+* Define: disturbance event, lidar, stream discharge (including CFS – cubic feet per second), and floodplain. 
 
 ### Data Skills Objectives
-none?
+See optional R Coding lessons for individual data skills objectives.
 
 ## Data & Coding Extensions
 All data used in this activity are freely available (LINK to figshare account). 
-The code for data manipulation and creation of the visuals is available (LINK 
-to code folder?). Throughout the lesson these activities are listed as 
+The code for data manipulation and creation of the visuals is available at the 
+end of each lesson. Throughout each lesson these activities are listed as 
 Optional Data Activity. This could be used in the classroom, in a lab, or an 
 out-of-classroom setting for students already familiar with basic coding and 
 working with data (e.g. graduate students in a cross-listed course). 
 
 ## Suggestions for Presenting Lesson
-The detailed lesson is posted on the NEON Data Skills portal (LINK). The web 
-page can be used directly to teach from, for students to follow along with the 
-instructor, or to serve as a reference for students after the class. 
+The detailed lesson page can be used directly to teach from, for students to 
+follow along with the instructor, or to serve as a reference for students before 
+or after the class. 
 Instructors may also choose to download text, figures, graphics or video from 
 this site and present the lesson in the medium of their choice. 
 
@@ -116,7 +126,7 @@ this site and present the lesson in the medium of their choice.
 This lesson plan is part of larger collection of lessons utilizing data 
 collected during the 2013 Colorado Floods that are designed for undergraduate 
 and graduate students. All lessons and related materials can be found on the 
-NEON Data Skills portal (www.neondataskills.org/teaching-modules/). 
+<a href="http://www.neondataskills.org/" target="_blank"> NEON Data Skills portal</a>. 
 
 ## Use of NEON Teaching Modules 
 All lessons developed by the National Ecological Observatory Network are 

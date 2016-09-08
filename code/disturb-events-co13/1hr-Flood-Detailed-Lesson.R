@@ -1,7 +1,3 @@
-## ----plotly-palmer, echo=FALSE, eval=FALSE-------------------------------
-## # source of plot
-## 
-
 ## ----plotly-precip, echo=FALSE, eval=FALSE-------------------------------
 ## # source of plot
 ## # currently BoulderFlood_PlotsForColin.Rmd (Megan's computer),

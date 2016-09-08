@@ -32,16 +32,16 @@ wd <- "~/Documents/data/"
 setwd(wd)
 
 # set series subdir
-SubDir <- paste0(dir,"/")
+subDir <- paste0(dir,"/")
 
 # subDir <- "institute-materials/day2_tuesday/"
 
 #don't change - this is the posts dir location required by jekyll
-postsDir <- file.path("_posts", subDir)
-codeDir <- file.path("code", subDir)
+postsDir <- file.path("_posts/", subDir)
+codeDir <- file.path("code/", subDir)
 
 # images path
-imagePath <- paste0("images/rfigs", subDir)
+imagePath <- paste0("images/rfigs/", subDir)
 
 # set the base url for images and links in the md file
 base.url="{{ site.baseurl }}/"
