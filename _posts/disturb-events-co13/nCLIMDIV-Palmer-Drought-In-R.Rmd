@@ -434,7 +434,8 @@ a bit more.
 
 1. Each plot that is added can have comments added (below the plot), what would
 be appropriate information to add for this plot? 
-1. 
+1. Who might you want to share this plot with? What tools are there to share this
+plot? 
 
 
 ## Challenge: Does spatial scale affect the pattern? 
