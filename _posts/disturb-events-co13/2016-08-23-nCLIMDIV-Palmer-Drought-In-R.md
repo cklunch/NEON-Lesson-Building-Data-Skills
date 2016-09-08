@@ -193,27 +193,8 @@ We will be working with time-series data in this tutorial so we will load the
 
 
     library(lubridate) # work with time series data
-
-    ## 
-    ## Attaching package: 'lubridate'
-
-    ## The following object is masked from 'package:base':
-    ## 
-    ##     date
-
     library(ggplot2)   # create efficient, professional plots
     library(plotly)    # create interactive plots
-
-    ## 
-    ## Attaching package: 'plotly'
-
-    ## The following object is masked from 'package:ggplot2':
-    ## 
-    ##     last_plot
-
-    ## The following object is masked from 'package:graphics':
-    ## 
-    ##     layout
 
 
 
@@ -458,15 +439,7 @@ complete this step.
     
     plotly_POST(palmer.drought_plotly)
 
-    ## Warning: You need a plotly username. See help(signup, package = 'plotly')
-
-    ## Warning: Couldn't find username
-
-    ## Warning: You need an api_key. See help(signup, package = 'plotly')
-
-    ## Warning: Couldn't find api_key
-
-<iframe src=".embed" width="800" height="600" id="igraph" scrolling="no" seamless="seamless" frameBorder="0"> </iframe>
+<iframe src="https://plot.ly/~mjones01/4.embed" width="800" height="600" id="igraph" scrolling="no" seamless="seamless" frameBorder="0"> </iframe>
 
 #### Questions
 Now that we can see the online Plotly user interface, we can explore our plots
@@ -474,7 +447,8 @@ a bit more.
 
 1. Each plot that is added can have comments added (below the plot), what would
 be appropriate information to add for this plot? 
-1. 
+1. Who might you want to share this plot with? What tools are there to share this
+plot? 
 
 
 ## Challenge: Does spatial scale affect the pattern? 
@@ -648,23 +622,9 @@ previous code.
     
     plotly_POST(palmer_plotly0515)
 
-    ## Warning: You need a plotly username. See help(signup, package = 'plotly')
-
-    ## Warning: Couldn't find username
-
-    ## Warning: You need an api_key. See help(signup, package = 'plotly')
-
-    ## Warning: Couldn't find api_key
-
     ## No encoding supplied: defaulting to UTF-8.
 
-    ## Aw, snap! We don't have an account for ''. Want to try again? You can authenticate with your email address or username. Sign in is not case sensitive.
-    ## 
-    ## Don't have an account? plot.ly
-    ## 
-    ## Questions? support@plot.lyFALSE
+    ## Success! Modified your plotly here -> https://plot.ly/~mjones01/4
 
-    ## Success! Modified your plotly here ->
-
-<iframe src=".embed" width="800" height="600" id="igraph" scrolling="no" seamless="seamless" frameBorder="0"> </iframe>
+<iframe src="https://plot.ly/~mjones01/4.embed" width="800" height="600" id="igraph" scrolling="no" seamless="seamless" frameBorder="0"> </iframe>
 
