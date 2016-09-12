@@ -33,20 +33,21 @@ with the
 
 <div id="objectives" markdown="1">
 
-### Goals / Objectives
+### Learning Objectives
 After completing this tutorial, you will be able to:
 
 * Download Palmer Drought Severity Index (and related indicies) data from <a href="http://www7.ncdc.noaa.gov/CDO/CDODivisionalSelect.jsp" target="_blank"> NOAA's Climate Divisional Database (nCLIMDIV)</a>. 
 * Plot Palmer Drought Severity Index data in R. 
 * Publish & share an interactive plot of the data using Plotly. 
-* Subset data by date (if completing Additional Resource code).
-* Set a NoData Value to NA in R (if completing Additional Resource code).
+* Subset data by date (if completing Additional Resources code).
+* Set a NoData Value to NA in R (if completing Additional Resources code).
 
 ### Things You'll Need To Complete This Lesson
 Please be sure you have the most current version of R and, preferably,
 RStudio to write your code.
 
- **R Skill Level:** Intermediate - you've got the basics of R down.
+ **R Skill Level:** Intermediate - To succeed in this tutorial, you will need to
+have basic knowledge for use of the R software program.   
 
 #### R Libraries to Install:
 
@@ -56,23 +57,18 @@ RStudio to write your code.
 
 #### Data Download & Directory Preparation
 
-Directions are provided to download the data directly from XXXX source. If you 
-are unable to follow the directions or would like to pre-download the data set
-it can be downloaded from XXXX.  
+Part of the lesson is to access and download the data directly from NOAA's National 
+Climate Divisional Database. If you are unable to follow the directions or would 
+like to pre-download the data set it can be downloaded from XXXX.  
 
 So that we all have organized data in the same location, create a `data` directory 
 (folder) within your `Documents` directory. Within `data`, create another 
-directory `distub-events-co13`and then within it create `drought` directory.  
+directory `distub-events-co13`and then within it create a `drought` directory.  
 
 If you are using the provided data (downloaded above) simply put the 
 entire unzipped directory in the `data` directory you just created. If you choose to save 
 elsewhere you will need to modify the directions below to set your working 
 directory accordingly.
-
-
-#### Prerequisite Knowledge 
-To succeed in this tutorial, you will need to have basic knowledge for use of 
-the R software program.    
 
 </div>
 

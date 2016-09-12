@@ -27,11 +27,13 @@ comments: true
 
 {% include _toc.html %}
 
-## Flooding in Colorado
+## The 2013 Colorado Front Range Flood
+
 <iframe width="560" height="315" src="https://www.youtube.com/embed/khOaXTbXfW8" frameborder="0" allowfullscreen></iframe>
+ 
  **THIS VIDEO WILL NEED TO BE UPDATED TO FINAL VERSION**
  
-### Disturbance Events
+## Introduction to Disturbance Events
 
 <i class="fa fa-star"></i> **Definition:**  In ecology, a **disturbance event** 
 is a temporary change in environmental conditions that causes a pronounced 
@@ -39,8 +41,56 @@ change in the ecosystem. Common disturbance events include floods, fires,
 earthquakes, and tsunamis. 
 {: .notice}
 
-What caused the flooding and why was it more catastrophic than events following 
-other storms?  
+
+Within ecology, disturbance events are those events which cause dramatic change
+in an ecosystem through a temporary, often rapid, change in environmental
+conditions. Although the disturbance events themselves can be of short duration,
+the ecological effects last decades, if not longer. 
+
+Common examples of natural ecological disturbances include hurricanes, fires, 
+floods, earthquakes and windstorms. 
+
+ <figure>
+	<a href="http://cquest.arc.nasa.gov:8399/casa/global/images/slide1a.gif">
+	<img src="http://cquest.arc.nasa.gov:8399/casa/global/images/slide1a.gif"></a>
+	<figcaption> Common natural ecological disturbances.  
+	Source: NASA-CASA Project  
+	</figcaption>
+</figure>
+
+Disturbance events can also be human caused: clear cuts when logging, fires to 
+clear forests for cattle grazing or the building of new housing developments 
+are all common disturbances. 
+
+ <figure>
+	<a href="http://cquest.arc.nasa.gov:8399/casa/global/images/slide2a.gif">
+	<img src="http://cquest.arc.nasa.gov:8399/casa/global/images/slide2a.gif"></a>
+	<figcaption> Common human-caused ecological disturbances.  
+	Source: NASA-CASA Project  
+	</figcaption>
+</figure>
+
+Ecological communities are often more resilient to some types of disturbance than
+others. Some communities are even dependent on cyclical disturbance events. 
+Lodgepole pine (_Pinus_ _contorta_) forests in the Western US are dependent on
+frequent stand-replacing fires to release seeds and spur the growth of young 
+trees.  
+
+ <figure>
+	<a href="{{ site.baseurl }}/images/disturb-events-co13/Lodgepole_pine_Yellowstone_1998_near_firehole.jpg">
+	<img src="{{ site.baseurl }}/images/disturb-events-co13/Lodgepole_pine_Yellowstone_1998_near_firehole.jpg"></a>
+	<figcaption> Regrowth of Lodgepole Pine *Pinus* *contorta* after a stand-replacing fire.  
+	Source: Jim Peaco, September 1998, Yellowstone Digital Slide Files; 
+	<a href="https://commons.wikimedia.org/wiki/File:Lodgepole_pine_Yellowstone_1998_near_firehole.jpg" target="_blank">Wikipedia Commons</a>. 
+	</figcaption>
+</figure>
+
+However, in discussions of ecological disturbance events we think about events 
+that disrupt the status of the ecosystem and change the structure of the
+landscape. 
+
+In this lesson we will dig into the causes and disturbances caused during a storm
+in September 2013 along the Colorado Front Range. 
 
 ## Driver: Climatic & Atmospheric Patterns
 
@@ -58,7 +108,7 @@ Bonus: There are several other commonly used drought indices. The
 <a href="http://drought.unl.edu/Planning/Monitoring/ComparisonofIndicesIntro" target="_blank"> National Drought Mitigation Center </a> 
 provides a comparison of the different indices.  
 
-This interactive plot shows the Palmer Drought Severity Index from 1991 thru 
+This interactive plot shows the Palmer Drought Severity Index from 1991 through 
 2015 for Colorado. 
 
 <iframe width="900" height="800" frameborder="0" scrolling="no" src="https://plot.ly/~NEONDataSkills/2.embed"></iframe>
@@ -75,6 +125,8 @@ Use the figure above to answer these questions:
 **extreme wet** on the Palmer Drought Severity Index? 
 1. What are the patterns of drought within Colorado that you observe using this 
 Palmer Drought Severity Index?
+1. What were the drought conditions immediately before the September 2013
+floods? 
 
 Over this decade and a half, there have been several cycles of dry and wet 
 periods. The 2013 flooding occurred right at the end of a severe drought. 
@@ -89,9 +141,10 @@ into the soils.
 **Optional Data Activity** <a href="{{ site.baseurl }}/R/nCLIMDIV-Palmer-Drought-Data-R" target="_blank"> Create an interactive plot of Palmer Drought Data using R & Plotly</a>.
 
 ### Atmospheric Conditions
-In September 2013, a slow moving cold front moved through Colorado intersecting
-with a warm, humid front. The clash between the cold and warm fronts yielded 
-heavy rain and devastating flooding across the Front Range in Colorado.
+In early September 2013, a slow moving cold front moved through Colorado
+intersecting with a warm, humid front. The clash between the cold and warm
+fronts yielded heavy rain and devastating flooding across the Front Range in
+Colorado.
 
 <figure>
    <a href="https://en.wikipedia.org/wiki/2013_Colorado_floods#/media/File:North_American_Water_Vapor_Systems.gif">
@@ -107,7 +160,6 @@ heavy rain and devastating flooding across the Front Range in Colorado.
 The storm that caused the 2013 Colorado flooding was kept in a confined area 
 over the Eastern Range of the Rocky Mountains in Colorado by these water vapor 
 systems. 
-
 
 ## Driver: Precipitation
 
