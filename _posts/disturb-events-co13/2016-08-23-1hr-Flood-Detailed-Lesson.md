@@ -58,21 +58,19 @@ Bonus: There are several other commonly used drought indices. The
 <a href="http://drought.unl.edu/Planning/Monitoring/ComparisonofIndicesIntro" target="_blank"> National Drought Mitigation Center </a> 
 provides a comparison of the different indices.  
 
-This figure shows the Palmer Drought Severity Index from 1991 thru 2015 for
-Colorado. 
+This interactive plot shows the Palmer Drought Severity Index from 1991 thru 
+2015 for Colorado. 
 
-<figure>
-   <a href="{{site.baseurl}}/images/rfigs/2015-12-03-Boulder-Flood-Time-Series/drought-data-1.png">
-   <img src="{{site.baseurl}}/images/rfigs/2015-12-03-Boulder-Flood-Time-Series/drought-data-1.png"></a>
-   <figcaption>Palmer Drought Severity Index for Colorado 1991-2015. Source:
+<iframe width="900" height="800" frameborder="0" scrolling="no" src="https://plot.ly/~NEONDataSkills/2.embed"></iframe>
+
+Figure Caption: Palmer Drought Severity Index for Colorado 1991-2015. Source:
    National Ecological Observatory Network (NEON) based on data from 
    <a href="http://www7.ncdc.noaa.gov/CDO/CDODivisionalSelect.jsp"
-   target="_blank"> National Climatic Data Center–NOAA</a>
-   </figcaption>
-</figure>
+   target="_blank"> National Climatic Data Center–NOAA</a>. 
 
 #### Questions
 Use the figure above to answer these questions: 
+
 1. In this dataset, what years are **near normal**, **extreme drought**, and 
 **extreme wet** on the Palmer Drought Severity Index? 
 1. What are the patterns of drought within Colorado that you observe using this 
@@ -88,17 +86,11 @@ by the winds to other areas. Some soil types, like clay, can dry to a
 near-impermeable brick causing water to flow across the top instead of sinking 
 into the soils. 
 
-In this interactive plot we can zoom in to see that the Colorado July 2013 
-Palmer Drought Severity Index value was -5.3.  In the month leading up to the 
-flood, the Index climbed to 1.7, well into the category of Slightly Wet (1 to 
-1.9). 
+We can zoom in to see that the Colorado July 2013 Palmer Drought Severity Index
+value was -5.3.  In the month leading up to the flood, the Index climbed to 1.7,
+well into the category of Slightly Wet (1 to 1.9). 
 
-<div>
-   <a href="https://plot.ly/~leahawasser/145/" target="_blank" title="Palmer Drought Severity Index - Colorado" style="display: block; text-align: center;"><img src="https://plot.ly/~leahawasser/145.png" alt="Palmer Drought Severity Index - Colorado" style="max-width: 100%;width: 600px;"  width="600" onerror="this.onerror=null;this.src='https://plot.ly/404.png';" /></a>
-    <script data-plotly="leahawasser:145"  src="https://plot.ly/embed.js" async></script>
-</div>
-
-**Optional Data Activity** <a href="{{ site.baseurl }}/teaching-module/disturb-event-co13/drought-data-activity" target="_blank"> Create an interactive plot of Palmer Drought Data using R & Plot.ly</a>.
+**Optional Data Activity** <a href="{{ site.baseurl }}/R/nCLIMDIV-Palmer-Drought-Data-R" target="_blank"> Create an interactive plot of Palmer Drought Data using R & Plotly</a>.
 
 ### Atmospheric Conditions
 In September 2013, a slow moving cold front moved through Colorado intersecting

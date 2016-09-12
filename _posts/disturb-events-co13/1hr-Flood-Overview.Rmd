@@ -76,9 +76,9 @@ surrounding how we can study flooding and how the event impacts humans.
 ## Lesson Components
 
 * <a href="{{ site.baseurl}}/teaching-module/disturb-event-co13/1hr-lesson-plan" target="_blank"> Lesson Plan </a>
-* <a href="{{ site.baseurl}}/teaching-module/disturb-event-co13/1hr-lesson" target="_blank">Detailed lesson page
+* <a href="{{ site.baseurl}}/teaching-module/disturb-event-co13/1hr-lesson" target="_blank"> Detailed lesson page
 * R Coding Lessons *additional time required
-+ <a href="{{ site.baseurl }}/R/nCLIMDIV-Palmer-Drought-Data-R"> target="_blank" Palmer Drought Severity Index Data </a>
++ <a href="{{ site.baseurl }}/R/nCLIMDIV-Palmer-Drought-Data-R" target="_blank"> Palmer Drought Severity Index Data </a>
 + Precipitation Data   
 + Stream Gauge Data
 
