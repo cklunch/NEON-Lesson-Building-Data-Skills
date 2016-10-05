@@ -4,7 +4,7 @@ title: "Data Activity: Visualize Stream Discharge Data in R to Better Understand
 date: 2015-12-04
 authors: [Leah A. Wasser, Megan A. Jones Mariela Perignon]
 dateCreated: 2015-05-18
-lastModified: `r format(Sys.time(), "%Y-%m-%d")`
+lastModified: 2016-10-05
 categories: [Coding and Informatics]
 category: [teaching-module]
 tags: [R, time-series]
@@ -156,22 +156,26 @@ individual values.
 Let's import our data.
 
 ## Import Stream Discharge Data
-```{r import-discharge-2 }
-#SOURCE
-#http://nwis.waterdata.usgs.gov/co/nwis/uv/?cb_00065=on&cb_00060=on&format=rdb&site_no=06730200&period=&begin_date=2013-01-01&end_date=2013-12-31
-#import data
 
-discharge <- read.csv("precip-discharge/2013-discharge.txt",
-                      sep="\t",
-                      skip=25,
-                      header=TRUE,
-                      stringsAsFactors = FALSE)
+    #SOURCE
+    #http://nwis.waterdata.usgs.gov/co/nwis/uv/?cb_00065=on&cb_00060=on&format=rdb&site_no=06730200&period=&begin_date=2013-01-01&end_date=2013-12-31
+    #import data
+    
+    discharge <- read.csv("precip-discharge/2013-discharge.txt",
+                          sep="\t",
+                          skip=25,
+                          header=TRUE,
+                          stringsAsFactors = FALSE)
 
-#view first few lines
-head(discharge)
+    ## Warning in file(file, "rt"): cannot open file 'precip-discharge/2013-
+    ## discharge.txt': No such file or directory
 
+    ## Error in file(file, "rt"): cannot open the connection
 
-```
+    #view first few lines
+    head(discharge)
+
+    ## Error in head(discharge): object 'discharge' not found
 
 When we import these data, it appears as if we have 2 header rows rather than
 one. Let's create a new `R` object that removes the second row of header values.
@@ -186,15 +190,18 @@ number of rows in the object.
 
 Let's subset our `discharge` object to remove the first row.
 
-```{r remove-second-header }
-#how many rows are in the R object
-nrow(discharge)
 
-#remove the first line from the data frame (which is a second list of headers)
-#the code below selects all rows beginning at row 2 and ending at the total
-#number of rows. 
-boulderStrDis.2013 <- discharge[2:nrow(discharge),]
-```
+    #how many rows are in the R object
+    nrow(discharge)
+
+    ## Error in nrow(discharge): object 'discharge' not found
+
+    #remove the first line from the data frame (which is a second list of headers)
+    #the code below selects all rows beginning at row 2 and ending at the total
+    #number of rows. 
+    boulderStrDis.2013 <- discharge[2:nrow(discharge),]
+
+    ## Error in eval(expr, envir, enclos): object 'discharge' not found
 
 Now, we have an `R` object that contains only rows containing data values. Each 
 column also has a unique column name. However the column names may not be descriptive
@@ -202,18 +209,21 @@ enough. In some cases, when we had useful metadata, we might keep the names as i
 In this case, let's rename column 5, which contains the discharge value, **disValue**
 so it is more "human readable" as we work with it in `R`.
 
-```{r rename-headers }
 
-#view names
-names(boulderStrDis.2013)
+    #view names
+    names(boulderStrDis.2013)
 
-#rename the fifth column to disValue representing discharge value
-names(boulderStrDis.2013)[5] <- "disValue"
+    ## Error in eval(expr, envir, enclos): object 'boulderStrDis.2013' not found
 
-#view names
-names(boulderStrDis.2013)
+    #rename the fifth column to disValue representing discharge value
+    names(boulderStrDis.2013)[5] <- "disValue"
 
-```
+    ## Error in names(boulderStrDis.2013)[5] <- "disValue": object 'boulderStrDis.2013' not found
+
+    #view names
+    names(boulderStrDis.2013)
+
+    ## Error in eval(expr, envir, enclos): object 'boulderStrDis.2013' not found
 
 #View Data Structure
 Let's have a look at the structure of our data. It appears as if the discharge 
@@ -221,20 +231,29 @@ value is a `character` class. This is likely because we had an additional row in
 data. Let's convert the discharge column to a `numeric` class. In this case, we can 
 reassign that column to be of class: `integer` given there are no decimal places.
 
-```{r adjust-data-structure }
-#view structure of data
-str(boulderStrDis.2013)
 
-#view class of the disValue column
-class(boulderStrDis.2013$disValue)
+    #view structure of data
+    str(boulderStrDis.2013)
 
-#convert column to integer
-boulderStrDis.2013$disValue <- as.integer(boulderStrDis.2013$disValue)
+    ## Error in str(boulderStrDis.2013): object 'boulderStrDis.2013' not found
 
-class(boulderStrDis.2013$disValue)
-str(boulderStrDis.2013)
+    #view class of the disValue column
+    class(boulderStrDis.2013$disValue)
 
-```
+    ## Error in eval(expr, envir, enclos): object 'boulderStrDis.2013' not found
+
+    #convert column to integer
+    boulderStrDis.2013$disValue <- as.integer(boulderStrDis.2013$disValue)
+
+    ## Error in eval(expr, envir, enclos): object 'boulderStrDis.2013' not found
+
+    class(boulderStrDis.2013$disValue)
+
+    ## Error in eval(expr, envir, enclos): object 'boulderStrDis.2013' not found
+
+    str(boulderStrDis.2013)
+
+    ## Error in str(boulderStrDis.2013): object 'boulderStrDis.2013' not found
 
 
 #Converting Time Stamps
@@ -244,68 +263,64 @@ if we do, it will confuse R. It will read in the dates as character strings and
 get confused. Your plot will take a LONG time to render!
 
 
-```{r plot-flood-data-example, echo=FALSE }
-#this plot takes FOREVER to create with all of the rows, so we will just 
-#show them the output. OTherwise it could hang up machines.
-ggplot(boulderStrDis.2013, aes(datetime, disValue)) +
-  geom_point() +
-  ggtitle("Plot Data With Time Field as a Character Class\nNotice the X Axis Labels") +
-  xlab("Date Time (Character Class)") + ylab("Discharge (CFS)")
 
-```
+    ## Error in ggplot(boulderStrDis.2013, aes(datetime, disValue)): object 'boulderStrDis.2013' not found
 
 To efficiently plot time series data, let's convert the `datetime` column to a 
 `time` class for efficient plotting and analysis.
 
-```{r convert-time }
-#view class
-class(boulderStrDis.2013$datetime)
 
-#convert to date/time class - POSIX
-boulderStrDis.2013$datetime <- as.POSIXct(boulderStrDis.2013$datetime)
+    #view class
+    class(boulderStrDis.2013$datetime)
 
-#recheck data structure
-str(boulderStrDis.2013)
+    ## Error in eval(expr, envir, enclos): object 'boulderStrDis.2013' not found
 
-```
+    #convert to date/time class - POSIX
+    boulderStrDis.2013$datetime <- as.POSIXct(boulderStrDis.2013$datetime)
+
+    ## Error in as.POSIXct(boulderStrDis.2013$datetime): object 'boulderStrDis.2013' not found
+
+    #recheck data structure
+    str(boulderStrDis.2013)
+
+    ## Error in str(boulderStrDis.2013): object 'boulderStrDis.2013' not found
 
 #No Data Values
 Next, let's query our data to check whether there are no data values (`NA`) in it.
 
 
-```{r no-data-values }
-#make sure there are no null values in our datetime field
-sum(is.na(boulderStrDis.2013$datetime ))
 
-```
+    #make sure there are no null values in our datetime field
+    sum(is.na(boulderStrDis.2013$datetime ))
+
+    ## Error in eval(expr, envir, enclos): object 'boulderStrDis.2013' not found
 
 #Plot The Data
 Finally, we are ready to plot our data. We will use `GGPLOT` to create our plot.
 
-```{r plot-flood-data }
 
-ggplot(boulderStrDis.2013, aes(datetime, disValue)) +
-  geom_point() +
-  ggtitle("Stream Discharge (CFS) for Boulder Creek\nJan. 2013-Jan. 2014") +
-  xlab("Date (POSIX Time Class)") + ylab("Discharge (Cubic Feet per Second)")
+    ggplot(boulderStrDis.2013, aes(datetime, disValue)) +
+      geom_point() +
+      ggtitle("Stream Discharge (CFS) for Boulder Creek\nJan. 2013-Jan. 2014") +
+      xlab("Date (POSIX Time Class)") + ylab("Discharge (Cubic Feet per Second)")
 
-```
+    ## Error in ggplot(boulderStrDis.2013, aes(datetime, disValue)): object 'boulderStrDis.2013' not found
 
 #Plot Data Time Subsets With ggplot 
 
 We can plot a subset of our data using `ggplot`. Let's plot data for the months 
 directly around the boulder flood: August 2013 - October 2013.
 
-```{r define-time-subset }
 
-#Define Start and end times for the subset as R objects that are the time class
-startTime <- as.POSIXct("2013-08-15 00:00:00")
-endTime <- as.POSIXct("2013-10-15 00:00:00")
+    #Define Start and end times for the subset as R objects that are the time class
+    startTime <- as.POSIXct("2013-08-15 00:00:00")
+    endTime <- as.POSIXct("2013-10-15 00:00:00")
+    
+    #create a start and end time R object
+    start.end <- c(startTime,endTime)
+    start.end
 
-#create a start and end time R object
-start.end <- c(startTime,endTime)
-start.end
-```
+    ## [1] "2013-08-15 MDT" "2013-10-15 MDT"
 
 ## Plot A Temporal Subset
 
@@ -317,17 +332,16 @@ this time, we will use the `scale_x_datetime` method and define the limits to ou
 ggtitle("Stream Discharge (CFS) for Boulder Creek\nJan. 2013-Jan. 2014") +
   xlab("Date") + ylab("Discharge (Cubic Feet per Second")
   
-```{r plot-subset }
-#plot the data - September-October
-ggplot(data=boulderStrDis.2013,
-      aes(datetime,disValue)) +
-      geom_point() +
-      scale_x_datetime(limits=start.end) +
-      xlab("Date") + ylab("Discharge (Cubic Feet per Second)") +
-      ggtitle("Stream Discharge (CFS) for Boulder Creek\nAugust 2013 - October 2013")
 
+    #plot the data - September-October
+    ggplot(data=boulderStrDis.2013,
+          aes(datetime,disValue)) +
+          geom_point() +
+          scale_x_datetime(limits=start.end) +
+          xlab("Date") + ylab("Discharge (Cubic Feet per Second)") +
+          ggtitle("Stream Discharge (CFS) for Boulder Creek\nAugust 2013 - October 2013")
 
-```
+    ## Error in ggplot(data = boulderStrDis.2013, aes(datetime, disValue)): object 'boulderStrDis.2013' not found
 
 #Publish to Plot.ly
 We have now successfully created a plot. We can turn that plot into an interactive
@@ -343,38 +357,36 @@ Set your user key: `Sys.setenv("plotly_api_key"="yourUserKeyHere")`
 Note that plot.ly doesn't accept the ggplot time subset method. Thus we will
 have to manually subset out our data.
 
-```{r plotly-discharge-data, results="hide", eval=FALSE}
-library(plotly)
 
-#set username
-Sys.setenv("plotly_username"="yourUserNameHere")
-#set user key
-Sys.setenv("plotly_api_key"="yourUserKeyHere")
-
-#subset out some of the data - July-November
-boulderStrDis.aug.oct2013 <- subset(boulderStrDis.2013, 
-                        datetime >= as.POSIXct('2013-08-15 00:00',
-                                              tz = "America/Denver") & 
-                        datetime <= as.POSIXct('2013-10-15 23:59', 
-                                              tz = "America/Denver"))
-
-#plot the data - September-October
-disPlot.plotly <- ggplot(data=boulderStrDis.aug.oct2013,
-        aes(datetime,disValue)) +
-        geom_point(size=3) 
-      
-#add title and labels
-disPlot.plotly <- disPlot.plotly + theme(axis.title.x = element_blank()) +
-          xlab("Time") + ylab("Stream Discharge CFS") +
-          ggtitle("Stream Discharge - Boulder Creek 2013")
-
-#view plotly plot in R
-ggplotly()
-
-#publish plotly plot to your plot.ly online account if you want. 
-#plotly_POST(disPlot.plotly)
-
-```
+    library(plotly)
+    
+    #set username
+    Sys.setenv("plotly_username"="yourUserNameHere")
+    #set user key
+    Sys.setenv("plotly_api_key"="yourUserKeyHere")
+    
+    #subset out some of the data - July-November
+    boulderStrDis.aug.oct2013 <- subset(boulderStrDis.2013, 
+                            datetime >= as.POSIXct('2013-08-15 00:00',
+                                                  tz = "America/Denver") & 
+                            datetime <= as.POSIXct('2013-10-15 23:59', 
+                                                  tz = "America/Denver"))
+    
+    #plot the data - September-October
+    disPlot.plotly <- ggplot(data=boulderStrDis.aug.oct2013,
+            aes(datetime,disValue)) +
+            geom_point(size=3) 
+          
+    #add title and labels
+    disPlot.plotly <- disPlot.plotly + theme(axis.title.x = element_blank()) +
+              xlab("Time") + ylab("Stream Discharge CFS") +
+              ggtitle("Stream Discharge - Boulder Creek 2013")
+    
+    #view plotly plot in R
+    ggplotly()
+    
+    #publish plotly plot to your plot.ly online account if you want. 
+    #plotly_POST(disPlot.plotly)
 
 #Challenge ???
 * Maybe have them grab data from another location - possibly another guage that

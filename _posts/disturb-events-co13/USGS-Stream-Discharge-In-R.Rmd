@@ -1,0 +1,472 @@
+---
+layout: post
+title: "Data Activity: Visualize Stream Discharge Data in R to Better Understand the 2013 Colorado Floods"
+date: 2015-12-04
+authors: [Megan A. Jones, Leah A. Wasser, Mariela Perignon]
+dateCreated: 2015-05-18
+lastModified: `r format(Sys.time(), "%Y-%m-%d")`
+categories: [Coding and Informatics]
+category: [teaching-module]
+tags: [R, time-series]
+mainTag: disturb-event-co13
+scienceThemes: [disturbance]
+description: "This lesson walks through the steps need to download and visualize
+USGS Stream Discharge data in R to better understand the drivers and impacts of 
+the 2013 Colorado floods."
+image:
+  feature: TeachingModules.jpg
+  credit: A National Ecological Observatory Network (NEON) - Teaching Module
+  creditlink: http://www.neonscience.org
+permalink: /R/USGS-Stream-Discharge-Data-R/
+code1: 
+comments: false
+---
+
+{% include _toc.html %}
+
+Several factors contributed to extreme flooding that occurred in Boulder,
+Colorado in 2013. In this data activity, we explore and visualize the data for 
+stream discharge data collected by the United States Geological Survey (USGS). 
+
+### Learning Objectives
+After completing this tutorial, you will be able to:
+
+* Download stream gauge data from <a href="FIX THIS" target="_blank">USGS's National Water Information System </a>. 
+* Plot precipitation data in R. 
+* Publish & share an interactive plot of the data using Plotly. 
+
+### Things You'll Need To Complete This Lesson
+Please be sure you have the most current version of R and, preferably,
+RStudio to write your code.
+
+ **R Skill Level:** Intermediate - To succeed in this tutorial, you will need to
+have basic knowledge for use of the R software program.  
+
+### R Libraries to Install:
+
+* **ggplot2:** `install.packages("ggplot2")`
+* **lubridate:** `install.packages("lubridate")`
+* **plotly:** `install.packages("plotly")`
+
+### Data to Download
+We include directions on how to directly find and access the data from USGS's 
+National National Water Information System Database. However, depending on your 
+learning objectives you may prefer to use the 
+provided teaching data subset that can be downloaded here XXXX. 
+
+So that we all have organized data in the same location, create a `data` directory 
+(folder) within your `Documents` directory. 
+
+* If you are downloading your own data
+set, within `data`, create another directory `distub-events-co13`and then 
+within it create a `discharge` directory.  
+* If you are using the provided data (downloaded above), simply put the 
+entire unzipped directory in the `data` directory you just created and it should
+match the file path used throughout the activity. 
+
+If you choose to save the data elsewhere, you will need to modify the directions
+below to set your working directory & file paths accordingly.
+
+</div>
+
+## Research Question 
+What were the patterns of stream discharge prior to and during the 2013 flooding
+events in Colorado? 
+
+## About the Data - USGS Stream Discharge Data
+
+The USGS has a distributed network of aquatic sensors located in streams across
+the United States. This network monitors a suit of variables that are important
+to stream morphology and health. One of the metrics that this sensor network
+monitors is **Stream Discharge**, a metric which quantifies the volume of water
+moving down a stream. Discharge is an ideal metric to quantify flow, which
+increases significantly during a flood event.
+
+> As defined by USGS: Discharge is the volume of water moving down a stream or 
+> river per unit of time, commonly expressed in cubic feet per second or gallons 
+> per day. In general, river discharge is computed by multiplying the area of 
+> water in a channel cross section by the average velocity of the water in that 
+> cross section.
+> 
+> <a href="http://water.usgs.gov/edu/streamflow2.html" target="_blank">
+For more on stream discharge by USGS.</a>
+
+<figure>
+<a href="{{ site.baseurl }}/images/dist-co-flood/USGS-Peak-discharge.gif">
+<img src="{{ site.baseurl }}/images/dist-co-flood/USGS-Peak-discharge.gif"></a>
+<figcaption>
+The USGS tracks stream discharge through time at locations across the United 
+States. Note the pattern observed in the plot above. The peak recorded discharge
+value in 2013 was significantly larger than what was observed in other years. 
+Source: <a href="http://nwis.waterdata.usgs.gov/usa/nwis/peak/?site_no=06730200" target="_blank"> USGS, National Water Information System. 
+</figcaption>
+</figure>
+
+## Obtain USGS Stream Gauge Data
+
+This next section explains how to find and locate data through the USGS's 
+<a href="http://waterdata.usgs.gov/nwis" target="_blank"> National Water Information System portal</a>.
+If you want to use the provided data set downloaded above, you can skip this 
+section and start again at the
+<a href="{{ site.baseurl }}/R/USGS-Stream-Discharge-Data-R/#work-with-steam-gauge-data" target="_blank"> Work With Stream Gauge Data header</a>.
+
+#### Step 1: Search for the data
+
+To search for stream gauge data in a particular area, we can use the 
+<a href="http://maps.waterdata.usgs.gov/mapper/index.html" target="_blank"> interactive map of all USGS stations</a>.
+By searching for locations around "Boulder, CO", we can find 3 guages in the area. 
+
+For this lesson, we want data collected by USGS stream guage 06730200 located on 
+Boulder Creek at North 75th St. This guage is one of the few the was able to 
+collect data throughout the 2013 Boulder floods. 
+
+You can directly access the data for this station through the "Access Data" link
+on the map icon or searching for this site on the 
+<a href="http://waterdata.usgs.gov/nwis" target="_blank"> National Water Information System portal </a>.
+
+On the <a href="http://waterdata.usgs.gov/nwis/inventory?agency_code=USGS&site_no=06730200
+" target="_blank"> Boulder Creek stream guage 06730200 page</a>, we can now see 
+summary information about the types of data available for this station.  We want
+to select **Daily Data** and then the following parameters: 
+
+* Available Parameters = **00060 Discharge (Mean)**
+* Output format = **Tab-separated**
+* Begin Date = **1 October 1986**
+* End Date = **31 December 2013** 
+
+Now select "Go". The output is a plain text website that you must 
+
+#insert picture of guage! <PICTURE>>
+
+
+#insert map of where the guage is located - leaflet?
+
+#### Step 2: Request the data
+#### Step 3: Get the data
+
+
+
+
+Guage Data info:
+USGS 06730200 BOULDER CREEK AT NORTH 75TH ST. NEAR BOULDER, CO
+{ : .notice }
+
+# Work with Stream Gauge Data
+
+## R Libraries
+
+We will be working with time-series data in this lesson so we will load the
+`lubridate` library that allows use to easily work with dates. We will use 
+`ggplot2` to efficiently plot our data and `plotly` to create interactive plots.
+
+```{r load-libraries}
+# set your working directory
+# setwd("~/Documents/data/disturb-events-co13")  # or your appropriate file path 
+
+# load packages
+library(lubridate) # work with time series data
+library(ggplot2) # create efficient, professional plots
+library(plotly) # create cool interactive plots
+
+```
+
+
+
+##  Import USGS Stream Discharge Data Into R
+Now that we better understand the data that we will work with, let's import it into
+`R`. First, open up the `precip-discharge/2013-discharge.txt` file in a text editor.
+What do you notice about the structure of the file?
+
+The first 25 lines are descriptive text and not actual data. Also notice that 
+this file is separated by tabs, not commas. We will need to specify the **Tab delimiter**
+when we import our data.We will use the `read.csv` to import it into an `R` object. 
+
+When we use `csv` we need to define several attributes of the file including:
+
+1. The data are tab delimited. We will this tell R to use the `"/t"` **sep**arator. 
+Which defines a tab delimited separation.
+2. The first group of lines in the file are not data, we will tell `R` to skip
+those lines when it imports the data using `skip=25`.
+3. Our data have a header, which is similar to column names in a spreadsheet. We 
+will tell `R` to set `header=TRUE` to ensure the headers are imported as column
+names rather than data values.
+4. Finally we will set `stringsAsFactors = FALSE` to ensure our data come in a 
+individual values.
+
+Let's import our data.
+
+## Import Stream Discharge Data
+```{r import-discharge-2 }
+#SOURCE
+#http://nwis.waterdata.usgs.gov/co/nwis/uv/?cb_00065=on&cb_00060=on&format=rdb&site_no=06730200&period=&begin_date=2013-01-01&end_date=2013-12-31
+#import data
+
+discharge <- read.csv("precip-discharge/2013-discharge.txt",
+                      sep="\t",
+                      skip=25,
+                      header=TRUE,
+                      stringsAsFactors = FALSE)
+
+#view first few lines
+head(discharge)
+
+
+```
+
+When we import these data, it appears as if we have 2 header rows rather than
+one. Let's create a new `R` object that removes the second row of header values.
+To do this, we can use select all data beginning at row 2 and ending at the
+total number or rows in the file. The `nrow` function will count the total
+number of rows in the object.
+
+# LINK OUT TO DATA OR SOFTWARE CARPENTRY LESSONS THAT TEACH THIS??
+* More on selecting a subset of a data.frame in R
+
+
+
+Let's subset our `discharge` object to remove the first row.
+
+```{r remove-second-header }
+#how many rows are in the R object
+nrow(discharge)
+
+#remove the first line from the data frame (which is a second list of headers)
+#the code below selects all rows beginning at row 2 and ending at the total
+#number of rows. 
+boulderStrDis.2013 <- discharge[2:nrow(discharge),]
+```
+
+Now, we have an `R` object that contains only rows containing data values. Each 
+column also has a unique column name. However the column names may not be descriptive
+enough. In some cases, when we had useful metadata, we might keep the names as is.
+In this case, let's rename column 5, which contains the discharge value, **disValue**
+so it is more "human readable" as we work with it in `R`.
+
+```{r rename-headers }
+
+#view names
+names(boulderStrDis.2013)
+
+#rename the fifth column to disValue representing discharge value
+names(boulderStrDis.2013)[5] <- "disValue"
+
+#view names
+names(boulderStrDis.2013)
+
+```
+
+#View Data Structure
+Let's have a look at the structure of our data. It appears as if the discharge 
+value is a `character` class. This is likely because we had an additional row in our
+data. Let's convert the discharge column to a `numeric` class. In this case, we can 
+reassign that column to be of class: `integer` given there are no decimal places.
+
+```{r adjust-data-structure }
+#view structure of data
+str(boulderStrDis.2013)
+
+#view class of the disValue column
+class(boulderStrDis.2013$disValue)
+
+#convert column to integer
+boulderStrDis.2013$disValue <- as.integer(boulderStrDis.2013$disValue)
+
+class(boulderStrDis.2013$disValue)
+str(boulderStrDis.2013)
+
+```
+
+
+#Converting Time Stamps
+We have converted our discharge data to an `integer` class However the time stamp
+field, `datetime` is still a `character` class. We could try to plot the data however, 
+if we do, it will confuse R. It will read in the dates as character strings and
+get confused. Your plot will take a LONG time to render!
+
+
+```{r plot-flood-data-example, echo=FALSE }
+#this plot takes FOREVER to create with all of the rows, so we will just 
+#show them the output. OTherwise it could hang up machines.
+ggplot(boulderStrDis.2013, aes(datetime, disValue)) +
+  geom_point() +
+  ggtitle("Plot Data With Time Field as a Character Class\nNotice the X Axis Labels") +
+  xlab("Date Time (Character Class)") + ylab("Discharge (CFS)")
+
+```
+
+To efficiently plot time series data, let's convert the `datetime` column to a 
+`time` class for efficient plotting and analysis.
+
+```{r convert-time }
+#view class
+class(boulderStrDis.2013$datetime)
+
+#convert to date/time class - POSIX
+boulderStrDis.2013$datetime <- as.POSIXct(boulderStrDis.2013$datetime)
+
+#recheck data structure
+str(boulderStrDis.2013)
+
+```
+
+#No Data Values
+Next, let's query our data to check whether there are no data values (`NA`) in it.
+
+
+```{r no-data-values }
+#make sure there are no null values in our datetime field
+sum(is.na(boulderStrDis.2013$datetime ))
+
+```
+
+#Plot The Data
+Finally, we are ready to plot our data. We will use `GGPLOT` to create our plot.
+
+```{r plot-flood-data }
+
+ggplot(boulderStrDis.2013, aes(datetime, disValue)) +
+  geom_point() +
+  ggtitle("Stream Discharge (CFS) for Boulder Creek\nJan. 2013-Jan. 2014") +
+  xlab("Date (POSIX Time Class)") + ylab("Discharge (Cubic Feet per Second)")
+
+```
+
+#Plot Data Time Subsets With ggplot 
+
+We can plot a subset of our data using `ggplot`. Let's plot data for the months 
+directly around the boulder flood: August 2013 - October 2013.
+
+```{r define-time-subset }
+
+#Define Start and end times for the subset as R objects that are the time class
+startTime <- as.POSIXct("2013-08-15 00:00:00")
+endTime <- as.POSIXct("2013-10-15 00:00:00")
+
+#create a start and end time R object
+start.end <- c(startTime,endTime)
+start.end
+```
+
+## Plot A Temporal Subset
+
+Finally, we can use GGPLOT just like we did above to create a new plot. However, 
+this time, we will use the `scale_x_datetime` method and define the limits to our
+`limits` object.
+
+
+ggtitle("Stream Discharge (CFS) for Boulder Creek\nJan. 2013-Jan. 2014") +
+  xlab("Date") + ylab("Discharge (Cubic Feet per Second")
+  
+```{r plot-subset }
+#plot the data - September-October
+ggplot(data=boulderStrDis.2013,
+      aes(datetime,disValue)) +
+      geom_point() +
+      scale_x_datetime(limits=start.end) +
+      xlab("Date") + ylab("Discharge (Cubic Feet per Second)") +
+      ggtitle("Stream Discharge (CFS) for Boulder Creek\nAugust 2013 - October 2013")
+
+
+```
+
+# Publish to Plot.ly
+We have now successfully created a plot. We can turn that plot into an interactive
+plot using `Plot.ly` if we want. Note, for this to be successful you need to 
+set your Plot.ly API key which you will get from your free online account, once 
+you create it.
+
+Set your username: `Sys.setenv("plotly_username"="yourUserNameHere")`
+Set your user key: `Sys.setenv("plotly_api_key"="yourUserKeyHere")`
+
+## Time subsets in plot.ly
+
+Note that plot.ly doesn't accept the ggplot time subset method. Thus we will
+have to manually subset out our data.
+
+```{r plotly-discharge-data, results="hide", eval=FALSE}
+library(plotly)
+
+#set username
+Sys.setenv("plotly_username"="yourUserNameHere")
+#set user key
+Sys.setenv("plotly_api_key"="yourUserKeyHere")
+
+#subset out some of the data - July-November
+boulderStrDis.aug.oct2013 <- subset(boulderStrDis.2013, 
+                        datetime >= as.POSIXct('2013-08-15 00:00',
+                                              tz = "America/Denver") & 
+                        datetime <= as.POSIXct('2013-10-15 23:59', 
+                                              tz = "America/Denver"))
+
+#plot the data - September-October
+disPlot.plotly <- ggplot(data=boulderStrDis.aug.oct2013,
+        aes(datetime,disValue)) +
+        geom_point(size=3) 
+      
+#add title and labels
+disPlot.plotly <- disPlot.plotly + theme(axis.title.x = element_blank()) +
+          xlab("Time") + ylab("Stream Discharge CFS") +
+          ggtitle("Stream Discharge - Boulder Creek 2013")
+
+#view plotly plot in R
+ggplotly()
+
+#publish plotly plot to your plot.ly online account if you want. 
+#plotly_POST(disPlot.plotly)
+
+```
+
+## Additional Resources
+
+
+Additional information on USGS streamflow measurements and data:
+
+
+* <a href="http://nwis.waterdata.usgs.gov/usa/nwis/peak/?site_no=06730200" target="_blank"> More on peak streamflow. </a>
+* <a href="http://water.usgs.gov/edu/measureflow.html" target="_blank">part 2 - USGS overview of measuring streamflow</a>
+* <a href="http://water.usgs.gov/edu/streamflow2.html" target="_blank">part 2 - USGS overview of measuring streamflow</a>
+
+## Data from USGS Portal
+
+#### Step 1: Search for the data
+
+To search for stream gauge data in a particular area, we can use the 
+<a href="http://maps.waterdata.usgs.gov/mapper/index.html" target="_blank"> interactive map of all USGS stations</a>.
+By searching for locations around "Boulder, CO", we can find 3 guages in the area. 
+
+For this lesson, we want data collected by USGS stream guage 06730200 located on 
+Boulder Creek at North 75th St. This guage is one of the few the was able to 
+collect data throughout the 2013 Boulder floods. 
+
+You can directly access the data for this station through the "Access Data" link
+on the map icon or searching for this site on the 
+<a href="http://waterdata.usgs.gov/nwis" target="_blank"> National Water Information System portal </a>.
+
+On the <a href="http://waterdata.usgs.gov/nwis/inventory?agency_code=USGS&site_no=06730200
+" target="_blank"> Boulder Creek stream guage 06730200 page</a>, we can now see 
+summary information about the types of data available for this station.  We want
+to select **Daily Data** and then the following parameters: 
+
+* Available Parameters = **00060 Discharge (Mean)**
+* Output format = **Tab-separated**
+* Begin Date = **1 October 1986**
+* End Date = **31 December 2013** 
+
+Now select "Go". The output is a plain text website, not downloadable data. 
+
+#### Create .csv 
+
+To create a .csv file from the data, copy all data on this page and paste into 
+a spreadsheet.  You then need to delete the information at the top 
+
+
+## API Data Access
+USGS data can be downloaded via an API using a command line interface. This is
+particularly useful if you want to request data from multiple sites or build the
+data request into a script. 
+<a href="http://help.waterdata.usgs.gov/faq/automated-retrievals#RT">
+Read more hear about API downloads of USGS data</a>.
+
+
+
+

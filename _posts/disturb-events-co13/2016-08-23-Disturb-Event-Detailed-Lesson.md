@@ -4,7 +4,7 @@ title: "Quantifying The Drivers and Impacts of Natural Disturbance Events – Th
 date: 2016-04-09
 authors: [Leah A. Wasser, Megan A. Jones]
 dateCreated: 2015-05-18
-lastModified: `r format(Sys.time(), "%Y-%m-%d")`
+lastModified: 2016-10-05
 categories: [teaching-module]
 tags: [R, time-series]
 mainTag: disturb-event-co13
@@ -20,7 +20,7 @@ image:
   feature: TeachingModules.jpg
   credit: A National Ecological Observatory Network (NEON) - Teaching Module
   creditlink: http://www.neonscience.org
-permalink: /teaching-module/disturb-event-co13/1hr-lesson
+permalink: /teaching-module/disturb-event-co13/detailed-lesson
 code1: 
 comments: true
 ---
@@ -29,9 +29,7 @@ comments: true
 
 ## The 2013 Colorado Front Range Flood
 
-<iframe width="560" height="315" src="https://www.youtube.com/embed/khOaXTbXfW8" frameborder="0" allowfullscreen></iframe>
- 
- **THIS VIDEO WILL NEED TO BE UPDATED TO FINAL VERSION**
+<iframe width="560" height="315" src="https://www.youtube.com/embed/DJqTmByRma8" frameborder="0" allowfullscreen></iframe>
  
 ## Introduction to Disturbance Events
 
@@ -79,7 +77,7 @@ trees.
  <figure>
 	<a href="{{ site.baseurl }}/images/disturb-events-co13/Lodgepole_pine_Yellowstone_1998_near_firehole.jpg">
 	<img src="{{ site.baseurl }}/images/disturb-events-co13/Lodgepole_pine_Yellowstone_1998_near_firehole.jpg"></a>
-	<figcaption> Regrowth of Lodgepole Pine *Pinus* *contorta* after a stand-replacing fire.  
+	<figcaption> Regrowth of Lodgepole Pine (<i>Pinus contorta</i>) after a stand-replacing fire.  
 	Source: Jim Peaco, September 1998, Yellowstone Digital Slide Files; 
 	<a href="https://commons.wikimedia.org/wiki/File:Lodgepole_pine_Yellowstone_1998_near_firehole.jpg" target="_blank">Wikipedia Commons</a>. 
 	</figcaption>
@@ -138,7 +136,7 @@ by the winds to other areas. Some soil types, like clay, can dry to a
 near-impermeable brick causing water to flow across the top instead of sinking 
 into the soils. 
 
-**Optional Data Activity** <a href="{{ site.baseurl }}/R/nCLIMDIV-Palmer-Drought-Data-R" target="_blank"> Create an interactive plot of Palmer Drought Data using R & Plotly</a>.
+**Optional Data Activity** <a href="{{ site.baseurl }}/R/nCLIMDIV-Palmer-Drought-Data-R" target="_blank">Visualize Palmer Drought Severity Index in R to Better Understand the 2013 Colorado Floods</a>.
 
 ### Atmospheric Conditions
 In early September 2013, a slow moving cold front moved through Colorado
@@ -162,37 +160,49 @@ over the Eastern Range of the Rocky Mountains in Colorado by these water vapor
 systems. 
 
 ## Driver: Precipitation
+How do we measure precipitation? 
 
-``` {r plotly-precip, echo=FALSE, eval=FALSE}
-# source of plot
-# currently BoulderFlood_PlotsForColin.Rmd (Megan's computer), 
+<i class="fa fa-star"></i> **Definition:** Precipitation is the moisture that
+falls from clouds including rain, hail and snow. 
+{: .notice}
 
-```
+Precipitaiton can be measured by different types of gauges; some must be 
+manually read and emptied, others automatically record the amount of 
+precipitation. If the precipitation is in a frozen form (snow, hail, freezing rain)
+the contents of the gauge must be melted to get the water equivalency for 
+measurement. Rainfall is generally reported as the total amount of rain 
+(millimeters, centimeters, or inches) over a given per period of time. 
 
-GRAPHIC: Century or multi-decade rainfall patterns
+Boulder, Colorado lays on the eastern edge of the Rocky Mountains where they meet
+the high plains. The average annual precipitation is near 20". However, the 
+precipitation comes in many forms -- winter snow, intense summer thunderstorms, 
+and intermitent storms throughout the year.
+
+The figure below show the total precipitation each month from 1948 to 2013 for
+the National Weather Service's COOP site Boulder 2 (Station ID:050843) that is 
+centrally located in Boulder, CO. 
+
+<iframe width="900" height="800" frameborder="0" scrolling="no" src="https://plot.ly/~NEONDataSkills/6.embed"></iframe>
+
+Notice the general pattern of rainfall across the 65 years. 
+
+1. How much rain generally falls within one month?
+1. Is there a strong annual or seasonal pattern? (Remember, with 
+interactive Plotly plots you can zoom in on the data) 
+1. Do any other events over the last 65 years equal the September 2013 event?
 
 
-Text: something about pattern of rainfall?
-
-
-This plot shows daily precipitation between August 15 - October 15 2015. 
+Now that we've looked at 65 years of data from Boulder, CO. Let's focus more 
+specifically on the September 2013 event. The plot below shows daily 
+precipitation between August 15 - October 15, 2013. 
 
 Explore the data and answer the following questions:
 
 1. What dates were the highest precipitation values observed? 
-2. What was the total precipitation on these days? 
-3. In what units is this value?
+1. What was the total precipitation on these days? 
+1. In what units is this value?
 
-``` {r plotly-precip-2013, echo=FALSE, eval=FALSE}
-# source of plot
-# , 
-
-```
-
-<div>
-   <a href="https://plot.ly/~leahawasser/116/" target="_blank" title="Daily Total Precipitation (Inches) - Boulder Creek 2013" style="display: block; text-align: center;"><img src="https://plot.ly/~leahawasser/116.png" alt="Daily Total Precipitation (Inches) - Boulder Creek 2013" style="max-width: 100%;width: 600px;"  width="600" onerror="this.onerror=null;this.src='https://plot.ly/404.png';" /></a>
-    <script data-plotly="leahawasser:116"  src="https://plot.ly/embed.js" async></script>
-</div>
+<iframe width="900" height="800" frameborder="0" scrolling="no" src="https://plot.ly/~NEONDataSkills/4.embed"></iframe>
 
 
 ## Driver: Stream Discharge
@@ -216,10 +226,7 @@ for 2013. What do you notice about the patterns of discharge seen in these data?
 inundates normally dry land. 
 {: .notice}
 
-```{r map-boulder-floodplain, echo=FALSE}
-#embedded leaflet map of the boulder floodplain
-#{% include /maps/_boulderFloodplain.html %}
-```
+
 
 <i class="fa fa-star"></i> **Definition:**  A **flood plain** is land adjacent 
 to a waterway, from the channel banks to the base of the enclosing valley walls,

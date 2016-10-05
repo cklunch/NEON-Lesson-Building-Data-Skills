@@ -1,6 +1,6 @@
 ---
 layout: post
-title: "Visualize Palmer Drought Severity Index in 
+title: "Visualize Palmer Drought Severity Index Data in 
 R to Better Understand the 2013 Colorado Floods"
 date: 2015-12-07
 authors: [Leah A. Wasser, Megan A. Jones, Mariela Perignon]
