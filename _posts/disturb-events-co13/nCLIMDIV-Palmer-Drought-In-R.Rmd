@@ -325,35 +325,18 @@ package in R that allow us to create interactive figures that can be published
 to the web and 
 
 ## Plotly - Interactive (and Online) Plots
+
 <a href="https://plot.ly/" target="_blank" >Plotly </a> 
-bills itself as "a collaborative platform for modern data science". We 
-are using it here as we can build an interactive plot that can easily be shared
-with others (like on our
-<a href="http://{{ site.baseurl }}/teaching-module/disturb-event-co13/1hr-lesson#drought"> target="_blank"> Disturbance Events lesson</a>). 
+allows you to create interactive plots that can also be shared online. If
+you are new to Plotly, view the companion mini-lesson 
+<a href="{{ site.baseurl }}/R/Plotly/" target="_blank"> *Interactive Data Vizualization with R and Plotly*</a>
+to learn how to set up an account and access your username and API key. 
 
-Plotly allows you to create interactive plots that can also be shared online. You will need an free online Plotly account to post & share you plot online. But you
-can create the plots and use them on your local computer without an account. If 
-you do not wish to share plots online you can skip to **Step 3: Create Plotly plot**. 
+### Step 1: Connect account to R 
 
-Additional information on the Plotly R package can be found 
-<a href="https://plot.ly/r/getting-started/" target="_blank"> on the Plotly R Getting Started page</a>.  
-
-Note: Plotly doesn't just work with R -- other programs include Python, MATLAB,
-Excel, and JavaScript. 
-
-### Step 1: Create account
-If you do not already have an account, you need to set up an account by visiting
-the <a href="https://plot.ly/" target="_blank" >Plotly</a> website.
-
-### Step 2: Connect account to R 
-
-To share plots from R (or RStudio) to Plotly, you have to connect to your 
-account.  This is done through an API (Application Program Interface). You can
-find your username & API key under your Profile on the Plotly website under the
-"API key" menu option.  
-
-To link your account to your R, use the following commands, substituting in your
-own username & key as appropriate. 
+First, we need to connect our R session to our Plotly account. If you only want 
+to create interactive plots and not share them on a Plotly account, you can skip
+this step.  
 
 ``` {r set-plotly-creds, eval=FALSE}
 # set plotly user name
@@ -363,12 +346,13 @@ Sys.setenv("plotly_api_key"="YOUR_api_key")
 
 ```
 
-### Step 3: Create Plotly plot
+### Step 2: Create Plotly plot
 
 We can create an interactive version of our plot using `plot.ly`.
 
 We should simply be able to use our existing ggplot `palmer.drought` with the 
-`ggplotly()` function to 
+`ggplotly()` function to create an interactive plot. 
+
 ```{r create-ggplotly-drought}
 
 # Use exisitng ggplot plot & view as plotly plot in R
@@ -411,7 +395,7 @@ flooding?
 1. When might you want to use `ggplot()`?
 1. When might `plotly()` be better? 
 
-### Step 4: Push to Plotly online
+### Step 3: Push to Plotly online
 
 Once the plot is built with a Plotly related function (`plot_ly` or `ggplotly`)
 you can post the plot to your online account. Make sure you are signed in to

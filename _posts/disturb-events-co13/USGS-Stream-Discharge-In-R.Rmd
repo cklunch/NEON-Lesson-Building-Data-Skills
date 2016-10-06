@@ -134,22 +134,13 @@ to select **Daily Data** and then the following parameters:
 * Begin Date = **1 October 1986**
 * End Date = **31 December 2013** 
 
-Now select "Go". The output is a plain text website that you must 
+Now select "Go". 
 
-#insert picture of guage! <PICTURE>>
+#### Step 2: Save data to .txt
+The output is a plain text website that you must copy into a spreadsheet of 
+choice and save as a .csv. Note, you can also download the teaching data set 
+(above) or access the data through an API (see Additional Reserouces, below). 
 
-
-#insert map of where the guage is located - leaflet?
-
-#### Step 2: Request the data
-#### Step 3: Get the data
-
-
-
-
-Guage Data info:
-USGS 06730200 BOULDER CREEK AT NORTH 75TH ST. NEAR BOULDER, CO
-{ : .notice }
 
 # Work with Stream Gauge Data
 
@@ -161,31 +152,34 @@ We will be working with time-series data in this lesson so we will load the
 
 ```{r load-libraries}
 # set your working directory
-# setwd("~/Documents/data/disturb-events-co13")  # or your appropriate file path 
+setwd("~/Documents/data/disturb-events-co13")  # or your appropriate file path 
 
 # load packages
-library(lubridate) # work with time series data
+#library(lubridate) # work with time series data
 library(ggplot2) # create efficient, professional plots
 library(plotly) # create cool interactive plots
 
 ```
 
-
-
 ##  Import USGS Stream Discharge Data Into R
-Now that we better understand the data that we will work with, let's import it into
-`R`. First, open up the `precip-discharge/2013-discharge.txt` file in a text editor.
+
+Now that we better understand the data that we are working with, let's import it
+into R. First, open up the `discharge/06730200-discharge_daily_1986-2013.txt` 
+file in a text editor.
+
 What do you notice about the structure of the file?
 
-The first 25 lines are descriptive text and not actual data. Also notice that 
-this file is separated by tabs, not commas. We will need to specify the **Tab delimiter**
-when we import our data.We will use the `read.csv` to import it into an `R` object. 
+The first 24 lines are descriptive text and not actual data. Also notice that 
+this file is separated by tabs, not commas. We will need to specify the 
+**tab delimiter** when we import our data.We will use the `read.csv()` function
+to import it into an R object. 
 
-When we use `csv` we need to define several attributes of the file including:
+When we use `read.csv()`, we need to define several attributes of the file 
+including:
 
-1. The data are tab delimited. We will this tell R to use the `"/t"` **sep**arator. 
-Which defines a tab delimited separation.
-2. The first group of lines in the file are not data, we will tell `R` to skip
+1. The data are tab delimited. We will this tell R to use the `"/t"` 
+**sep**arator, which defines a tab delimited separation.
+2. The first group of 24 lines in the file are not data, we will tell R to skip
 those lines when it imports the data using `skip=25`.
 3. Our data have a header, which is similar to column names in a spreadsheet. We 
 will tell `R` to set `header=TRUE` to ensure the headers are imported as column
@@ -195,270 +189,252 @@ individual values.
 
 Let's import our data.
 
-## Import Stream Discharge Data
-```{r import-discharge-2 }
-#SOURCE
-#http://nwis.waterdata.usgs.gov/co/nwis/uv/?cb_00065=on&cb_00060=on&format=rdb&site_no=06730200&period=&begin_date=2013-01-01&end_date=2013-12-31
-#import data
+(Note: you can use the `discharge/06730200-discharge_daily_1986-2013.csv` file
+and read it in directly using `read.csv()` function and then skip to the **View 
+Data Structure** section).
 
-discharge <- read.csv("precip-discharge/2013-discharge.txt",
+```{r import-discharge-2 }
+
+#import data
+discharge <- read.csv("discharge/06730200-discharge_daily_1986-2013.txt",
                       sep="\t",
-                      skip=25,
+                      skip=24,
                       header=TRUE,
                       stringsAsFactors = FALSE)
 
 #view first few lines
 head(discharge)
 
-
 ```
 
-When we import these data, it appears as if we have 2 header rows rather than
-one. Let's create a new `R` object that removes the second row of header values.
-To do this, we can use select all data beginning at row 2 and ending at the
+When we import these data, the first row of data still appears to be another
+header row rather than actual data. We can remove the second row of header 
+values, by selecting all data beginning at row 2 and ending at the
 total number or rows in the file. The `nrow` function will count the total
 number of rows in the object.
 
-# LINK OUT TO DATA OR SOFTWARE CARPENTRY LESSONS THAT TEACH THIS??
-* More on selecting a subset of a data.frame in R
-
-
-
-Let's subset our `discharge` object to remove the first row.
-
 ```{r remove-second-header }
-#how many rows are in the R object
+# nrow: how many rows are in the R object
 nrow(discharge)
 
-#remove the first line from the data frame (which is a second list of headers)
-#the code below selects all rows beginning at row 2 and ending at the total
-#number of rows. 
-boulderStrDis.2013 <- discharge[2:nrow(discharge),]
+# remove the first line from the data frame (which is a second list of headers)
+# the code below selects all rows beginning at row 2 and ending at the total
+# number of rows. 
+discharge <- discharge[2:nrow(discharge),]
 ```
 
-Now, we have an `R` object that contains only rows containing data values. Each 
-column also has a unique column name. However the column names may not be descriptive
-enough. In some cases, when we had useful metadata, we might keep the names as is.
-In this case, let's rename column 5, which contains the discharge value, **disValue**
-so it is more "human readable" as we work with it in `R`.
+## Metadata 
+Now, we have an R object that contains only rows containing data values. Each 
+column also has a unique column name. However the column names may not be 
+descriptive enough - what is `X17663_00060_00003`?.
+
+Reopen the `discharge/06730200-discharge_daily_1986-2013.txt` data, the text at 
+the top provides useful metadata about our data. On rows 10-12, we see that the
+values for the data are "Discharge, cubic feed epr second (Mean)" corresponding
+to the 5th column of data.  Rows 14-16 tell us more about the 6th column of data, 
+the quality flags.  
+
+Now that we know what the colums are, let's rename column 5, which contains the
+discharge value, **disValue** and column 6 as **qualFlag** so it is more "human
+readable" as we work with it 
+in R.
 
 ```{r rename-headers }
-
 #view names
-names(boulderStrDis.2013)
+names(discharge)
 
 #rename the fifth column to disValue representing discharge value
-names(boulderStrDis.2013)[5] <- "disValue"
+names(discharge)[4] <- "disValue"
+names(discharge)[5] <- "qualCode"
 
 #view names
-names(boulderStrDis.2013)
+names(discharge)
 
 ```
 
-#View Data Structure
-Let's have a look at the structure of our data. It appears as if the discharge 
-value is a `character` class. This is likely because we had an additional row in our
-data. Let's convert the discharge column to a `numeric` class. In this case, we can 
-reassign that column to be of class: `integer` given there are no decimal places.
+## View Data Structure
+
+Let's have a look at the structure of our data. 
+
+```{r view-data-structure }
+#view structure of data
+str(discharge)
+
+```
+
+It appears as if the discharge value is a `character` (`chr`) class. This is 
+likely because we had an additional row in our data. Let's convert the discharge
+column to a `numeric` class. In this case, we can reassign that column to be of
+class: `integer` given there are no decimal places.
 
 ```{r adjust-data-structure }
-#view structure of data
-str(boulderStrDis.2013)
+# view class of the disValue column
+class(discharge$disValue)
 
-#view class of the disValue column
-class(boulderStrDis.2013$disValue)
+# convert column to integer
+discharge$disValue <- as.integer(discharge$disValue)
 
-#convert column to integer
-boulderStrDis.2013$disValue <- as.integer(boulderStrDis.2013$disValue)
-
-class(boulderStrDis.2013$disValue)
-str(boulderStrDis.2013)
+str(discharge)
 
 ```
 
 
-#Converting Time Stamps
-We have converted our discharge data to an `integer` class However the time stamp
-field, `datetime` is still a `character` class. We could try to plot the data however, 
-if we do, it will confuse R. It will read in the dates as character strings and
-get confused. Your plot will take a LONG time to render!
+### Converting Time Stamps
 
+We have converted our discharge data to an `integer` class. However, the time
+stamp field, `datetime` is still a `character` class. 
 
-```{r plot-flood-data-example, echo=FALSE }
-#this plot takes FOREVER to create with all of the rows, so we will just 
-#show them the output. OTherwise it could hang up machines.
-ggplot(boulderStrDis.2013, aes(datetime, disValue)) +
-  geom_point() +
-  ggtitle("Plot Data With Time Field as a Character Class\nNotice the X Axis Labels") +
-  xlab("Date Time (Character Class)") + ylab("Discharge (CFS)")
+To work with and efficiently plot time series data, it is best to convert date
+and/or time data to a date/time class. As we have both date and time date, we 
+will use the class POSIXct. 
 
-```
-
-To efficiently plot time series data, let's convert the `datetime` column to a 
-`time` class for efficient plotting and analysis.
+To learn more about different date/time classes, see the 
+<a href="{{ site.baseurl }}/R/time-series-convert-date-time-class-POSIX/" target="_blank" > 
+*Dealing With Dates & Times in R - as.Date, POSIXct, POSIXlt*</a> tutorial. 
 
 ```{r convert-time }
 #view class
-class(boulderStrDis.2013$datetime)
+class(discharge$datetime)
 
 #convert to date/time class - POSIX
-boulderStrDis.2013$datetime <- as.POSIXct(boulderStrDis.2013$datetime)
+discharge$datetime <- as.POSIXct(discharge$datetime)
 
 #recheck data structure
-str(boulderStrDis.2013)
+str(discharge)
 
 ```
 
-#No Data Values
-Next, let's query our data to check whether there are no data values (`NA`) in it.
-
+### No Data Values
+Next, let's query our data to check whether there are no data values in 
+it.  The metadata associated with the data doesn't specify what the values would
+be, `NA` or `-9999` are common values
 
 ```{r no-data-values }
-#make sure there are no null values in our datetime field
-sum(is.na(boulderStrDis.2013$datetime ))
+# check total number of NA values
+sum(is.na(discharge$datetime))
+
+# check for "strange" values that could be an NA indicator
+hist(discharge$disValue)
 
 ```
 
-#Plot The Data
-Finally, we are ready to plot our data. We will use `GGPLOT` to create our plot.
+Excellent! No, No Data values.  
+
+## Plot The Data
+
+Finally, we are ready to plot our data. We will use `ggplot` fromt the `ggplot2`
+package to create our plot.
 
 ```{r plot-flood-data }
 
-ggplot(boulderStrDis.2013, aes(datetime, disValue)) +
+ggplot(discharge, aes(datetime, disValue)) +
   geom_point() +
-  ggtitle("Stream Discharge (CFS) for Boulder Creek\nJan. 2013-Jan. 2014") +
-  xlab("Date (POSIX Time Class)") + ylab("Discharge (Cubic Feet per Second)")
+  ggtitle("Stream Discharge (CFS) for Boulder Creek") +
+  xlab("Date") + ylab("Discharge (Cubic Feet per Second)")
 
 ```
 
-#Plot Data Time Subsets With ggplot 
+Questions: 
 
-We can plot a subset of our data using `ggplot`. Let's plot data for the months 
-directly around the boulder flood: August 2013 - October 2013.
+1. What patterns do you see in the data?  
+1. Why might there be an increase in discharge during that time of year? 
+
+
+## Plot Data Time Subsets With ggplot 
+
+We can plot a subset of our data within `ggplot()` by specifying the start and 
+end times (in a `limits` object) for the x-axis with `scale_x_datetime`. Let's 
+plot data for the months directly around the Boulder flood: August 15 2013 - 
+October 15 2013.
 
 ```{r define-time-subset }
 
-#Define Start and end times for the subset as R objects that are the time class
+# Define Start and end times for the subset as R objects that are the time class
 startTime <- as.POSIXct("2013-08-15 00:00:00")
 endTime <- as.POSIXct("2013-10-15 00:00:00")
 
-#create a start and end time R object
+# create a start and end time R object
 start.end <- c(startTime,endTime)
 start.end
-```
 
-## Plot A Temporal Subset
-
-Finally, we can use GGPLOT just like we did above to create a new plot. However, 
-this time, we will use the `scale_x_datetime` method and define the limits to our
-`limits` object.
-
-
-ggtitle("Stream Discharge (CFS) for Boulder Creek\nJan. 2013-Jan. 2014") +
-  xlab("Date") + ylab("Discharge (Cubic Feet per Second")
-  
-```{r plot-subset }
-#plot the data - September-October
-ggplot(data=boulderStrDis.2013,
+# plot the data - Aug 15-October 15
+ggplot(discharge,
       aes(datetime,disValue)) +
       geom_point() +
       scale_x_datetime(limits=start.end) +
       xlab("Date") + ylab("Discharge (Cubic Feet per Second)") +
-      ggtitle("Stream Discharge (CFS) for Boulder Creek\nAugust 2013 - October 2013")
-
+      ggtitle("Stream Discharge (CFS) for Boulder Creek\nAugust 15 - October 15, 2013")
 
 ```
 
-# Publish to Plot.ly
+We get a warning message because we are "ignoring" lots of the data in the
+data set
+
+## Plotly - Interactive (and Online) Plots
+
 We have now successfully created a plot. We can turn that plot into an interactive
-plot using `Plot.ly` if we want. Note, for this to be successful you need to 
-set your Plot.ly API key which you will get from your free online account, once 
-you create it.
+plot using **Plotly**. <a href="https://plot.ly/" target="_blank" >Plotly </a> 
+allows you to create interactive plots that can also be shared online. If
+you are new to Plotly, view the companion mini-lesson 
+<a href="{{ site.baseurl }}/R/Plotly/" target="_blank"> *Interactive Data Vizualization with R and Plotly*</a>
+to learn how to set up an account and access your username and API key. 
 
-Set your username: `Sys.setenv("plotly_username"="yourUserNameHere")`
-Set your user key: `Sys.setenv("plotly_api_key"="yourUserKeyHere")`
+### Time subsets in plotly
 
-## Time subsets in plot.ly
+To plot a subset of the total data we have to manually subset the data as Plotly
+code doesn't (yet?) recognize the `limits` method of subsetting. 
 
-Note that plot.ly doesn't accept the ggplot time subset method. Thus we will
-have to manually subset out our data.
+Here we create a new R object with just the dates we want and then plot that data. 
 
-```{r plotly-discharge-data, results="hide", eval=FALSE}
-library(plotly)
+```{r plotly-discharge-data}
 
-#set username
-Sys.setenv("plotly_username"="yourUserNameHere")
-#set user key
-Sys.setenv("plotly_api_key"="yourUserKeyHere")
-
-#subset out some of the data - July-November
-boulderStrDis.aug.oct2013 <- subset(boulderStrDis.2013, 
+# subset out some of the data - Aug 15 - October 15
+discharge.aug.oct2013 <- subset(discharge, 
                         datetime >= as.POSIXct('2013-08-15 00:00',
                                               tz = "America/Denver") & 
                         datetime <= as.POSIXct('2013-10-15 23:59', 
                                               tz = "America/Denver"))
 
-#plot the data - September-October
-disPlot.plotly <- ggplot(data=boulderStrDis.aug.oct2013,
+# plot the data
+disPlot.plotly <- ggplot(data=discharge.aug.oct2013,
         aes(datetime,disValue)) +
-        geom_point(size=3) 
+        geom_point(size=3)     # makes the points larger than default
+
+disPlot.plotly
       
-#add title and labels
-disPlot.plotly <- disPlot.plotly + theme(axis.title.x = element_blank()) +
-          xlab("Time") + ylab("Stream Discharge CFS") +
-          ggtitle("Stream Discharge - Boulder Creek 2013")
+# add title and labels
+disPlot.plotly <- disPlot.plotly + 
+	theme(axis.title.x = element_blank()) +
+	xlab("Time") + ylab("Stream Discharge (CFS)") +
+	ggtitle("Stream Discharge - Boulder Creek 2013")
 
-#view plotly plot in R
-ggplotly()
+disPlot.plotly
 
-#publish plotly plot to your plot.ly online account if you want. 
-#plotly_POST(disPlot.plotly)
+# view plotly plot in R
+ggplotly(disPlot.plotly)
+```
+
+If you are satisfied with your plot you can now publish it to your Plotly account. 
+
+``` {r pub-plotly, eval=FALSE}
+# set username
+Sys.setenv("plotly_username"="yourUserNameHere")
+# set user key
+Sys.setenv("plotly_api_key"="yourUserKeyHere")
+
+# publish plotly plot to your plotly online account if you want. 
+plotly_POST(disPlot.plotly)
 
 ```
 
 ## Additional Resources
 
-
 Additional information on USGS streamflow measurements and data:
-
 
 * <a href="http://nwis.waterdata.usgs.gov/usa/nwis/peak/?site_no=06730200" target="_blank"> More on peak streamflow. </a>
 * <a href="http://water.usgs.gov/edu/measureflow.html" target="_blank">part 2 - USGS overview of measuring streamflow</a>
 * <a href="http://water.usgs.gov/edu/streamflow2.html" target="_blank">part 2 - USGS overview of measuring streamflow</a>
-
-## Data from USGS Portal
-
-#### Step 1: Search for the data
-
-To search for stream gauge data in a particular area, we can use the 
-<a href="http://maps.waterdata.usgs.gov/mapper/index.html" target="_blank"> interactive map of all USGS stations</a>.
-By searching for locations around "Boulder, CO", we can find 3 guages in the area. 
-
-For this lesson, we want data collected by USGS stream guage 06730200 located on 
-Boulder Creek at North 75th St. This guage is one of the few the was able to 
-collect data throughout the 2013 Boulder floods. 
-
-You can directly access the data for this station through the "Access Data" link
-on the map icon or searching for this site on the 
-<a href="http://waterdata.usgs.gov/nwis" target="_blank"> National Water Information System portal </a>.
-
-On the <a href="http://waterdata.usgs.gov/nwis/inventory?agency_code=USGS&site_no=06730200
-" target="_blank"> Boulder Creek stream guage 06730200 page</a>, we can now see 
-summary information about the types of data available for this station.  We want
-to select **Daily Data** and then the following parameters: 
-
-* Available Parameters = **00060 Discharge (Mean)**
-* Output format = **Tab-separated**
-* Begin Date = **1 October 1986**
-* End Date = **31 December 2013** 
-
-Now select "Go". The output is a plain text website, not downloadable data. 
-
-#### Create .csv 
-
-To create a .csv file from the data, copy all data on this page and paste into 
-a spreadsheet.  You then need to delete the information at the top 
-
+* http://pubs.usgs.gov/fs/2005/3131/FS2005-3131.pdf" target="_blank"> USGS Stream Discharge Fact Sheet </a>
 
 ## API Data Access
 USGS data can be downloaded via an API using a command line interface. This is

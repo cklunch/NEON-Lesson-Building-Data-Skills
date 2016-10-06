@@ -1,6 +1,6 @@
 ---
 layout: post
-title: "Visualize Precipitation Data in R to Better Understand the 2013 Colorado Floods"
+title: "Data Activity: Visualize Precipitation Data in R to Better Understand the 2013 Colorado Floods"
 date: 2016-10-01
 authors: [Megan A. Jones, Leah A. Wasser, Mariela Perignon]
 dateCreated: 2015-05-18
@@ -490,8 +490,6 @@ precPlot_flood2 <- ggplot(data=precip.boulder_AugOct, aes(DATE,PRECIP)) +
 precPlot_flood2 
 
 ```
-
-
 
 
 ## Interactive Plots - Plotly

@@ -49,10 +49,9 @@ Common examples of natural ecological disturbances include hurricanes, fires,
 floods, earthquakes and windstorms. 
 
  <figure>
-	<a href="http://cquest.arc.nasa.gov:8399/casa/global/images/slide1a.gif">
-	<img src="http://cquest.arc.nasa.gov:8399/casa/global/images/slide1a.gif"></a>
+	<a href="{{ site.baseurl }}images/disturb-events-co13/Natural-disturbance.png">
+	<img src="{{ site.baseurl }}images/disturb-events-co13/Natural-disturbance.png"></a>
 	<figcaption> Common natural ecological disturbances.  
-	Source: NASA-CASA Project  
 	</figcaption>
 </figure>
 
@@ -61,10 +60,9 @@ clear forests for cattle grazing or the building of new housing developments
 are all common disturbances. 
 
  <figure>
-	<a href="http://cquest.arc.nasa.gov:8399/casa/global/images/slide2a.gif">
-	<img src="http://cquest.arc.nasa.gov:8399/casa/global/images/slide2a.gif"></a>
+	<a href="{{ site.baseurl }}images/disturb-events-co13/Anthro-disturbance.png">
+	<img src="{{ site.baseurl }}images/disturb-events-co13/Anthro-disturbance.png"></a>
 	<figcaption> Common human-caused ecological disturbances.  
-	Source: NASA-CASA Project  
 	</figcaption>
 </figure>
 
@@ -216,16 +214,33 @@ monitors is **stream discharge**, a metric which quantifies the volume of water
 moving down a stream. Discharge is an ideal metric to quantify flow, which
 increases significantly during a flood event.
 
+#### How is stream discharge measured? 
+
+> Most USGS streamgages operate by measuring the elevation of the water in the 
+> river or stream and then converting the water elevation (called 'stage') to a 
+> streamflow ('discharge') by using a curve that relates the elevation to a set 
+> of actual discharge measurements. This is done because currently the 
+> technology is not available to measure the flow of the water accurately 
+> enough directly.  From the
+<a href="http://water.usgs.gov/nsip/definition9.html" target="_blank"> USGS National Streamflow Information Program</a>
+
+<figure>
+   <a href="http://water.usgs.gov/edu/images/streamflow1-fig2.jpg">
+   <img src="http://water.usgs.gov/edu/images/streamflow1-fig2.jpg"></a>
+   <figcaption>A typical USGS stream gauge using a stilling well. Source: <a href="http://water.usgs.gov/edu/streamflow1.html" target="_blank"> USGS</a>.  
+    </figcaption>
+</figure>
+
+#### What was the stream discharge prior to and during the flood events?  
+
+The data for the stream gauge along Boulder Creek 5 miles downstream of downtown 
+Boulder was reported in daily averages.  Take a look at the interactive plot 
+below to see how patterns of 
 Below, have a look at a static plot that shows stream discharge in Boulder Creek
 for 2013. What do you notice about the patterns of discharge seen in these data?
 
-![ ]({{ site.baseurl }}/images/rfigs/2015-12-03-Boulder-Flood-Time-Series/plot-flood-data-1.png) 
 
-<div>
-   <a href="https://plot.ly/~leahawasser/140/" target="_blank" title="Stream Discharge - Boulder Creek 2013" style="display: block; text-align: center;">
-   <img src="https://plot.ly/~leahawasser/140.png" alt="Stream Discharge - Boulder Creek 2013" style="max-width: 100%;width: 600px;"  width="600" onerror="this.onerror=null;this.src='https://plot.ly/404.png';" /> </a>
-   <script data-plotly="leahawasser:140"  src="https://plot.ly/embed.js" async></script>
-</div>
+<iframe width="900" height="800" frameborder="0" scrolling="no" src="https://plot.ly/~NEONDataSkills/8.embed"></iframe>
 
 **Optional Data Activity** <a href="{{ site.baseurl }}/R/USGS-Stream-Discharge-Data-R/" target="_blank">Visualize <b>Stream Discharge Data</b> in R to Better Understand the 2013 Colorado Floods</a>.
 
