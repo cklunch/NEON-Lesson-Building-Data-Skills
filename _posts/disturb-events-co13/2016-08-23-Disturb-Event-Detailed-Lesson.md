@@ -4,7 +4,7 @@ title: "Quantifying The Drivers and Impacts of Natural Disturbance Events – Th
 date: 2016-04-09
 authors: [Leah A. Wasser, Megan A. Jones]
 dateCreated: 2015-05-18
-lastModified: 2016-09-08
+lastModified: 2016-10-05
 categories: [teaching-module]
 tags: [R, time-series]
 mainTag: disturb-event-co13
@@ -20,18 +20,18 @@ image:
   feature: TeachingModules.jpg
   credit: A National Ecological Observatory Network (NEON) - Teaching Module
   creditlink: http://www.neonscience.org
-permalink: /teaching-module/disturb-event-co13/1hr-lesson
+permalink: /teaching-module/disturb-event-co13/detailed-lesson
 code1: 
 comments: true
 ---
 
 {% include _toc.html %}
 
-## Flooding in Colorado
-<iframe width="560" height="315" src="https://www.youtube.com/embed/khOaXTbXfW8" frameborder="0" allowfullscreen></iframe>
- **THIS VIDEO WILL NEED TO BE UPDATED TO FINAL VERSION**
+## The 2013 Colorado Front Range Flood
+
+<iframe width="560" height="315" src="https://www.youtube.com/embed/DJqTmByRma8" frameborder="0" allowfullscreen></iframe>
  
-### Disturbance Events
+## Introduction to Disturbance Events
 
 <i class="fa fa-star"></i> **Definition:**  In ecology, a **disturbance event** 
 is a temporary change in environmental conditions that causes a pronounced 
@@ -39,12 +39,60 @@ change in the ecosystem. Common disturbance events include floods, fires,
 earthquakes, and tsunamis. 
 {: .notice}
 
-What caused the flooding and why was it more catastrophic than events following 
-other storms?  
+
+Within ecology, disturbance events are those events which cause dramatic change
+in an ecosystem through a temporary, often rapid, change in environmental
+conditions. Although the disturbance events themselves can be of short duration,
+the ecological effects last decades, if not longer. 
+
+Common examples of natural ecological disturbances include hurricanes, fires, 
+floods, earthquakes and windstorms. 
+
+ <figure>
+	<a href="http://cquest.arc.nasa.gov:8399/casa/global/images/slide1a.gif">
+	<img src="http://cquest.arc.nasa.gov:8399/casa/global/images/slide1a.gif"></a>
+	<figcaption> Common natural ecological disturbances.  
+	Source: NASA-CASA Project  
+	</figcaption>
+</figure>
+
+Disturbance events can also be human caused: clear cuts when logging, fires to 
+clear forests for cattle grazing or the building of new housing developments 
+are all common disturbances. 
+
+ <figure>
+	<a href="http://cquest.arc.nasa.gov:8399/casa/global/images/slide2a.gif">
+	<img src="http://cquest.arc.nasa.gov:8399/casa/global/images/slide2a.gif"></a>
+	<figcaption> Common human-caused ecological disturbances.  
+	Source: NASA-CASA Project  
+	</figcaption>
+</figure>
+
+Ecological communities are often more resilient to some types of disturbance than
+others. Some communities are even dependent on cyclical disturbance events. 
+Lodgepole pine (_Pinus_ _contorta_) forests in the Western US are dependent on
+frequent stand-replacing fires to release seeds and spur the growth of young 
+trees.  
+
+ <figure>
+	<a href="{{ site.baseurl }}/images/disturb-events-co13/Lodgepole_pine_Yellowstone_1998_near_firehole.jpg">
+	<img src="{{ site.baseurl }}/images/disturb-events-co13/Lodgepole_pine_Yellowstone_1998_near_firehole.jpg"></a>
+	<figcaption> Regrowth of Lodgepole Pine (<i>Pinus contorta</i>) after a stand-replacing fire.  
+	Source: Jim Peaco, September 1998, Yellowstone Digital Slide Files; 
+	<a href="https://commons.wikimedia.org/wiki/File:Lodgepole_pine_Yellowstone_1998_near_firehole.jpg" target="_blank">Wikipedia Commons</a>. 
+	</figcaption>
+</figure>
+
+However, in discussions of ecological disturbance events we think about events 
+that disrupt the status of the ecosystem and change the structure of the
+landscape. 
+
+In this lesson we will dig into the causes and disturbances caused during a storm
+in September 2013 along the Colorado Front Range. 
 
 ## Driver: Climatic & Atmospheric Patterns
 
-## Drought
+### Drought
 How do we measure drought? 
 
 <i class="fa fa-star"></i> **Definition:** The **Palmer Drought Severity 
@@ -58,7 +106,7 @@ Bonus: There are several other commonly used drought indices. The
 <a href="http://drought.unl.edu/Planning/Monitoring/ComparisonofIndicesIntro" target="_blank"> National Drought Mitigation Center </a> 
 provides a comparison of the different indices.  
 
-This interactive plot shows the Palmer Drought Severity Index from 1991 thru 
+This interactive plot shows the Palmer Drought Severity Index from 1991 through 
 2015 for Colorado. 
 
 <iframe width="900" height="800" frameborder="0" scrolling="no" src="https://plot.ly/~NEONDataSkills/2.embed"></iframe>
@@ -75,6 +123,8 @@ Use the figure above to answer these questions:
 **extreme wet** on the Palmer Drought Severity Index? 
 1. What are the patterns of drought within Colorado that you observe using this 
 Palmer Drought Severity Index?
+1. What were the drought conditions immediately before the September 2013
+floods? 
 
 Over this decade and a half, there have been several cycles of dry and wet 
 periods. The 2013 flooding occurred right at the end of a severe drought. 
@@ -86,16 +136,13 @@ by the winds to other areas. Some soil types, like clay, can dry to a
 near-impermeable brick causing water to flow across the top instead of sinking 
 into the soils. 
 
-We can zoom in to see that the Colorado July 2013 Palmer Drought Severity Index
-value was -5.3.  In the month leading up to the flood, the Index climbed to 1.7,
-well into the category of Slightly Wet (1 to 1.9). 
-
-**Optional Data Activity** <a href="{{ site.baseurl }}/R/nCLIMDIV-Palmer-Drought-Data-R" target="_blank"> Create an interactive plot of Palmer Drought Data using R & Plotly</a>.
+**Optional Data Activity** <a href="{{ site.baseurl }}/R/nCLIMDIV-Palmer-Drought-Data-R" target="_blank">Visualize Palmer Drought Severity Index in R to Better Understand the 2013 Colorado Floods</a>.
 
 ### Atmospheric Conditions
-In September 2013, a slow moving cold front moved through Colorado intersecting
-with a warm, humid front. The clash between the cold and warm fronts yielded 
-heavy rain and devastating flooding across the Front Range in Colorado.
+In early September 2013, a slow moving cold front moved through Colorado
+intersecting with a warm, humid front. The clash between the cold and warm
+fronts yielded heavy rain and devastating flooding across the Front Range in
+Colorado.
 
 <figure>
    <a href="https://en.wikipedia.org/wiki/2013_Colorado_floods#/media/File:North_American_Water_Vapor_Systems.gif">
@@ -113,29 +160,49 @@ over the Eastern Range of the Rocky Mountains in Colorado by these water vapor
 systems. 
 
 ## Driver: Precipitation
+How do we measure precipitation? 
+
+<i class="fa fa-star"></i> **Definition:** Precipitation is the moisture that
+falls from clouds including rain, hail and snow. 
+{: .notice}
+
+Precipitaiton can be measured by different types of gauges; some must be 
+manually read and emptied, others automatically record the amount of 
+precipitation. If the precipitation is in a frozen form (snow, hail, freezing rain)
+the contents of the gauge must be melted to get the water equivalency for 
+measurement. Rainfall is generally reported as the total amount of rain 
+(millimeters, centimeters, or inches) over a given per period of time. 
+
+Boulder, Colorado lays on the eastern edge of the Rocky Mountains where they meet
+the high plains. The average annual precipitation is near 20". However, the 
+precipitation comes in many forms -- winter snow, intense summer thunderstorms, 
+and intermitent storms throughout the year.
+
+The figure below show the total precipitation each month from 1948 to 2013 for
+the National Weather Service's COOP site Boulder 2 (Station ID:050843) that is 
+centrally located in Boulder, CO. 
+
+<iframe width="900" height="800" frameborder="0" scrolling="no" src="https://plot.ly/~NEONDataSkills/6.embed"></iframe>
+
+Notice the general pattern of rainfall across the 65 years. 
+
+1. How much rain generally falls within one month?
+1. Is there a strong annual or seasonal pattern? (Remember, with 
+interactive Plotly plots you can zoom in on the data) 
+1. Do any other events over the last 65 years equal the September 2013 event?
 
 
-
-GRAPHIC: Century or multi-decade rainfall patterns
-
-
-Text: something about pattern of rainfall?
-
-
-This plot shows daily precipitation between August 15 - October 15 2015. 
+Now that we've looked at 65 years of data from Boulder, CO. Let's focus more 
+specifically on the September 2013 event. The plot below shows daily 
+precipitation between August 15 - October 15, 2013. 
 
 Explore the data and answer the following questions:
 
 1. What dates were the highest precipitation values observed? 
-2. What was the total precipitation on these days? 
-3. In what units is this value?
+1. What was the total precipitation on these days? 
+1. In what units is this value?
 
-
-
-<div>
-   <a href="https://plot.ly/~leahawasser/116/" target="_blank" title="Daily Total Precipitation (Inches) - Boulder Creek 2013" style="display: block; text-align: center;"><img src="https://plot.ly/~leahawasser/116.png" alt="Daily Total Precipitation (Inches) - Boulder Creek 2013" style="max-width: 100%;width: 600px;"  width="600" onerror="this.onerror=null;this.src='https://plot.ly/404.png';" /></a>
-    <script data-plotly="leahawasser:116"  src="https://plot.ly/embed.js" async></script>
-</div>
+<iframe width="900" height="800" frameborder="0" scrolling="no" src="https://plot.ly/~NEONDataSkills/4.embed"></iframe>
 
 
 ## Driver: Stream Discharge

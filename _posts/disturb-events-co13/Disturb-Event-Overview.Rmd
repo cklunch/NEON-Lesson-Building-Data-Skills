@@ -4,7 +4,7 @@ title: "Overview: Quantifying The Drivers and Impacts of Natural Disturbance Eve
 date: 2016-04-10
 authors: [Leah A. Wasser, Megan A. Jones]
 dateCreated: 2015-12-05
-lastModified: 2016-09-08
+lastModified: `r format(Sys.time(), "%Y-%m-%d")`
 categories: [teaching-module]
 tags: [R, time-series]
 mainTag: disturb-event-co13
@@ -42,11 +42,11 @@ discussions or instructor-led introductions as needed)
 **Technology Needed**
 
 * Instructor
-+ Internet access: if presenting, live from the website or accessing videos.
-+ Computer & projector
-+ Optional: audio capabilities for videos
+		+ Internet access: if presenting, live from the website or accessing videos.
+		+ Computer & projector
+		+ Optional: audio capabilities for videos
 * Student:
-+ Optional: Computer/device with internet access 
+		+ Optional: Computer/device with internet access 
 
 **Materials Needed**
 
@@ -68,25 +68,26 @@ While the drivers and impacts of flooding extend beyond the metrics used in
 this lesson, we use these datasets <LINK> to elicit discussion 
 surrounding how we can study flooding and how the event impacts humans. 
 
+* Palmer Drought Index: <a href="http://www7.ncdc.noaa.gov/CDO/CDODivisionalSelect.jsp" target="_blank"> NOAA's Climate Divisional Database (nCLIMDIV)</a>
 * Precipitation: <a href="http://http://www.ncdc.noaa.gov/" target="_blank"> National Climatic Data Center-NOAA </a>
 * Stream Discharge: <a href="http://http://waterdata.usgs.gov/nwis/rt" target="_blank"> USGS stream gauges </a>
-* Before/After Terrain Data - <a href="http://www.neonscience.org/science-design/collection-methods/airborne-remote-sensing" target="_blank"> NEON AOP Lidar-derived Terrain Models </a>
-* Before/After Imagery- various sources, each image has source information 
+* Before/After Terrain Data: <a href="http://www.neonscience.org/science-design/collection-methods/airborne-remote-sensing" target="_blank"> NEON AOP Lidar-derived Terrain Models </a>
+* Before/After Imagery: various sources, each image has source information 
 
 ## Lesson Components
 
 * <a href="{{ site.baseurl}}/teaching-module/disturb-event-co13/1hr-lesson-plan" target="_blank"> Lesson Plan </a>
 * <a href="{{ site.baseurl}}/teaching-module/disturb-event-co13/1hr-lesson" target="_blank"> Detailed lesson page
 * R Coding Lessons *additional time required
-+ <a href="{{ site.baseurl }}/R/nCLIMDIV-Palmer-Drought-Data-R" target="_blank"> Palmer Drought Severity Index Data </a>
-+ Precipitation Data   
-+ Stream Gauge Data
+		 + <a href="{{ site.baseurl }}/R/nCLIMDIV-Palmer-Drought-Data-R" target="_blank"> Palmer Drought Severity Index Data </a>
+		 + Precipitation Data   
+		 + Stream Gauge Data
 
 
 ## Lesson Goals 
-This lesson focuses on how data can be used to quantify the drivers and impacts of natural 
-disturbance events and why the quantification is important to for society’s 
-understanding of, forecasting of, and recovery from disturbance events. 
+This lesson focuses on how data can be used to quantify the drivers and impacts
+of natural disturbance events and why the quantification is important to for
+society’s understanding of, forecasting of, and recovery from disturbance events. 
 
 ### Science Objectives
 After the lesson, students will be able to: 
@@ -126,7 +127,7 @@ this site and present the lesson in the medium of their choice.
 This lesson plan is part of larger collection of lessons utilizing data 
 collected during the 2013 Colorado Floods that are designed for undergraduate 
 and graduate students. All lessons and related materials can be found on the 
-<a href="http://www.neondataskills.org/" target="_blank"> NEON Data Skills portal</a>. 
+<a href="http://www.neondataskills.org/" target="_blank"> NEON Data Skills portal</a>.
 
 ## Use of NEON Teaching Modules 
 All lessons developed by the National Ecological Observatory Network are 
@@ -135,7 +136,7 @@ General feedback on the lesson is welcomed in the comments section <Link> for
 each lesson page. If you develop additional materials related to or supporting 
 this lesson, and are willing to share them, we provide the opportunity for you 
 to share them with other instructors. Please 
-<a href="mailto:neondataskills@neoninc.org?subject=Comment%20RE%3A%20Teaching%20Module">NEON Data Skills</a> 
+<a href="mailto:neondataskills@BattelleEcology.org?subject=Comment%20RE%3A%20Teaching%20Module">NEON Data Skills</a> 
 or, if familiar with GitHub, submit a pull request with the materials to the 
 lesson’s repo (available from the lesson’s webpage). All materials will be
 reviewed by NEON staff prior to inclusion or linking to from the NEON Data 
