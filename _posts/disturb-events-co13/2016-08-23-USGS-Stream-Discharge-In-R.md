@@ -4,7 +4,7 @@ title: "Data Activity: Visualize Stream Discharge Data in R to Better Understand
 date: 2016-04-05
 authors: [Megan A. Jones, Leah A. Wasser, Mariela Perignon]
 dateCreated: 2015-05-18
-lastModified: `r format(Sys.time(), "%Y-%m-%d")`
+lastModified: 2016-10-13
 categories: [Coding and Informatics]
 category: [teaching-module]
 tags: [R, time-series]
@@ -91,6 +91,8 @@ increases significantly during a flood event.
 > <a href="http://water.usgs.gov/edu/streamflow2.html" target="_blank">
 For more on stream discharge by USGS.</a>
 
+(test)
+
 <figure>
 <a href="{{ site.baseurl }}/images/dist-co-flood/USGS-Peak-discharge.gif">
 <img src="{{ site.baseurl }}/images/dist-co-flood/USGS-Peak-discharge.gif"></a>
@@ -151,16 +153,14 @@ We will be working with time-series data in this lesson so we will load the
 `lubridate` library that allows use to easily work with dates. We will use 
 `ggplot2` to efficiently plot our data and `plotly` to create interactive plots.
 
-```{r load-libraries}
-# set your working directory
-setwd("~/Documents/data/disturb-events-co13")  # or your appropriate file path 
 
-# load packages
-#library(lubridate) # work with time series data
-library(ggplot2) # create efficient, professional plots
-library(plotly) # create cool interactive plots
-
-```
+    # set your working directory
+    setwd("~/Documents/data/disturb-events-co13")  # or your appropriate file path 
+    
+    # load packages
+    #library(lubridate) # work with time series data
+    library(ggplot2) # create efficient, professional plots
+    library(plotly) # create cool interactive plots
 
 ##  Import USGS Stream Discharge Data Into R
 
@@ -194,19 +194,23 @@ Let's import our data.
 and read it in directly using `read.csv()` function and then skip to the **View 
 Data Structure** section).
 
-```{r import-discharge-2 }
 
-#import data
-discharge <- read.csv("discharge/06730200-discharge_daily_1986-2013.txt",
-                      sep="\t",
-                      skip=24,
-                      header=TRUE,
-                      stringsAsFactors = FALSE)
+    #import data
+    discharge <- read.csv("discharge/06730200-discharge_daily_1986-2013.txt",
+                          sep="\t",
+                          skip=24,
+                          header=TRUE,
+                          stringsAsFactors = FALSE)
 
-#view first few lines
-head(discharge)
+    ## Warning in file(file, "rt"): cannot open file 'discharge/06730200-
+    ## discharge_daily_1986-2013.txt': No such file or directory
 
-```
+    ## Error in file(file, "rt"): cannot open the connection
+
+    #view first few lines
+    head(discharge)
+
+    ## Error in head(discharge): object 'discharge' not found
 
 When we import these data, the first row of data still appears to be another
 header row rather than actual data. We can remove the second row of header 
@@ -214,15 +218,18 @@ values, by selecting all data beginning at row 2 and ending at the
 total number or rows in the file. The `nrow` function will count the total
 number of rows in the object.
 
-```{r remove-second-header }
-# nrow: how many rows are in the R object
-nrow(discharge)
 
-# remove the first line from the data frame (which is a second list of headers)
-# the code below selects all rows beginning at row 2 and ending at the total
-# number of rows. 
-discharge <- discharge[2:nrow(discharge),]
-```
+    # nrow: how many rows are in the R object
+    nrow(discharge)
+
+    ## Error in nrow(discharge): object 'discharge' not found
+
+    # remove the first line from the data frame (which is a second list of headers)
+    # the code below selects all rows beginning at row 2 and ending at the total
+    # number of rows. 
+    discharge <- discharge[2:nrow(discharge),]
+
+    ## Error in eval(expr, envir, enclos): object 'discharge' not found
 
 ## Metadata 
 Now, we have an R object that contains only rows containing data values. Each 
@@ -240,44 +247,55 @@ discharge value, **disValue** and column 6 as **qualFlag** so it is more "human
 readable" as we work with it 
 in R.
 
-```{r rename-headers }
-#view names
-names(discharge)
 
-#rename the fifth column to disValue representing discharge value
-names(discharge)[4] <- "disValue"
-names(discharge)[5] <- "qualCode"
+    #view names
+    names(discharge)
 
-#view names
-names(discharge)
+    ## Error in eval(expr, envir, enclos): object 'discharge' not found
 
-```
+    #rename the fifth column to disValue representing discharge value
+    names(discharge)[4] <- "disValue"
+
+    ## Error in names(discharge)[4] <- "disValue": object 'discharge' not found
+
+    names(discharge)[5] <- "qualCode"
+
+    ## Error in names(discharge)[5] <- "qualCode": object 'discharge' not found
+
+    #view names
+    names(discharge)
+
+    ## Error in eval(expr, envir, enclos): object 'discharge' not found
 
 ## View Data Structure
 
 Let's have a look at the structure of our data. 
 
-```{r view-data-structure }
-#view structure of data
-str(discharge)
 
-```
+    #view structure of data
+    str(discharge)
+
+    ## Error in str(discharge): object 'discharge' not found
 
 It appears as if the discharge value is a `character` (`chr`) class. This is 
 likely because we had an additional row in our data. Let's convert the discharge
 column to a `numeric` class. In this case, we can reassign that column to be of
 class: `integer` given there are no decimal places.
 
-```{r adjust-data-structure }
-# view class of the disValue column
-class(discharge$disValue)
 
-# convert column to integer
-discharge$disValue <- as.integer(discharge$disValue)
+    # view class of the disValue column
+    class(discharge$disValue)
 
-str(discharge)
+    ## Error in eval(expr, envir, enclos): object 'discharge' not found
 
-```
+    # convert column to integer
+    discharge$disValue <- as.integer(discharge$disValue)
+
+    ## Error in eval(expr, envir, enclos): object 'discharge' not found
+
+    str(discharge)
+
+    ## Error in str(discharge): object 'discharge' not found
 
 
 ### Converting Time Stamps
@@ -293,31 +311,37 @@ To learn more about different date/time classes, see the
 <a href="{{ site.baseurl }}/R/time-series-convert-date-time-class-POSIX/" target="_blank" > 
 *Dealing With Dates & Times in R - as.Date, POSIXct, POSIXlt*</a> tutorial. 
 
-```{r convert-time }
-#view class
-class(discharge$datetime)
 
-#convert to date/time class - POSIX
-discharge$datetime <- as.POSIXct(discharge$datetime)
+    #view class
+    class(discharge$datetime)
 
-#recheck data structure
-str(discharge)
+    ## Error in eval(expr, envir, enclos): object 'discharge' not found
 
-```
+    #convert to date/time class - POSIX
+    discharge$datetime <- as.POSIXct(discharge$datetime)
+
+    ## Error in as.POSIXct(discharge$datetime): object 'discharge' not found
+
+    #recheck data structure
+    str(discharge)
+
+    ## Error in str(discharge): object 'discharge' not found
 
 ### No Data Values
 Next, let's query our data to check whether there are no data values in 
 it.  The metadata associated with the data doesn't specify what the values would
 be, `NA` or `-9999` are common values
 
-```{r no-data-values }
-# check total number of NA values
-sum(is.na(discharge$datetime))
 
-# check for "strange" values that could be an NA indicator
-hist(discharge$disValue)
+    # check total number of NA values
+    sum(is.na(discharge$datetime))
 
-```
+    ## Error in eval(expr, envir, enclos): object 'discharge' not found
+
+    # check for "strange" values that could be an NA indicator
+    hist(discharge$disValue)
+
+    ## Error in hist(discharge$disValue): object 'discharge' not found
 
 Excellent! No, No Data values.  
 
@@ -326,14 +350,13 @@ Excellent! No, No Data values.
 Finally, we are ready to plot our data. We will use `ggplot` fromt the `ggplot2`
 package to create our plot.
 
-```{r plot-flood-data }
 
-ggplot(discharge, aes(datetime, disValue)) +
-  geom_point() +
-  ggtitle("Stream Discharge (CFS) for Boulder Creek") +
-  xlab("Date") + ylab("Discharge (Cubic Feet per Second)")
+    ggplot(discharge, aes(datetime, disValue)) +
+      geom_point() +
+      ggtitle("Stream Discharge (CFS) for Boulder Creek") +
+      xlab("Date") + ylab("Discharge (Cubic Feet per Second)")
 
-```
+    ## Error in ggplot(discharge, aes(datetime, disValue)): object 'discharge' not found
 
 Questions: 
 
@@ -348,25 +371,26 @@ end times (in a `limits` object) for the x-axis with `scale_x_datetime`. Let's
 plot data for the months directly around the Boulder flood: August 15 2013 - 
 October 15 2013.
 
-```{r define-time-subset }
 
-# Define Start and end times for the subset as R objects that are the time class
-startTime <- as.POSIXct("2013-08-15 00:00:00")
-endTime <- as.POSIXct("2013-10-15 00:00:00")
+    # Define Start and end times for the subset as R objects that are the time class
+    startTime <- as.POSIXct("2013-08-15 00:00:00")
+    endTime <- as.POSIXct("2013-10-15 00:00:00")
+    
+    # create a start and end time R object
+    start.end <- c(startTime,endTime)
+    start.end
 
-# create a start and end time R object
-start.end <- c(startTime,endTime)
-start.end
+    ## [1] "2013-08-15 MDT" "2013-10-15 MDT"
 
-# plot the data - Aug 15-October 15
-ggplot(discharge,
-      aes(datetime,disValue)) +
-      geom_point() +
-      scale_x_datetime(limits=start.end) +
-      xlab("Date") + ylab("Discharge (Cubic Feet per Second)") +
-      ggtitle("Stream Discharge (CFS) for Boulder Creek\nAugust 15 - October 15, 2013")
+    # plot the data - Aug 15-October 15
+    ggplot(discharge,
+          aes(datetime,disValue)) +
+          geom_point() +
+          scale_x_datetime(limits=start.end) +
+          xlab("Date") + ylab("Discharge (Cubic Feet per Second)") +
+          ggtitle("Stream Discharge (CFS) for Boulder Creek\nAugust 15 - October 15, 2013")
 
-```
+    ## Error in ggplot(discharge, aes(datetime, disValue)): object 'discharge' not found
 
 We get a warning message because we are "ignoring" lots of the data in the
 data set
@@ -387,46 +411,54 @@ code doesn't (yet?) recognize the `limits` method of subsetting.
 
 Here we create a new R object with just the dates we want and then plot that data. 
 
-```{r plotly-discharge-data}
 
-# subset out some of the data - Aug 15 - October 15
-discharge.aug.oct2013 <- subset(discharge, 
-                        datetime >= as.POSIXct('2013-08-15 00:00',
-                                              tz = "America/Denver") & 
-                        datetime <= as.POSIXct('2013-10-15 23:59', 
-                                              tz = "America/Denver"))
+    # subset out some of the data - Aug 15 - October 15
+    discharge.aug.oct2013 <- subset(discharge, 
+                            datetime >= as.POSIXct('2013-08-15 00:00',
+                                                  tz = "America/Denver") & 
+                            datetime <= as.POSIXct('2013-10-15 23:59', 
+                                                  tz = "America/Denver"))
 
-# plot the data
-disPlot.plotly <- ggplot(data=discharge.aug.oct2013,
-        aes(datetime,disValue)) +
-        geom_point(size=3)     # makes the points larger than default
+    ## Error in subset(discharge, datetime >= as.POSIXct("2013-08-15 00:00", : object 'discharge' not found
 
-disPlot.plotly
-      
-# add title and labels
-disPlot.plotly <- disPlot.plotly + 
-	theme(axis.title.x = element_blank()) +
-	xlab("Time") + ylab("Stream Discharge (CFS)") +
-	ggtitle("Stream Discharge - Boulder Creek 2013")
+    # plot the data
+    disPlot.plotly <- ggplot(data=discharge.aug.oct2013,
+            aes(datetime,disValue)) +
+            geom_point(size=3)     # makes the points larger than default
 
-disPlot.plotly
+    ## Error in ggplot(data = discharge.aug.oct2013, aes(datetime, disValue)): object 'discharge.aug.oct2013' not found
 
-# view plotly plot in R
-ggplotly(disPlot.plotly)
-```
+    disPlot.plotly
+
+    ## Error in eval(expr, envir, enclos): object 'disPlot.plotly' not found
+
+    # add title and labels
+    disPlot.plotly <- disPlot.plotly + 
+    	theme(axis.title.x = element_blank()) +
+    	xlab("Time") + ylab("Stream Discharge (CFS)") +
+    	ggtitle("Stream Discharge - Boulder Creek 2013")
+
+    ## Error in eval(expr, envir, enclos): object 'disPlot.plotly' not found
+
+    disPlot.plotly
+
+    ## Error in eval(expr, envir, enclos): object 'disPlot.plotly' not found
+
+    # view plotly plot in R
+    ggplotly(disPlot.plotly)
+
+    ## Error in ggplotly(disPlot.plotly): object 'disPlot.plotly' not found
 
 If you are satisfied with your plot you can now publish it to your Plotly account. 
 
-``` {r pub-plotly, eval=FALSE}
-# set username
-Sys.setenv("plotly_username"="yourUserNameHere")
-# set user key
-Sys.setenv("plotly_api_key"="yourUserKeyHere")
 
-# publish plotly plot to your plotly online account if you want. 
-plotly_POST(disPlot.plotly)
-
-```
+    # set username
+    Sys.setenv("plotly_username"="yourUserNameHere")
+    # set user key
+    Sys.setenv("plotly_api_key"="yourUserKeyHere")
+    
+    # publish plotly plot to your plotly online account if you want. 
+    plotly_POST(disPlot.plotly)
 
 ## Additional Resources
 

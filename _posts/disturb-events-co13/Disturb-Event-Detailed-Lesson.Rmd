@@ -234,13 +234,14 @@ increases significantly during a flood event.
 #### What was the stream discharge prior to and during the flood events?  
 
 The data for the stream gauge along Boulder Creek 5 miles downstream of downtown 
-Boulder was reported in daily averages.  Take a look at the interactive plot 
-below to see how patterns of 
-Below, have a look at a static plot that shows stream discharge in Boulder Creek
-for 2013. What do you notice about the patterns of discharge seen in these data?
+Boulder is reported in daily averages.  Take a look at the interactive plot 
+below to see how patterns of discharge seen in these data?
 
 
 <iframe width="900" height="800" frameborder="0" scrolling="no" src="https://plot.ly/~NEONDataSkills/8.embed"></iframe>
+
+#### Questions: 
+
 
 **Optional Data Activity** <a href="{{ site.baseurl }}/R/USGS-Stream-Discharge-Data-R/" target="_blank">Visualize <b>Stream Discharge Data</b> in R to Better Understand the 2013 Colorado Floods</a>.
 
@@ -250,54 +251,95 @@ for 2013. What do you notice about the patterns of discharge seen in these data?
 inundates normally dry land. 
 {: .notice}
 
-```{r map-boulder-floodplain, echo=FALSE}
-# embedded leaflet map of the boulder floodplain
-# {% include /maps/_boulderFloodplain.html %}
-```
-
-<i class="fa fa-star"></i> **Definition:**  A **flood plain** is land adjacent 
-to a waterway, from the channel banks to the base of the enclosing valley walls,
-that experiences flooding during periods of high discharge. 
-{: .notice}
-
 ### Return Interval
 
-100-year/500-year Flood Headline images
+<figure class="half">
+	<a href="{ { site.baseurl }}/images/disturb-events-co-13/500-yr-flood_cropped.jpg">
+	<img src="{ { site.baseurl }}/images/disturb-events-co-13/500-yr-flood_cropped.jpg">
+	</a>
+	<a href="{ { site.baseurl }}/images/disturb-events-co-13/DailyCamera_100-yearFlood_cropped.jpg">
+	<img src="{ { site.baseurl }}/images/disturb-events-co-13/DailyCamera_100-yearFlood_cropped.jpg">
+	</a>
+	<figcaption>Return intervals make for shocking headlines but how are they calculated?
+	</figcaption>
+</figure>    
 
 <i class="fa fa-star"></i> **Definition:** A **return interval ** is the 
 likelihood, a statistical measurement, of how often an event will occur for a
 given area. 
 {: .notice}
 
+Check out this 
+<a href="https://weather.com/news/weather/video/1000-year-flood-explained" target="_blank">video explanation from The Weather Channel </a>
+on how return intervals are calculated and what they mean to us.  
+
+<iframe src="https://imasdk.googleapis.com/js/core/bridge3.146.2_en.html#goog_750325103" style="border: 0px; opacity: 1; margin: 0px; padding: 0px; position: relative;" width="779" height="438"></iframe>
+
+### Flood Plains 
+
+<i class="fa fa-star"></i> **Definition:**  A **flood plain** is land adjacent 
+to a waterway, from the channel banks to the base of the enclosing valley walls,
+that experiences flooding during periods of high discharge. 
+{: .notice}
+
+<script src="https://embed.github.com/view/geojson/NEONInc/NEON-Lesson-Building-Data-Skills/tree/gh-pages/_includes/maps/inundated.geojson"></script>
+
+#### Ask Leah what the souce of this map is? 
+Also, consider finding one that includes the flood plain in downtown Boulder. 
+
+#### Questions 
+
+1. 
+
 ## Impact: Erosion & Sedimentation
 
+How can we evaluate the impact of a flooding event? 
 
-### Viewing the Change
-FLY THROUGH VIDEO
+#### 1. Economic Impacts
+We could look at economic damages to homes, businesses, and other 
+infrastructure. 
+<a href="https://bouldercolorado.gov/flood/flood-maps" target="_blank"> Click here to view the City of Boulder's maps for flood damages.</a> 
 
+#### 2. Before & After Photos
+We could view photos from before and after the disturbance event to see where
+erosion or sedimentation has occured. 
+
+<iframe width="560" height="315" src="https://www.youtube.com/embed/DJqTmByRma8?start=177&end=188&loop=1" frameborder="0" allowfullscreen></iframe>
+
+Images are great for an overall impression of what happenned, where soil has 
+eroded, and where soil or rocks have been deposited. But it is hard to 
+get measurements of change from these 2D images. There are several ways that we can 
+measure the apparent erosion and soil deposition.  
+
+#### 3. Field Surveys
+Standard surveys can be done to 
+
+#### 4. Stereoscopic Images
+We could view stereoscopic images, two photos taken from slightly different
+perspectives to give the illusion of 3D, one can view, and even measure, elevation changes from 2D pictures. 
 
 <figure>
-   <a href="http://neonhighered.org/websiteGraphics/2013-Boulder-flood-data.gif">
-   <img src="http://neonhighered.org/websiteGraphics/2013-Boulder-flood-data.gif"></a>
-   <figcaption> This looped animation shows flood damage done along Lee Hill
-   Road, Boulder, Colorado during the September 2013 floods. Source: National 
-   Ecological Observatory Network (NEON) 
-   </figcaption>
+   <a href="https://theoldtopographer.files.wordpress.com/2014/06/sokkisha-13.jpg?w=584&h=444">
+   <img src="https://theoldtopographer.files.wordpress.com/2014/06/sokkisha-13.jpg?w=584&h=444"></a>
+   <figcaption>A Sokkisha MS-16 stereoscope and the overlapping imaged used to 
+   create 3-D visuals from a aerial photo. Source: <a href="https://oldtopographer.net/2014/07/" target="_blank"> Brian Haren</a> NOTE
+   permission to use photo is pending.  
+    </figcaption>
 </figure>
 
-### Measuring the Change
- How do we measure Erosion & Sedimentation as it changes the terrain?
+However, this relies on specialized equipment and is challenging to automate. 
 
-#### Survey
-
-#### Stereoscopy - before after images. 
-
-#### LiDAR 
+#### 5. LiDAR
+A newer technology is Light Detection and Ranging (LiDAR or lidar).  Watch this
+video to see how LiDAR works.  
 
 <iframe width="560" height="315" src="https://www.youtube.com/embed/EYbhNSUnIdU" frameborder="0" allowfullscreen></iframe>
 <figure>
 
+
 ## Using LiDAR to Measure Change
+
+
 ### Rasters & Digital Models
 <figure>
 	<a href="http://data-lessons.githu.io/NEON-R-Spatial-Raster/images/dc-spatial-raster/lidarTree-height.png">
@@ -308,9 +350,13 @@ allows scientists to study changes in terrain (topography) over time.
 </figcaption>
 </figure>
 
-### Digital Surface Models  & Digital Elevation Models
+#### Digital Elevation Model: Before  
 
-### Elevation Change Map
+#### Digital Elevation Model: After 
+
+#### Elevation Change Map
+
+
 
 ## Understanding Disturbance Events
 

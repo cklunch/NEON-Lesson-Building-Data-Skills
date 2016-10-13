@@ -1,10 +1,10 @@
 ---
 layout: post
 title: "Quantifying Disturbance Events Drivers & Impacts: LiDAR"
-date:  2015-11-23
+date:  2016-04-04
 authors: [Leah A. Wasser]
 dateCreated:  2015-05-18
-lastModified: 2016-10-05
+lastModified: 2016-10-13
 categories: [Coding and Informatics]
 category: coding-and-informatics
 tags: [R, time-series]
@@ -16,7 +16,7 @@ image:
   feature: TeachingModules.jpg
   credit: A National Ecological Observatory Network (NEON) - Teaching Module
   creditlink: http://www.neonscience.org
-permalink: /R/NEON-lidar-flood-CO13/
+permalink: /R/NEON-lidar-flood-CO13
 code1: Boulder-Flood-Data.R
 comments: false
 ---
@@ -79,19 +79,7 @@ http://neondataskills.org/self-paced-tutorial/1_About-LiDAR-Data-Light-Detection
 
     # load libraries
     library(raster)
-
-    ## Loading required package: sp
-
     library(rgdal)
-
-    ## rgdal: version: 1.1-10, (SVN revision 622)
-    ##  Geospatial Data Abstraction Library extensions to R successfully loaded
-    ##  Loaded GDAL runtime: GDAL 1.11.4, released 2016/01/25
-    ##  Path to GDAL shared files: /Library/Frameworks/R.framework/Versions/3.3/Resources/library/rgdal/gdal
-    ##  Loaded PROJ.4 runtime: Rel. 4.9.1, 04 March 2015, [PJ_VERSION: 491]
-    ##  Path to PROJ.4 shared files: /Library/Frameworks/R.framework/Versions/3.3/Resources/library/rgdal/proj
-    ##  Linking to sp version: 1.2-3
-
     library(RColorBrewer)
     
     # set working directory to ensure R can find the file we wish to import
@@ -392,8 +380,8 @@ http://neondataskills.org/self-paced-tutorial/1_About-LiDAR-Data-Light-Detection
 
     dev.off()
 
-    ## RStudioGD 
-    ##         2
+    ## quartz_off_screen 
+    ##                 2
 
     # POST
     png("lidar_post.png", width = 10, height = 10, units = 'in', res = 300)
@@ -415,8 +403,8 @@ http://neondataskills.org/self-paced-tutorial/1_About-LiDAR-Data-Light-Detection
 
     dev.off()
 
-    ## RStudioGD 
-    ##         2
+    ## quartz_off_screen 
+    ##                 2
 
     # CHANGE
     png("lidar_change.png", width = 10, height = 10, units = 'in', res = 300)
@@ -439,6 +427,6 @@ http://neondataskills.org/self-paced-tutorial/1_About-LiDAR-Data-Light-Detection
 
     dev.off()
 
-    ## RStudioGD 
-    ##         2
+    ## quartz_off_screen 
+    ##                 2
 

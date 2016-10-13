@@ -1,82 +1,4 @@
----
-layout: post
-title: "Quantifying Disturbance Events Drivers & Impacts: LiDAR"
-date:  2016-04-04
-authors: [Leah A. Wasser]
-dateCreated:  2015-05-18
-lastModified: `r format(Sys.time(), "%Y-%m-%d")`
-categories: [Coding and Informatics]
-category: coding-and-informatics
-tags: [R, time-series]
-mainTag:
-scienceThemes: [phenology, disturbance]
-description: "About description here."
-code1:
-image:
-  feature: TeachingModules.jpg
-  credit: A National Ecological Observatory Network (NEON) - Teaching Module
-  creditlink: http://www.neonscience.org
-permalink: /R/NEON-lidar-flood-CO13
-code1: Boulder-Flood-Data.R
-comments: false
----
-
-{% include _toc.html %}
-
- 
-
-# How do We Measure Changes in Terrain? LiDAR!
-
-<iframe width="640" height="360" src="https://www.youtube.com/embed/EYbhNSUnIdU" frameborder="0" allowfullscreen></iframe>
-
-1. How can LiDAR data be collected?  
-2. How might we use LiDAR to hlep study the 2013 Colorado Floods?
-
-### Using LiDAR Data
-
-LiDAR data can be used to create many different models of a landscape.  This
-brief lesson on 
-<a href="http://neondataskills.org/remote-sensing/2_LiDAR-Data-Concepts_Activity2/" target="_blank">
-"What is a CHM, DSM and DTM? About Gridded, Raster LiDAR Data"</a> explores
-three important landscape models that are commonly used.  
-
-1. How might we use a CHM, DSM or DTM model to better understand what happened
-in the 2013 Colorado Flood? 
-2. Would you use only one of the models or could you use two or more of them
-together?
-
-###More Details on LiDAR
-
-If you are particularly interested in how LiDAR works consider taking a closer
-look at how the data is collected and represented by going through this tutorial
-on <a href="http://neondataskills.org/remote-sensing/1_About-LiDAR-Data-Light-Detection-and-Ranging_Activity1/" target="_blank"> "Light Detection and Ranging."</a> 
-
-
-
-#Light Detection and Ranging
-
-<figure>
-
-<img src="http://data-lessons.github.io/NEON-R-Spatial-Raster/images/raster_timeseries/lidarTree-height.png">
-<figcaption>Digital Terrain Models, Digital Surface Models and Canopy height
-models are three common lidar derived data products. The digital terrain model
-allows scientists to study changes in terrain (topography) over time.
-</figcaption>
-</figure>
-
-# 
-
-http://neondataskills.org/self-paced-tutorial/1_About-LiDAR-Data-Light-Detection-and-Ranging_Activity1/  
-
-<figure>
-
-<img src="http://neonhighered.org/websiteGraphics/2013-Boulder-flood-data.gif
-">
-<figcaption>2013 Flood damage to Lee Hill Road, Boulder, Colorado.
-</figcaption>
-</figure>
-
-```{r load-libraries }
+## ----load-libraries------------------------------------------------------
 # load libraries
 library(raster)
 library(rgdal)
@@ -84,10 +6,8 @@ library(RColorBrewer)
 
 # set working directory to ensure R can find the file we wish to import
 # setwd("working-dir-path-here")
-```
 
-
-```{r open-DTMs }
+## ----open-DTMs-----------------------------------------------------------
 # Load s into R
 DTM_pre <- raster("lidar/pre-flood/preDTM3.tif")
 DTM_post <- raster("lidar/post-flood/postDTM3.tif")
@@ -95,10 +15,8 @@ DTM_post <- raster("lidar/post-flood/postDTM3.tif")
 # View raster structure
 DTM_pre
 DTM_post
-```
 
-
-``` {r open-hillshade}
+## ----open-hillshade------------------------------------------------------
 # import DSM hillshade
 DTMpre_hill <- raster("lidar/pre-flood/preDTMhill3.tif")
 DTMpost_hill <- 
@@ -117,10 +35,8 @@ plot(DTMpost_hill,
     main="Hillshade \n Lee Hill Rd. Boulder County",
     axes=FALSE)
 
-```
 
-
-``` {r plot-rasters}
+## ----plot-rasters--------------------------------------------------------
 
 # plot Pre-flood w/ hillshade
 plot(DTMpre_hill,
@@ -146,12 +62,8 @@ plot(DTM_post,
 		 alpha=0.5,
 		 add=T)
 
-```
 
-
-
-
-``` {r create-difference-model}
+## ----create-difference-model---------------------------------------------
 # want erosion to be neg, deposition to be positive, therefore post - pre
 Change_Model <- DTM_post-DTM_pre
 
@@ -159,9 +71,8 @@ plot(Change_Model,
 		 main="Lee Hill Rd. Boulder County\nPost-Flood",
 		 axes=FALSE)
 
-```
 
-``` {r pretty-diff-model}
+## ----pretty-diff-model---------------------------------------------------
 difCol5 = c("#d7191c","#fdae61","#ffffbf","#abd9e9","#2c7bb6")
 difCol7 = c("#d73027","#fc8d59","#fee090","#ffffbf","#e0f3f8","#91bfdb","#4575b4")
 
@@ -177,11 +88,8 @@ plot(Change_Model,
 		 axes=FALSE,
 		 alpha=0.4,
 		 add =T)
-```
 
-## Crop to local area 
-
-``` {r crop-raster}
+## ----crop-raster---------------------------------------------------------
 # manually crop by drawing a box
 # plot the raster you want to crop from 
 plot(DTMpost_hill,
@@ -250,9 +158,8 @@ plot(Change_Model_crop,
 		 axes=FALSE,
 		 alpha=0.4,
 		 add =T)
-```
 
-``` {r crop-raster-2}
+## ----crop-raster-2-------------------------------------------------------
 # manually crop by drawing a box
 # plot the raster you want to crop from 
 plot(DTMpost_hill,
@@ -331,5 +238,4 @@ plot(Change_Model_crop2,
 		 add =T)
 
 dev.off()
-```
 

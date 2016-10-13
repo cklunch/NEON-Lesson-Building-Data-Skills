@@ -4,7 +4,7 @@ title: "Quantifying The Drivers and Impacts of Natural Disturbance Events – Th
 date: 2016-04-09
 authors: [Leah A. Wasser, Megan A. Jones]
 dateCreated: 2015-05-18
-lastModified: 2016-10-05
+lastModified: 2016-10-13
 categories: [teaching-module]
 tags: [R, time-series]
 mainTag: disturb-event-co13
@@ -49,10 +49,9 @@ Common examples of natural ecological disturbances include hurricanes, fires,
 floods, earthquakes and windstorms. 
 
  <figure>
-	<a href="http://cquest.arc.nasa.gov:8399/casa/global/images/slide1a.gif">
-	<img src="http://cquest.arc.nasa.gov:8399/casa/global/images/slide1a.gif"></a>
+	<a href="{{ site.baseurl }}images/disturb-events-co13/Natural-disturbance.png">
+	<img src="{{ site.baseurl }}images/disturb-events-co13/Natural-disturbance.png"></a>
 	<figcaption> Common natural ecological disturbances.  
-	Source: NASA-CASA Project  
 	</figcaption>
 </figure>
 
@@ -61,10 +60,9 @@ clear forests for cattle grazing or the building of new housing developments
 are all common disturbances. 
 
  <figure>
-	<a href="http://cquest.arc.nasa.gov:8399/casa/global/images/slide2a.gif">
-	<img src="http://cquest.arc.nasa.gov:8399/casa/global/images/slide2a.gif"></a>
+	<a href="{{ site.baseurl }}images/disturb-events-co13/Anthro-disturbance.png">
+	<img src="{{ site.baseurl }}images/disturb-events-co13/Anthro-disturbance.png"></a>
 	<figcaption> Common human-caused ecological disturbances.  
-	Source: NASA-CASA Project  
 	</figcaption>
 </figure>
 
@@ -136,7 +134,7 @@ by the winds to other areas. Some soil types, like clay, can dry to a
 near-impermeable brick causing water to flow across the top instead of sinking 
 into the soils. 
 
-**Optional Data Activity** <a href="{{ site.baseurl }}/R/nCLIMDIV-Palmer-Drought-Data-R" target="_blank">Visualize Palmer Drought Severity Index in R to Better Understand the 2013 Colorado Floods</a>.
+**Optional Data Activity** <a href="{{ site.baseurl }}/R/nCLIMDIV-Palmer-Drought-Data-R" target="_blank">Visualize <b>Palmer Drought Severity Index Data </b> in R to Better Understand the 2013 Colorado Floods</a>.
 
 ### Atmospheric Conditions
 In early September 2013, a slow moving cold front moved through Colorado
@@ -205,20 +203,47 @@ Explore the data and answer the following questions:
 <iframe width="900" height="800" frameborder="0" scrolling="no" src="https://plot.ly/~NEONDataSkills/4.embed"></iframe>
 
 
+**Optional Data Activity** <a href="{{ site.baseurl }}/R/COOP-precip-data-R" target="_blank">Visualize <b>Precipitation Data</b> in R to Better Understand the 2013 Colorado Floods</a>.
+
 ## Driver: Stream Discharge
 
-**some background on stream discharge will go here..**
+The USGS has a distributed network of aquatic sensors located in streams across
+the United States. This network monitors a suit of variables that are important
+to stream morphology and health. One of the metrics that this sensor network
+monitors is **stream discharge**, a metric which quantifies the volume of water
+moving down a stream. Discharge is an ideal metric to quantify flow, which
+increases significantly during a flood event.
 
-Below, have a look at a static plot that shows stream discharge in Boulder Creek
-for 2013. What do you notice about the patterns of discharge seen in these data?
+#### How is stream discharge measured? 
 
-![ ]({{ site.baseurl }}/images/rfigs/2015-12-03-Boulder-Flood-Time-Series/plot-flood-data-1.png) 
+> Most USGS streamgages operate by measuring the elevation of the water in the 
+> river or stream and then converting the water elevation (called 'stage') to a 
+> streamflow ('discharge') by using a curve that relates the elevation to a set 
+> of actual discharge measurements. This is done because currently the 
+> technology is not available to measure the flow of the water accurately 
+> enough directly.  From the
+<a href="http://water.usgs.gov/nsip/definition9.html" target="_blank"> USGS National Streamflow Information Program</a>
 
-<div>
-   <a href="https://plot.ly/~leahawasser/140/" target="_blank" title="Stream Discharge - Boulder Creek 2013" style="display: block; text-align: center;">
-   <img src="https://plot.ly/~leahawasser/140.png" alt="Stream Discharge - Boulder Creek 2013" style="max-width: 100%;width: 600px;"  width="600" onerror="this.onerror=null;this.src='https://plot.ly/404.png';" /> </a>
-   <script data-plotly="leahawasser:140"  src="https://plot.ly/embed.js" async></script>
-</div>
+<figure>
+   <a href="http://water.usgs.gov/edu/images/streamflow1-fig2.jpg">
+   <img src="http://water.usgs.gov/edu/images/streamflow1-fig2.jpg"></a>
+   <figcaption>A typical USGS stream gauge using a stilling well. Source: <a href="http://water.usgs.gov/edu/streamflow1.html" target="_blank"> USGS</a>.  
+    </figcaption>
+</figure>
+
+#### What was the stream discharge prior to and during the flood events?  
+
+The data for the stream gauge along Boulder Creek 5 miles downstream of downtown 
+Boulder is reported in daily averages.  Take a look at the interactive plot 
+below to see how patterns of discharge seen in these data?
+
+
+<iframe width="900" height="800" frameborder="0" scrolling="no" src="https://plot.ly/~NEONDataSkills/8.embed"></iframe>
+
+#### Questions: 
+
+
+**Optional Data Activity** <a href="{{ site.baseurl }}/R/USGS-Stream-Discharge-Data-R/" target="_blank">Visualize <b>Stream Discharge Data</b> in R to Better Understand the 2013 Colorado Floods</a>.
 
 ## Impact: Flood
 
@@ -226,51 +251,95 @@ for 2013. What do you notice about the patterns of discharge seen in these data?
 inundates normally dry land. 
 {: .notice}
 
-
-
-<i class="fa fa-star"></i> **Definition:**  A **flood plain** is land adjacent 
-to a waterway, from the channel banks to the base of the enclosing valley walls,
-that experiences flooding during periods of high discharge. 
-{: .notice}
-
 ### Return Interval
 
-100-year/500-year Flood Headline images
+<figure class="half">
+	<a href="{ { site.baseurl }}/images/disturb-events-co-13/500-yr-flood_cropped.jpg">
+	<img src="{ { site.baseurl }}/images/disturb-events-co-13/500-yr-flood_cropped.jpg">
+	</a>
+	<a href="{ { site.baseurl }}/images/disturb-events-co-13/DailyCamera_100-yearFlood_cropped.jpg">
+	<img src="{ { site.baseurl }}/images/disturb-events-co-13/DailyCamera_100-yearFlood_cropped.jpg">
+	</a>
+	<figcaption>Return intervals make for shocking headlines but how are they calculated?
+	</figcaption>
+</figure>    
 
 <i class="fa fa-star"></i> **Definition:** A **return interval ** is the 
 likelihood, a statistical measurement, of how often an event will occur for a
 given area. 
 {: .notice}
 
+Check out this 
+<a href="https://weather.com/news/weather/video/1000-year-flood-explained" target="_blank">video explanation from The Weather Channel </a>
+on how return intervals are calculated and what they mean to us.  
+
+<iframe src="https://imasdk.googleapis.com/js/core/bridge3.146.2_en.html#goog_750325103" style="border: 0px; opacity: 1; margin: 0px; padding: 0px; position: relative;" width="779" height="438"></iframe>
+
+### Flood Plains 
+
+<i class="fa fa-star"></i> **Definition:**  A **flood plain** is land adjacent 
+to a waterway, from the channel banks to the base of the enclosing valley walls,
+that experiences flooding during periods of high discharge. 
+{: .notice}
+
+<script src="https://embed.github.com/view/geojson/NEONInc/NEON-Lesson-Building-Data-Skills/tree/gh-pages/_includes/maps/inundated.geojson"></script>
+
+#### Ask Leah what the souce of this map is? 
+Also, consider finding one that includes the flood plain in downtown Boulder. 
+
+#### Questions 
+
+1. 
+
 ## Impact: Erosion & Sedimentation
 
+How can we evaluate the impact of a flooding event? 
 
-### Viewing the Change
-FLY THROUGH VIDEO
+#### 1. Economic Impacts
+We could look at economic damages to homes, businesses, and other 
+infrastructure. 
+<a href="https://bouldercolorado.gov/flood/flood-maps" target="_blank"> Click here to view the City of Boulder's maps for flood damages.</a> 
 
+#### 2. Before & After Photos
+We could view photos from before and after the disturbance event to see where
+erosion or sedimentation has occured. 
+
+<iframe width="560" height="315" src="https://www.youtube.com/embed/DJqTmByRma8?start=177&end=188&loop=1" frameborder="0" allowfullscreen></iframe>
+
+Images are great for an overall impression of what happenned, where soil has 
+eroded, and where soil or rocks have been deposited. But it is hard to 
+get measurements of change from these 2D images. There are several ways that we can 
+measure the apparent erosion and soil deposition.  
+
+#### 3. Field Surveys
+Standard surveys can be done to 
+
+#### 4. Stereoscopic Images
+We could view stereoscopic images, two photos taken from slightly different
+perspectives to give the illusion of 3D, one can view, and even measure, elevation changes from 2D pictures. 
 
 <figure>
-   <a href="http://neonhighered.org/websiteGraphics/2013-Boulder-flood-data.gif">
-   <img src="http://neonhighered.org/websiteGraphics/2013-Boulder-flood-data.gif"></a>
-   <figcaption> This looped animation shows flood damage done along Lee Hill
-   Road, Boulder, Colorado during the September 2013 floods. Source: National 
-   Ecological Observatory Network (NEON) 
-   </figcaption>
+   <a href="https://theoldtopographer.files.wordpress.com/2014/06/sokkisha-13.jpg?w=584&h=444">
+   <img src="https://theoldtopographer.files.wordpress.com/2014/06/sokkisha-13.jpg?w=584&h=444"></a>
+   <figcaption>A Sokkisha MS-16 stereoscope and the overlapping imaged used to 
+   create 3-D visuals from a aerial photo. Source: <a href="https://oldtopographer.net/2014/07/" target="_blank"> Brian Haren</a> NOTE
+   permission to use photo is pending.  
+    </figcaption>
 </figure>
 
-### Measuring the Change
- How do we measure Erosion & Sedimentation as it changes the terrain?
+However, this relies on specialized equipment and is challenging to automate. 
 
-#### Survey
-
-#### Stereoscopy - before after images. 
-
-#### LiDAR 
+#### 5. LiDAR
+A newer technology is Light Detection and Ranging (LiDAR or lidar).  Watch this
+video to see how LiDAR works.  
 
 <iframe width="560" height="315" src="https://www.youtube.com/embed/EYbhNSUnIdU" frameborder="0" allowfullscreen></iframe>
 <figure>
 
+
 ## Using LiDAR to Measure Change
+
+
 ### Rasters & Digital Models
 <figure>
 	<a href="http://data-lessons.githu.io/NEON-R-Spatial-Raster/images/dc-spatial-raster/lidarTree-height.png">
@@ -281,9 +350,13 @@ allows scientists to study changes in terrain (topography) over time.
 </figcaption>
 </figure>
 
-### Digital Surface Models  & Digital Elevation Models
+#### Digital Elevation Model: Before  
 
-### Elevation Change Map
+#### Digital Elevation Model: After 
+
+#### Elevation Change Map
+
+
 
 ## Understanding Disturbance Events
 

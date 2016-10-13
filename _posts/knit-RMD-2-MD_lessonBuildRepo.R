@@ -25,7 +25,7 @@ add.date <- "2016-08-23-"
 
 # set working dir - this is where the data are located
 
-wd <- "~/Documents/data/"
+wd <- "~/Documents/data/disturb-events-co13"
 
 ################### CONFIG BELOW IS REQUIRED BY JEKYLL - DON'T CHANGE ##########
 #set data working dir
