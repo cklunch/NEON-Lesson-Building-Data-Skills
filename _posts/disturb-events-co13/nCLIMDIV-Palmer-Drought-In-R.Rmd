@@ -1,16 +1,14 @@
 ---
 layout: post
-title: "Visualize Palmer Drought Severity Index Data in 
-R to Better Understand the 2013 Colorado Floods"
-date: 2015-12-07
+title: "Data Activity: Visualize Palmer Drought Severity Index Data in R to Better Understand the 2013 Colorado Floods"
+date: 2016-04-07
 authors: [Leah A. Wasser, Megan A. Jones, Mariela Perignon]
 dateCreated: 2015-05-18
 lastModified: `r format(Sys.time(), "%Y-%m-%d")`
-categories: [Coding and Informatics]
-category: coding-and-informatics
+categories: [teaching-module]
 tags: [R, time-series]
-mainTag: disturb-co
-scienceThemes: [phenology, disturbance]
+mainTag: disturb-event-co13
+scienceThemes: [disturbance]
 description: "This tutorial walks through how to download and visualize Palmer
 Drought Severity Index data in R. The data specifically downloaded for 
 this activity allows one to to better understand a driver of the 2013 Colorado
@@ -220,7 +218,7 @@ data to tell R to use that row as a column name rather than a row of data.
 # setwd("YourFullPathToDataDirectory")
 
 # Import CO state-wide nCLIMDIV data
-nCLIMDIV <- read.csv("disturb-events-co13/drought/CDODiv8506877122044_CO.txt", header = TRUE)
+nCLIMDIV <- read.csv("drought/CDODiv8506877122044_CO.txt", header = TRUE)
 
 # view data structure
 str(nCLIMDIV)
@@ -325,35 +323,18 @@ package in R that allow us to create interactive figures that can be published
 to the web and 
 
 ## Plotly - Interactive (and Online) Plots
+
 <a href="https://plot.ly/" target="_blank" >Plotly </a> 
-bills itself as "a collaborative platform for modern data science". We 
-are using it here as we can build an interactive plot that can easily be shared
-with others (like on our
-<a href="http://{{ site.baseurl }}/teaching-module/disturb-event-co13/1hr-lesson#drought"> target="_blank"> Disturbance Events lesson</a>). 
+allows you to create interactive plots that can also be shared online. If
+you are new to Plotly, view the companion mini-lesson 
+<a href="{{ site.baseurl }}/R/Plotly/" target="_blank"> *Interactive Data Vizualization with R and Plotly*</a>
+to learn how to set up an account and access your username and API key. 
 
-Plotly allows you to create interactive plots that can also be shared online. You will need an free online Plotly account to post & share you plot online. But you
-can create the plots and use them on your local computer without an account. If 
-you do not wish to share plots online you can skip to **Step 3: Create Plotly plot**. 
+### Step 1: Connect account to R 
 
-Additional information on the Plotly R package can be found 
-<a href="https://plot.ly/r/getting-started/" target="_blank"> on the Plotly R Getting Started page</a>.  
-
-Note: Plotly doesn't just work with R -- other programs include Python, MATLAB,
-Excel, and JavaScript. 
-
-### Step 1: Create account
-If you do not already have an account, you need to set up an account by visiting
-the <a href="https://plot.ly/" target="_blank" >Plotly</a> website.
-
-### Step 2: Connect account to R 
-
-To share plots from R (or RStudio) to Plotly, you have to connect to your 
-account.  This is done through an API (Application Program Interface). You can
-find your username & API key under your Profile on the Plotly website under the
-"API key" menu option.  
-
-To link your account to your R, use the following commands, substituting in your
-own username & key as appropriate. 
+First, we need to connect our R session to our Plotly account. If you only want 
+to create interactive plots and not share them on a Plotly account, you can skip
+this step.  
 
 ``` {r set-plotly-creds, eval=FALSE}
 # set plotly user name
@@ -363,12 +344,13 @@ Sys.setenv("plotly_api_key"="YOUR_api_key")
 
 ```
 
-### Step 3: Create Plotly plot
+### Step 2: Create Plotly plot
 
 We can create an interactive version of our plot using `plot.ly`.
 
 We should simply be able to use our existing ggplot `palmer.drought` with the 
-`ggplotly()` function to 
+`ggplotly()` function to create an interactive plot. 
+
 ```{r create-ggplotly-drought}
 
 # Use exisitng ggplot plot & view as plotly plot in R
@@ -411,7 +393,7 @@ flooding?
 1. When might you want to use `ggplot()`?
 1. When might `plotly()` be better? 
 
-### Step 4: Push to Plotly online
+### Step 3: Push to Plotly online
 
 Once the plot is built with a Plotly related function (`plot_ly` or `ggplotly`)
 you can post the plot to your online account. Make sure you are signed in to
@@ -454,7 +436,7 @@ found at "drought/CDODiv8868227122048_COdiv04.txt".
 ``` {r challenge-Div04, include=FALSE, echo=FALSE, results="hide"}
 
 # Import CO state-wide nCLIMDIV data
-nCLIMDIV.co04 <- read.csv("disturb-events-co13/drought/CDODiv8868227122048_COdiv04.txt", header = TRUE)
+nCLIMDIV.co04 <- read.csv("drought/CDODiv8868227122048_COdiv04.txt", header = TRUE)
 
 # view data structure
 str(nCLIMDIV.co04)
@@ -543,7 +525,7 @@ drought!
 
 ```{r palmer-NDV-plot-only, echo=FALSE, results="hide"}
 # NoData Value in the nCLIMDIV data from 1990-199 US spatial scale 
-nCLIMDIV_US <- read.csv("disturb-events-co13/drought/CDODiv5138116888828_US.txt", header = TRUE)
+nCLIMDIV_US <- read.csv("drought/CDODiv5138116888828_US.txt", header = TRUE)
 
 #add a day of the month to each year-month combination
 nCLIMDIV_US$Date <- paste0(nCLIMDIV_US$YearMonth,"01")
@@ -582,7 +564,7 @@ value to NA and plot the data.
 
 ```{r palmer-no-data-values}
 # NoData Value in the nCLIMDIV data from 1990-2015 US spatial scale 
-nCLIMDIV_US <- read.csv("disturb-events-co13/drought/CDODiv5138116888828_US.txt", header = TRUE)
+nCLIMDIV_US <- read.csv("drought/CDODiv5138116888828_US.txt", header = TRUE)
 
 # add a day of the month to each year-month combination
 nCLIMDIV_US$Date <- paste0(nCLIMDIV_US$YearMonth,"01")

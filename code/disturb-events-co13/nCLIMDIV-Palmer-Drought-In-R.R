@@ -19,7 +19,7 @@ library(webshot) # embed the plotly plots
 # setwd("YourFullPathToDataDirectory")
 
 # Import CO state-wide nCLIMDIV data
-nCLIMDIV <- read.csv("disturb-events-co13/drought/CDODiv8506877122044_CO.txt", header = TRUE)
+nCLIMDIV <- read.csv("drought/CDODiv8506877122044_CO.txt", header = TRUE)
 
 # view data structure
 str(nCLIMDIV)
@@ -97,7 +97,7 @@ plotly_POST(palmer.drought_plotly)
 ## ----challenge-Div04, include=FALSE, echo=FALSE, results="hide"----------
 
 # Import CO state-wide nCLIMDIV data
-nCLIMDIV.co04 <- read.csv("disturb-events-co13/drought/CDODiv8868227122048_COdiv04.txt", header = TRUE)
+nCLIMDIV.co04 <- read.csv("drought/CDODiv8868227122048_COdiv04.txt", header = TRUE)
 
 # view data structure
 str(nCLIMDIV.co04)
@@ -167,7 +167,7 @@ palmer.hydro
 
 ## ----palmer-NDV-plot-only, echo=FALSE, results="hide"--------------------
 # NoData Value in the nCLIMDIV data from 1990-199 US spatial scale 
-nCLIMDIV_US <- read.csv("disturb-events-co13/drought/CDODiv5138116888828_US.txt", header = TRUE)
+nCLIMDIV_US <- read.csv("drought/CDODiv5138116888828_US.txt", header = TRUE)
 
 #add a day of the month to each year-month combination
 nCLIMDIV_US$Date <- paste0(nCLIMDIV_US$YearMonth,"01")
@@ -188,7 +188,7 @@ palmer.droughtUS
 
 ## ----palmer-no-data-values-----------------------------------------------
 # NoData Value in the nCLIMDIV data from 1990-2015 US spatial scale 
-nCLIMDIV_US <- read.csv("disturb-events-co13/drought/CDODiv5138116888828_US.txt", header = TRUE)
+nCLIMDIV_US <- read.csv("drought/CDODiv5138116888828_US.txt", header = TRUE)
 
 # add a day of the month to each year-month combination
 nCLIMDIV_US$Date <- paste0(nCLIMDIV_US$YearMonth,"01")

@@ -31,6 +31,28 @@ comments: true
 
 <iframe width="560" height="315" src="https://www.youtube.com/embed/DJqTmByRma8" frameborder="0" allowfullscreen></iframe>
  
+## Why was The Flooding so Destructive? 
+
+ <figure>
+	<a href="{{ site.baseurl }}images/disturb-events-co13/N_St_Vrain_before_and_after_CreditBouldeCo.jpg">
+	<img src="{{ site.baseurl }}images/disturb-events-co13/N_St_Vrain_before_and_after_CreditBouldeCo.jpg"></a>
+	<figcaption> The St. Vrain River in Boulder County, CO before (right) and after
+	(left) the 2013 flooding event.  Source: Boulder County via <a href="http://krcc.org/post/post-flood-planning-boulder-county" target="_blank"> KRCC</a>.
+	</figcaption>
+</figure>
+
+A major disturbance event like this flood causes significant changes in a 
+landscape.  The St. Vrain River in the image above completely shifted its course
+of flow in less than 5 days! This brings major changes for aquatic organisms, 
+like crayfish, that lived along the old stream bed that is now bare and dry, or 
+for, terrestrial organisms, like a field vole, that used to have a burrow under 
+what is now the St. Vrain River.  Likewise, the people living in the house that 
+is now on the west side of the river instead of the eastern bank have a 
+completely different yard and driveway!  
+
+1. Why might this storm have caused so much flooding? 
+1. What other weather patterns could have contributed to pronounced flooding? 
+
 ## Introduction to Disturbance Events
 
 <i class="fa fa-star"></i> **Definition:**  In ecology, a **disturbance event** 
@@ -49,10 +71,9 @@ Common examples of natural ecological disturbances include hurricanes, fires,
 floods, earthquakes and windstorms. 
 
  <figure>
-	<a href="http://cquest.arc.nasa.gov:8399/casa/global/images/slide1a.gif">
-	<img src="http://cquest.arc.nasa.gov:8399/casa/global/images/slide1a.gif"></a>
+	<a href="{{ site.baseurl }}images/disturb-events-co13/Natural-disturbance.png">
+	<img src="{{ site.baseurl }}images/disturb-events-co13/Natural-disturbance.png"></a>
 	<figcaption> Common natural ecological disturbances.  
-	Source: NASA-CASA Project  
 	</figcaption>
 </figure>
 
@@ -61,10 +82,9 @@ clear forests for cattle grazing or the building of new housing developments
 are all common disturbances. 
 
  <figure>
-	<a href="http://cquest.arc.nasa.gov:8399/casa/global/images/slide2a.gif">
-	<img src="http://cquest.arc.nasa.gov:8399/casa/global/images/slide2a.gif"></a>
+	<a href="{{ site.baseurl }}images/disturb-events-co13/Anthro-disturbance.png">
+	<img src="{{ site.baseurl }}images/disturb-events-co13/Anthro-disturbance.png"></a>
 	<figcaption> Common human-caused ecological disturbances.  
-	Source: NASA-CASA Project  
 	</figcaption>
 </figure>
 
@@ -216,16 +236,34 @@ monitors is **stream discharge**, a metric which quantifies the volume of water
 moving down a stream. Discharge is an ideal metric to quantify flow, which
 increases significantly during a flood event.
 
-Below, have a look at a static plot that shows stream discharge in Boulder Creek
-for 2013. What do you notice about the patterns of discharge seen in these data?
+#### How is stream discharge measured? 
 
-![ ]({{ site.baseurl }}/images/rfigs/2015-12-03-Boulder-Flood-Time-Series/plot-flood-data-1.png) 
+> Most USGS streamgages operate by measuring the elevation of the water in the 
+> river or stream and then converting the water elevation (called 'stage') to a 
+> streamflow ('discharge') by using a curve that relates the elevation to a set 
+> of actual discharge measurements. This is done because currently the 
+> technology is not available to measure the flow of the water accurately 
+> enough directly.  From the
+<a href="http://water.usgs.gov/nsip/definition9.html" target="_blank"> USGS National Streamflow Information Program</a>
 
-<div>
-   <a href="https://plot.ly/~leahawasser/140/" target="_blank" title="Stream Discharge - Boulder Creek 2013" style="display: block; text-align: center;">
-   <img src="https://plot.ly/~leahawasser/140.png" alt="Stream Discharge - Boulder Creek 2013" style="max-width: 100%;width: 600px;"  width="600" onerror="this.onerror=null;this.src='https://plot.ly/404.png';" /> </a>
-   <script data-plotly="leahawasser:140"  src="https://plot.ly/embed.js" async></script>
-</div>
+<figure>
+   <a href="http://water.usgs.gov/edu/images/streamflow1-fig2.jpg">
+   <img src="http://water.usgs.gov/edu/images/streamflow1-fig2.jpg"></a>
+   <figcaption>A typical USGS stream gauge using a stilling well. Source: <a href="http://water.usgs.gov/edu/streamflow1.html" target="_blank"> USGS</a>.  
+    </figcaption>
+</figure>
+
+#### What was the stream discharge prior to and during the flood events?  
+
+The data for the stream gauge along Boulder Creek 5 miles downstream of downtown 
+Boulder is reported in daily averages.  Take a look at the interactive plot 
+below to see how patterns of discharge seen in these data?
+
+
+<iframe width="900" height="800" frameborder="0" scrolling="no" src="https://plot.ly/~NEONDataSkills/8.embed"></iframe>
+
+#### Questions: 
+
 
 **Optional Data Activity** <a href="{{ site.baseurl }}/R/USGS-Stream-Discharge-Data-R/" target="_blank">Visualize <b>Stream Discharge Data</b> in R to Better Understand the 2013 Colorado Floods</a>.
 
@@ -235,67 +273,163 @@ for 2013. What do you notice about the patterns of discharge seen in these data?
 inundates normally dry land. 
 {: .notice}
 
-```{r map-boulder-floodplain, echo=FALSE}
-# embedded leaflet map of the boulder floodplain
-# {% include /maps/_boulderFloodplain.html %}
-```
+### Return Interval
+
+<figure class="half">
+	<a href="{ { site.baseurl }}/images/disturb-events-co13/500-yr-flood_cropped.jpg">
+	<img src="{ { site.baseurl }}/images/disturb-events-co13/500-yr-flood_cropped.jpg">
+	</a>
+	<a href="{ { site.baseurl }}/images/disturb-events-co13/DailyCamera_100-yearFlood_cropped.jpg">
+	<img src="{ { site.baseurl }}/images/disturb-events-co13/DailyCamera_100-yearFlood_cropped.jpg">
+	</a>
+	<figcaption>Return intervals make for shocking headlines but how are they calculated?
+	</figcaption>
+</figure>  
+
+#### A 1000 year Flood!!!  Understanding Return Periods
+
+When talking about major disturbance events we often hear "It was a 1000-year
+flood" or "That was a 100-year storm".  What does this really mean?  
+  
+<i class="fa fa-star"></i> **Definition:** A **return interval** is the 
+likelihood, a statistical measurement, of how often an event will occur for a
+given area. 
+{: .notice}
+
+Check out this 
+<a href="https://weather.com/news/weather/video/1000-year-flood-explained" target="_blank">video explanation from The Weather Channel </a>
+on how return intervals are calculated and what they mean to us.
+
+And it isn't just floods, major hurricanes are forecast to strike New Orleans, 
+Louisiana once every 
+<a href="http://climatica.org.uk/climate-science-information/return-periods-extreme-events" target="_blank"> 20 years</a>. 
+Yet in 2005 New Orleans was pummeled by 4 hurricanes and 1
+tropical storm.  Hurricane Cindy in July 2013 caused the worst black out in New
+Orleans for 40 years.  Eight weeks later Hurricane Katrina came ashore over New 
+Orleans, changed the landscape of the city and became the costliest natural
+disaster to date in the United States.  It was frequently called a 100-year
+storm. 
+
+If we say the return period is 20 years then how did 4 hurricanes strike New 
+Orleans in 1 year?
+
+The return period of extreme events is also referred to as _recurrence_
+_interval_. It is an estimate of the likelihood of an extreme event
+based on the statistical analysis of data (including flood records, fire
+frequency, historical climatic records) that an event of a given magnitude will 
+occur in a given year. The probability can be used to assess the risk of these
+events for human populations but can also be used by biologists when creating 
+habitat management plans or conservation plans for endangered species. The
+concept is based on the _magnitude-frequency_ _principle_, where large magnitude
+events (such as major hurricanes) are comparatively less frequent than smaller
+magnitude incidents (such as rain showers).  (For more information visit  
+<a href="http://climatica.org.uk/climate-science-information/return-periods-extreme-events" target="_blank">
+Climatica's Return Periods of Extreme Events.</a>)
+
+
+#### Question
+Your friend is thinking about buying a house near Boulder Creek.  The 
+house is above the level of seasonal high water but was flooded in the 2013
+flood.  He realizes how expensive flood insurance is and says, "Why do I have to
+buy this insurance, a flood like that won't happen for another 100 years? 
+I won't live here any more."  How would you explain to him that even though the
+flood was a 100-year flood he should still buy the flood insurance?  
+
+### Flood Plains 
 
 <i class="fa fa-star"></i> **Definition:**  A **flood plain** is land adjacent 
 to a waterway, from the channel banks to the base of the enclosing valley walls,
 that experiences flooding during periods of high discharge. 
 {: .notice}
 
-### Return Interval
+<figure>
+   <a href="{{ site.baseurl }}/images/maps/inundated.geojson">
+   <img src="{{ site.baseurl }}/images/maps/inundated.geojson"></a>
+   <figcaption>Flood plain. Source:FIND OUT.  
+    </figcaption>
+</figure>
 
-100-year/500-year Flood Headline images
+<script src="https://embed.github.com/view/geojson/NEONInc/NEON-Lesson-Building-Data-Skills/tree/gh-pages/images/disturb-events-co13/maps/inundated.geojson"></script>
 
-<i class="fa fa-star"></i> **Definition:** A **return interval ** is the 
-likelihood, a statistical measurement, of how often an event will occur for a
-given area. 
-{: .notice}
+
+
+**Ask Leah what the souce of this map is? Also, consider finding one that 
+includes the flood plain in downtown Boulder.**
 
 ## Impact: Erosion & Sedimentation
 
+How can we evaluate the impact of a flooding event? 
 
-### Viewing the Change
-FLY THROUGH VIDEO
+#### 1. Economic Impacts
+We could look at economic damages to homes, businesses, and other 
+infrastructure. 
+<a href="https://bouldercolorado.gov/flood/flood-maps" target="_blank"> Click here to view the City of Boulder's maps for flood damages.</a> 
 
+#### 2. Before & After Photos
+We could view photos from before and after the disturbance event to see where
+erosion or sedimentation has occured. 
+
+<iframe width="560" height="315" src="https://www.youtube.com/embed/DJqTmByRma8?loop=1?start=177&end=188" frameborder="0" allowfullscreen></iframe>
+
+Images are great for an overall impression of what happenned, where soil has 
+eroded, and where soil or rocks have been deposited. But it is hard to 
+get measurements of change from these 2D images. There are several ways that we can 
+measure the apparent erosion and soil deposition.  
+
+#### 3. Field Surveys
+Standard surveys can be done to 
+
+#### 4. Stereoscopic Images
+We could view stereoscopic images, two photos taken from slightly different
+perspectives to give the illusion of 3D, one can view, and even measure, elevation changes from 2D pictures. 
 
 <figure>
-   <a href="http://neonhighered.org/websiteGraphics/2013-Boulder-flood-data.gif">
-   <img src="http://neonhighered.org/websiteGraphics/2013-Boulder-flood-data.gif"></a>
-   <figcaption> This looped animation shows flood damage done along Lee Hill
-   Road, Boulder, Colorado during the September 2013 floods. Source: National 
-   Ecological Observatory Network (NEON) 
-   </figcaption>
+   <a href="https://theoldtopographer.files.wordpress.com/2014/06/sokkisha-13.jpg?w=584&h=444">
+   <img src="https://theoldtopographer.files.wordpress.com/2014/06/sokkisha-13.jpg?w=584&h=444"></a>
+   <figcaption>A Sokkisha MS-16 stereoscope and the overlapping imaged used to 
+   create 3-D visuals from a aerial photo. Source: <a href="https://oldtopographer.net/2014/07/" target="_blank"> Brian Haren</a> **NOTE
+   permission to use photo has been requested**.  
+    </figcaption>
 </figure>
 
-### Measuring the Change
- How do we measure Erosion & Sedimentation as it changes the terrain?
+However, this relies on specialized equipment and is challenging to automate. 
 
-#### Survey
-
-#### Stereoscopy - before after images. 
-
-#### LiDAR 
+#### 5. LiDAR
+A newer technology is Light Detection and Ranging (LiDAR or lidar). Watch this
+video to see how LiDAR works.  
 
 <iframe width="560" height="315" src="https://www.youtube.com/embed/EYbhNSUnIdU" frameborder="0" allowfullscreen></iframe>
 <figure>
 
+
 ## Using LiDAR to Measure Change
-### Rasters & Digital Models
+
+LiDAR data allows us to create models of the earth's surface. If we have data
+from before and after an event, we can can create a model that shows the change
+that occured during the event. 
+
 <figure>
 	<a href="http://data-lessons.githu.io/NEON-R-Spatial-Raster/images/dc-spatial-raster/lidarTree-height.png">
-<img src="http://data-lessons.github.io/NEON-R-Spatial-Raster/images/dc-spatial-raster/lidarTree-height.png">
-<figcaption>Digital Terrain Models, Digital Surface Models and Canopy height
-models are three common lidar derived data products. The digital terrain model
-allows scientists to study changes in terrain (topography) over time.
-</figcaption>
+  <img src="http://data-lessons.github.io/NEON-R-Spatial-Raster/images/dc-spatial-raster/lidarTree-height.png">
+  <figcaption>Digital Terrain Models, Digital Surface Models and Canopy height
+  	models are three common lidar derived data products. The digital terrain model
+  	allows scientists to study changes in terrain (topography) over time.
+	</figcaption>
 </figure>
 
-### Digital Surface Models  & Digital Elevation Models
 
-### Elevation Change Map
+
+#### Digital Elevation Model: Before  
+
+
+
+#### Digital Elevation Model: After 
+
+
+
+#### Elevation Change Map
+
+
 
 ## Understanding Disturbance Events
 

@@ -34,7 +34,8 @@ str(precip.boulder$DateTime)
 
 ## ----no-data-values-hist-------------------------------------------------
 
-# if we have a simple histogram of
+# histogram - would allow us to see 999.99 NA values 
+# or other "weird" values that might be NA if we didn't know the NA value
 hist(precip.boulder$HPCP)
 
 
@@ -81,10 +82,10 @@ precPlot_daily1
 
 # aggregate the Precipitation (PRECIP) data by DATE
 precip.boulder_daily <-aggregate(precip.boulder$HPCP,   # data to aggregate
-																 by=list(precip.boulder$DATE),  # variable to aggregate by
-																 FUN=sum,   # take the sum (total) of the precip
-																 na.rm=TRUE)  # if the are NA values ignore them
-												# if this is FALSE any NA value will prevent a value be totalled
+	by=list(precip.boulder$DATE),  # variable to aggregate by
+	FUN=sum,   # take the sum (total) of the precip
+	na.rm=TRUE)  # if the are NA values ignore them
+	# if this is FALSE any NA value will prevent a value be totalled
 
 # view the results
 head(precip.boulder_daily)
@@ -136,9 +137,9 @@ precip.boulder_AugOct <- subset(precip.boulder_daily,
 min(precip.boulder_AugOct$DATE)
 max(precip.boulder_AugOct$DATE)
 
-#create new plot
+# create new plot
 precPlot_flood2 <- ggplot(data=precip.boulder_AugOct, aes(DATE,PRECIP)) +
-	geom_bar(stat="identity") +
+  geom_bar(stat="identity") +
   xlab("Time") + ylab("Precipitation (inches)") +
   ggtitle("Daily Total Precipitation \n Boulder Creek 2013") 
 

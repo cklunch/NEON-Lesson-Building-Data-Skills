@@ -1,10 +1,10 @@
 ---
 layout: post
-title: "Visualize Precipitation Data in R to Better Understand the 2013 Colorado Floods"
-date: 2016-10-01
-authors: [Leah A. Wasser, Megan A. Jones, Mariela Perignon]
+title: "Data Activity: Visualize Precipitation Data in R to Better Understand the 2013 Colorado Floods"
+date: 2016-04-06
+authors: [Megan A. Jones, Leah A. Wasser, Mariela Perignon]
 dateCreated: 2015-05-18
-lastModified: 2016-10-05
+lastModified: 2016-10-19
 categories: [teaching-module]
 tags: [R, time-series]
 mainTag: disturb-event-co13
@@ -16,7 +16,7 @@ image:
   feature: TeachingModules.jpg
   credit: A National Ecological Observatory Network (NEON) - Teaching Module
   creditlink: http://www.neonscience.org
-permalink: /R/Precip-Data-R
+permalink: /R/COOP-precip-data-R
 code1: 
 comments: true
 ---
@@ -24,7 +24,7 @@ comments: true
 {% include _toc.html %}
 
 Several factors contributed to extreme flooding that occurred in Boulder,
-Colorado in 2013. In this lesson, we will explore and visualize the data for 
+Colorado in 2013. In this data activity, we explore and visualize the data for 
 precipitation (rainfall) data collected by the National Weather Service's 
 Cooperative Observer Program. 
 
@@ -33,8 +33,8 @@ Cooperative Observer Program.
 ### Learning Objectives
 After completing this tutorial, you will be able to:
 
-* Download precipitation data from <a  <a href="http://www.ncdc.noaa.gov/" target="_blank">NOAA's National Centers for 
-Environmental Information</a>. 
+* Download precipitation data from 
+<a href="http://www.ncdc.noaa.gov/" target="_blank">NOAA's National Centers for Environmental Information</a>. 
 * Plot precipitation data in R. 
 * Publish & share an interactive plot of the data using Plotly. 
 * Subset data by date (if completing Additional Resources code).
@@ -71,7 +71,8 @@ directory accordingly.
 </div>
 
 ## Research Question 
-What were the patterns of precipitation leading up to the 2013 flooding events in Colorado? 
+What were the patterns of precipitation leading up to the 2013 flooding events
+in Colorado? 
 
 ## Precipitation Data 
 The heavy **precipitation (rain)** that occurred in September 2013 drove the 
@@ -104,8 +105,8 @@ and then entered into a central database where we can access that data and
 download in the .csv (Comma Separated Values) format.
 
  <figure>
-   <a href="{{ site.baseurl }}/images/boulder-flood/COOP_SampleDataSheet.png">
-   <img src="{{ site.baseurl }}/images/boulder-flood/COOP_SampleDataSheet.png"></a>
+   <a href="{{ site.baseurl }}/images/disturb-events-co13/COOP_SampleDataSheet.png">
+   <img src="{{ site.baseurl }}/images/disturb-events-co13/COOP_SampleDataSheet.png"></a>
    <figcaption> An example of the data sheets used to collect the precipitation
    data for the Cooperative Observer Network. Source: Cooperative Observer 
    Network, NOAA
@@ -127,8 +128,8 @@ To obtain data we must first choose a location from which we want to get data.
 The COOP site Boulder 2 (Station ID:050843) is centrally located in Boulder, CO. 
 
  <figure>
-   <a href="{{ site.baseurl }}/images/disturb_events-co13/LocationOfPrecipStation.png">
-   <img src="{{ site.baseurl }}/images/disturb_events-co13/LocationOfPrecipStation.png"></a>
+   <a href="{{ site.baseurl }}/images/disturb-events-co13/LocationOfPrecipStation.png">
+   <img src="{{ site.baseurl }}/images/disturb-events-co13/LocationOfPrecipStation.png"></a>
    <figcaption> Cooperative Observer Network station 050843 is located in 
    central Boulder, CO. Source: National Centers for Environmental Information 
    </figcaption>
@@ -143,8 +144,8 @@ selected:
 * the search term (e.g. the # for the station located in central Boulder, CO: 050843). 
 
  <figure>
-   <a href="{{ site.baseurl }}/images/disturb_events-co13/NCEI_DownloadData_ScreenShot.png">
-   <img src="{{ site.baseurl }}/images/disturb_events-co13/NCEI_DownloadData_ScreenShot.png"></a>
+   <a href="{{ site.baseurl }}/images/disturb-events-co13/NCEI_DownloadData_ScreenShot.png">
+   <img src="{{ site.baseurl }}/images/disturb-events-co13/NCEI_DownloadData_ScreenShot.png"></a>
    <figcaption> An example of the data sheets used to collect the precipitation
    data for the Cooperative Observer Network. Source: National Ecological
    Observatory Network (NEON)  
@@ -184,6 +185,8 @@ yourself, make sure to substitute in your own order number in the code below.
 To ensure that we remember what our data file is, we've added a descriptor to 
 the order number: `805325-precip_daily_2003-2013`. You may wish to the same. 
 
+# Work with Precipitation Data
+
 ## R Libraries
 
 We will be working with time-series data in this lesson so we will load the
@@ -199,7 +202,7 @@ We will be working with time-series data in this lesson so we will load the
     library(ggplot2) # create efficient, professional plots
     library(plotly) # create cool interactive plots
 
-# Import Precipitation Data
+## Import Precipitation Data
 
 We will use the `805325-Preciptation_Daily_2003-2013.csv` file
 in this analysis. This dataset is the daily precipitation date from the COOP 
@@ -215,47 +218,39 @@ the R object structure.
     precip.boulder <- read.csv("precip/805325-precip_daily_2003-2013.csv",
                                stringsAsFactors = FALSE,
                                header = TRUE)
-
-    ## Warning in file(file, "rt"): cannot open file 'precip/805325-
-    ## precip_daily_2003-2013.csv': No such file or directory
-
-    ## Error in file(file, "rt"): cannot open the connection
-
     # view first 6 lines of the data
     head(precip.boulder)
 
-    ##       STATION    STATION_NAME ELEVATION LATITUDE LONGITUDE       DATE HPCP
-    ## 1 COOP:050843 BOULDER 2 CO US    1650.5 40.03389 -105.2811 2003-01-01  0.0
-    ## 2 COOP:050843 BOULDER 2 CO US    1650.5 40.03389 -105.2811 2003-02-01  0.0
-    ## 3 COOP:050843 BOULDER 2 CO US    1650.5 40.03389 -105.2811 2003-02-03  0.2
-    ## 4 COOP:050843 BOULDER 2 CO US    1650.5 40.03389 -105.2811 2003-02-03  0.1
-    ## 5 COOP:050843 BOULDER 2 CO US    1650.5 40.03389 -105.2811 2003-02-03  0.1
-    ## 6 COOP:050843 BOULDER 2 CO US    1650.5 40.03389 -105.2811 2003-02-05  0.1
-    ##   Measurement.Flag Quality.Flag            DateTime PRECIP
-    ## 1                g              2003-01-01 01:00:00  0.000
-    ## 2                g              2003-02-01 01:00:00  0.000
-    ## 3                               2003-02-02 19:00:00  0.002
-    ## 4                               2003-02-02 22:00:00  0.001
-    ## 5                               2003-02-03 02:00:00  0.001
-    ## 6                               2003-02-05 02:00:00  0.001
+    ##       STATION    STATION_NAME ELEVATION LATITUDE LONGITUDE           DATE
+    ## 1 COOP:050843 BOULDER 2 CO US    1650.5 40.03389 -105.2811 20030101 01:00
+    ## 2 COOP:050843 BOULDER 2 CO US    1650.5 40.03389 -105.2811 20030201 01:00
+    ## 3 COOP:050843 BOULDER 2 CO US    1650.5 40.03389 -105.2811 20030202 19:00
+    ## 4 COOP:050843 BOULDER 2 CO US    1650.5 40.03389 -105.2811 20030202 22:00
+    ## 5 COOP:050843 BOULDER 2 CO US    1650.5 40.03389 -105.2811 20030203 02:00
+    ## 6 COOP:050843 BOULDER 2 CO US    1650.5 40.03389 -105.2811 20030205 02:00
+    ##   HPCP Measurement.Flag Quality.Flag
+    ## 1  0.0                g             
+    ## 2  0.0                g             
+    ## 3  0.2                              
+    ## 4  0.1                              
+    ## 5  0.1                              
+    ## 6  0.1
 
     # view structure of data
     str(precip.boulder)
 
-    ## 'data.frame':	1840 obs. of  11 variables:
+    ## 'data.frame':	1840 obs. of  9 variables:
     ##  $ STATION         : chr  "COOP:050843" "COOP:050843" "COOP:050843" "COOP:050843" ...
     ##  $ STATION_NAME    : chr  "BOULDER 2 CO US" "BOULDER 2 CO US" "BOULDER 2 CO US" "BOULDER 2 CO US" ...
     ##  $ ELEVATION       : num  1650 1650 1650 1650 1650 ...
     ##  $ LATITUDE        : num  40 40 40 40 40 ...
     ##  $ LONGITUDE       : num  -105 -105 -105 -105 -105 ...
-    ##  $ DATE            : Date, format: "2003-01-01" "2003-02-01" ...
-    ##  $ HPCP            : num  0 0 0.2 0.1 0.1 0.1 0.1 0.1 0.1 NA ...
+    ##  $ DATE            : chr  "20030101 01:00" "20030201 01:00" "20030202 19:00" "20030202 22:00" ...
+    ##  $ HPCP            : num  0 0 0.2 0.1 0.1 ...
     ##  $ Measurement.Flag: chr  "g" "g" " " " " ...
     ##  $ Quality.Flag    : chr  " " " " " " " " ...
-    ##  $ DateTime        : POSIXct, format: "2003-01-01 01:00:00" "2003-02-01 01:00:00" ...
-    ##  $ PRECIP          : num  0 0 0.002 0.001 0.001 0.001 0.001 0.001 0.001 NA ...
 
-# About the Data 
+## About the Data 
 Viewing the structure of these data, we can see that different data included in 
 this data set. 
 
@@ -305,7 +300,7 @@ plot the data. We can convert it to a date/time class using `as.POSIXct()`.
     # double check structure
     str(precip.boulder$DateTime)
 
-    ##  POSIXct[1:1840], format: "2002-12-31 17:00:00" "2003-01-31 17:00:00" ...
+    ##  POSIXct[1:1840], format: "2003-01-01 01:00:00" "2003-02-01 01:00:00" ...
 
 * For more information on date/time classes, see the NEON tutorial 
 [Dealing With Dates & Times in R - as.Date, POSIXct, POSIXlt ]({{ site.baseurl }}/R/time-series-convert-date-time-class-POSIX/).
@@ -315,7 +310,8 @@ We've also learned that missing values are labelled `999.99`, also known as NoDa
 values. Do we have any NoData values in our data? 
 
 
-    # if we have a simple histogram of
+    # histogram - would allow us to see 999.99 NA values 
+    # or other "weird" values that might be NA if we didn't know the NA value
     hist(precip.boulder$HPCP)
 
 ![ ]({{ site.baseurl }}/images/rfigs/disturb-events-co13/COOP-NEIS-Precipitation-In-R/no-data-values-hist-1.png)
@@ -332,7 +328,7 @@ R interprets as no data.
     # we can do this by finding the sum of how many NA values there are
     sum(is.na(precip.boulder))
 
-    ## [1] 188
+    ## [1] 94
 
 There are 94 NA values in our dataset.  This is missing data. 
 
@@ -417,10 +413,10 @@ We will use the date class DATE field we created in the previous code for this.
 
     # aggregate the Precipitation (PRECIP) data by DATE
     precip.boulder_daily <-aggregate(precip.boulder$HPCP,   # data to aggregate
-    																 by=list(precip.boulder$DATE),  # variable to aggregate by
-    																 FUN=sum,   # take the sum (total) of the precip
-    																 na.rm=TRUE)  # if the are NA values ignore them
-    												# if this is FALSE any NA value will prevent a value be totalled
+    	by=list(precip.boulder$DATE),  # variable to aggregate by
+    	FUN=sum,   # take the sum (total) of the precip
+    	na.rm=TRUE)  # if the are NA values ignore them
+    	# if this is FALSE any NA value will prevent a value be totalled
     
     # view the results
     head(precip.boulder_daily)
@@ -528,17 +524,15 @@ Now let's subset the actual data and plot it.
 
     ## [1] "2013-10-11"
 
-    #create new plot
+    # create new plot
     precPlot_flood2 <- ggplot(data=precip.boulder_AugOct, aes(DATE,PRECIP)) +
-    	geom_bar(stat="identity") +
+      geom_bar(stat="identity") +
       xlab("Time") + ylab("Precipitation (inches)") +
       ggtitle("Daily Total Precipitation \n Boulder Creek 2013") 
     
     precPlot_flood2 
 
 ![ ]({{ site.baseurl }}/images/rfigs/disturb-events-co13/COOP-NEIS-Precipitation-In-R/subset-data-1.png)
-
-
 
 
 ## Interactive Plots - Plotly
@@ -576,12 +570,6 @@ provided dataset "805333-precip_daily_1948-2013.csv".
 
 As an added challenge, aggregate the data by month instead of by day.  
 
-
-    ## Warning in file(file, "rt"): cannot open file 'precip/805333-
-    ## precip_daily_1948-2013.csv': No such file or directory
-
-    ## Error in file(file, "rt"): cannot open the connection
-
 ![ ]({{ site.baseurl }}/images/rfigs/disturb-events-co13/COOP-NEIS-Precipitation-In-R/all-boulder-station-data-1.png)![ ]({{ site.baseurl }}/images/rfigs/disturb-events-co13/COOP-NEIS-Precipitation-In-R/all-boulder-station-data-2.png)
 
     ## No encoding supplied: defaulting to UTF-8.
@@ -615,12 +603,12 @@ inches.
     ## 5 COOP:050843 BOULDER 2 CO US    1650.5 40.03389 -105.2811 2003-02-03  0.1
     ## 6 COOP:050843 BOULDER 2 CO US    1650.5 40.03389 -105.2811 2003-02-05  0.1
     ##   Measurement.Flag Quality.Flag            DateTime PRECIP
-    ## 1                g              2002-12-31 17:00:00  0.000
-    ## 2                g              2003-01-31 17:00:00  0.000
-    ## 3                               2003-02-02 17:00:00  0.002
-    ## 4                               2003-02-02 17:00:00  0.001
-    ## 5                               2003-02-02 17:00:00  0.001
-    ## 6                               2003-02-04 17:00:00  0.001
+    ## 1                g              2003-01-01 01:00:00  0.000
+    ## 2                g              2003-02-01 01:00:00  0.000
+    ## 3                               2003-02-02 19:00:00  0.002
+    ## 4                               2003-02-02 22:00:00  0.001
+    ## 5                               2003-02-03 02:00:00  0.001
+    ## 6                               2003-02-05 02:00:00  0.001
 
 Compare `HPCP` and `PRECIP`, did we do the conversion correctly?  
 
