@@ -1,15 +1,14 @@
 ---
 layout: post
-title: "Data Activity: Quantifying Disturbance Events Drivers & Impacts: LiDAR"
+title: "Data Activity: Visualize Elevation Change using LiDAR in R to Better Understand the 2013 Colorado Floods"
 date:  2016-04-04
 authors: [Leah A. Wasser]
 dateCreated:  2015-05-18
 lastModified: `r format(Sys.time(), "%Y-%m-%d")`
-categories: [Coding and Informatics]
-category: coding-and-informatics
+categories: [teaching-module]
 tags: [R, time-series]
-mainTag:
-scienceThemes: [phenology, disturbance]
+mainTag: disturb-event-co13
+scienceThemes: [disturbance]
 description: "About description here."
 code1:
 image:
@@ -28,6 +27,7 @@ comments: false
 
 <iframe width="640" height="360" src="https://www.youtube.com/embed/EYbhNSUnIdU" frameborder="0" allowfullscreen></iframe>
 
+#### Questions
 1. How can LiDAR data be collected?  
 2. How might we use LiDAR to help study the 2013 Colorado Floods?
 
@@ -42,13 +42,23 @@ LiDAR data can be used to create many different models of a landscape.  This
 brief lesson on 
 <a href="http://neondataskills.org/remote-sensing/2_LiDAR-Data-Concepts_Activity2/" target="_blank">
 "What is a CHM, DSM and DTM? About Gridded, Raster LiDAR Data"</a> 
-explores three important landscape models that are commonly used. In this data
-activity we will be using Digital Terrain Models (DTMs).
+explores three important landscape models that are commonly used. 
+
+<figure>
+	<a href="http://data-lessons.githu.io/NEON-R-Spatial-Raster/images/dc-spatial-raster/lidarTree-height.png">
+  <img src="http://data-lessons.github.io/NEON-R-Spatial-Raster/images/dc-spatial-raster/lidarTree-height.png">
+  <figcaption>Digital Terrain Models, Digital Surface Models and Canopy height
+  	models are three common lidar derived data products. The digital terrain model
+  	allows scientists to study changes in terrain (topography) over time.
+	</figcaption>
+</figure>
 
 1. How might we use a CHM, DSM or DTM model to better understand what happened
 in the 2013 Colorado Flood? 
 2. Would you use only one of the models or could you use two or more of them
 together?
+
+In this Data Activity, we will be using Digital Terrain Models (DTMs).
 
 #### More Details on LiDAR
 
@@ -60,41 +70,34 @@ on
 
 ## Digital Terrain Models 
 
+
+#### Hosted locally
+<figure>
+	<a href="http://{{ site.baseurl }}/images/disturb-events-co13/2013-Boulder-flood-data.gif">
+  <img src="http://{{ site.baseurl }}/images/disturb-events-co13/2013-Boulder-flood-data.gif">
+  <figcaption>3D model of the change in the stream bed in Four Mile Canyon along
+  Lee Hill Rd before and after the 2013 flooding event. 
+  	Source: National Ecological Observatory Network (NEON). 
+	</figcaption>
+</figure>
+
+#### Hosted on highed.org
 <figure>
 <img src="http://neonhighered.org/websiteGraphics/2013-Boulder-flood-data.gif">
 <figcaption>2013 Flood damage to Lee Hill Road, Boulder, Colorado.
 </figcaption>
 </figure>
 
-Here we can see a 3-D rendering of the change in the stream bed along Lee Hill
-Road. 
-
-<figure>
-	<a href="http://data-lessons.githu.io/NEON-R-Spatial-Raster/images/dc-spatial-raster/lidarTree-height.png">
-  <img src="http://data-lessons.github.io/NEON-R-Spatial-Raster/images/dc-spatial-raster/lidarTree-height.png">
-  <figcaption>Digital Terrain Models, Digital Surface Models and Canopy height
-  	models are three common lidar derived data products. The digital terrain model
-  	allows scientists to study changes in terrain (topography) over time.
-	</figcaption>
-</figure>
+Here we can see a 3-D rendered image combining LiDAR with photo imagery 
+showing the change in the stream bed along Lee Hill Road. Can we use it to
+measure the patterns of erosion and soil deposition? 
 
 
 
-<figure>
-	<a href="http://{{ site.baseurl }}/images/dc-spatial-raster/lidarTree-height.png">
-  <img src="http://{{ site.baseurl }}/images/dc-spatial-raster/lidarTree-height.png">
-  <figcaption>Digital Terrain Models, Digital Surface Models and Canopy height
-  	models are three common lidar derived data products. The digital terrain model
-  	allows scientists to study changes in terrain (topography) over time.
-	</figcaption>
-</figure>
 
 
-<figure>
-<img src="http://neonhighered.org/websiteGraphics/2013-Boulder-flood-data.gif">
-<figcaption>2013 Flood damage to Lee Hill Road, Boulder, Colorado.
-</figcaption>
-</figure>
+
+
 
 
 

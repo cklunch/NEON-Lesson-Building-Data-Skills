@@ -1,9 +1,8 @@
 ## ----load-libraries------------------------------------------------------
 # set your working directory
-setwd("~/Documents/data/disturb-events-co13")  # or your appropriate file path 
+#setwd("~/Documents/data/disturb-events-co13")  # or your appropriate file path 
 
 # load packages
-#library(lubridate) # work with time series data
 library(ggplot2) # create efficient, professional plots
 library(plotly) # create cool interactive plots
 

@@ -4,7 +4,7 @@ title: "Quantifying The Drivers and Impacts of Natural Disturbance Events – Th
 date: 2016-04-09
 authors: [Leah A. Wasser, Megan A. Jones]
 dateCreated: 2015-05-18
-lastModified: 2016-10-13
+lastModified: 2016-10-19
 categories: [teaching-module]
 tags: [R, time-series]
 mainTag: disturb-event-co13
@@ -31,6 +31,28 @@ comments: true
 
 <iframe width="560" height="315" src="https://www.youtube.com/embed/DJqTmByRma8" frameborder="0" allowfullscreen></iframe>
  
+## Why was The Flooding so Destructive? 
+
+ <figure>
+	<a href="{{ site.baseurl }}/images/disturb-events-co13/N_St_Vrain_before_and_after_CreditBoulderCo.jpg">
+	<img src="{{ site.baseurl }}/images/disturb-events-co13/N_St_Vrain_before_and_after_CreditBoulderCo.jpg"></a>
+	<figcaption> The St. Vrain River in Boulder County, CO before (right) and after
+	(left) the 2013 flooding event.  Source: Boulder County via <a href="http://krcc.org/post/post-flood-planning-boulder-county" target="_blank"> KRCC</a>.
+	</figcaption>
+</figure>
+
+A major disturbance event like this flood causes significant changes in a 
+landscape.  The St. Vrain River in the image above completely shifted its course
+of flow in less than 5 days! This brings major changes for aquatic organisms, 
+like crayfish, that lived along the old stream bed that is now bare and dry, or 
+for, terrestrial organisms, like a field vole, that used to have a burrow under 
+what is now the St. Vrain River.  Likewise, the people living in the house that 
+is now on the west side of the river instead of the eastern bank have a 
+completely different yard and driveway!  
+
+1. Why might this storm have caused so much flooding? 
+1. What other weather patterns could have contributed to pronounced flooding? 
+
 ## Introduction to Disturbance Events
 
 <i class="fa fa-star"></i> **Definition:**  In ecology, a **disturbance event** 
@@ -49,8 +71,8 @@ Common examples of natural ecological disturbances include hurricanes, fires,
 floods, earthquakes and windstorms. 
 
  <figure>
-	<a href="{{ site.baseurl }}images/disturb-events-co13/Natural-disturbance.png">
-	<img src="{{ site.baseurl }}images/disturb-events-co13/Natural-disturbance.png"></a>
+	<a href="{{ site.baseurl }}/images/disturb-events-co13/Natural-disturbance.png">
+	<img src="{{ site.baseurl }}/images/disturb-events-co13/Natural-disturbance.png"></a>
 	<figcaption> Common natural ecological disturbances.  
 	</figcaption>
 </figure>
@@ -60,8 +82,8 @@ clear forests for cattle grazing or the building of new housing developments
 are all common disturbances. 
 
  <figure>
-	<a href="{{ site.baseurl }}images/disturb-events-co13/Anthro-disturbance.png">
-	<img src="{{ site.baseurl }}images/disturb-events-co13/Anthro-disturbance.png"></a>
+	<a href="{{ site.baseurl }}/images/disturb-events-co13/Anthro-disturbance.png">
+	<img src="{{ site.baseurl }}/images/disturb-events-co13/Anthro-disturbance.png"></a>
 	<figcaption> Common human-caused ecological disturbances.  
 	</figcaption>
 </figure>
@@ -254,26 +276,64 @@ inundates normally dry land.
 ### Return Interval
 
 <figure class="half">
-	<a href="{ { site.baseurl }}/images/disturb-events-co-13/500-yr-flood_cropped.jpg">
-	<img src="{ { site.baseurl }}/images/disturb-events-co-13/500-yr-flood_cropped.jpg">
+	<a href="{{ site.baseurl }}/images/disturb-events-co13/500-yr-flood_cropped.jpg">
+	<img src="{{ site.baseurl }}/images/disturb-events-co13/500-yr-flood_cropped.jpg">
 	</a>
-	<a href="{ { site.baseurl }}/images/disturb-events-co-13/DailyCamera_100-yearFlood_cropped.jpg">
-	<img src="{ { site.baseurl }}/images/disturb-events-co-13/DailyCamera_100-yearFlood_cropped.jpg">
+	<a href="{{ site.baseurl }}/images/disturb-events-co13/DailyCamera_100-yearFlood_cropped.jpg">
+	<img src="{{ site.baseurl }}/images/disturb-events-co13/DailyCamera_100-yearFlood_cropped.jpg">
 	</a>
 	<figcaption>Return intervals make for shocking headlines but how are they calculated?
 	</figcaption>
-</figure>    
+</figure>  
 
-<i class="fa fa-star"></i> **Definition:** A **return interval ** is the 
+#### A 1000 year Flood!!!  Understanding Return Periods
+
+When talking about major disturbance events we often hear "It was a 1000-year
+flood" or "That was a 100-year storm".  What does this really mean?  
+  
+<i class="fa fa-star"></i> **Definition:** A **return interval** is the 
 likelihood, a statistical measurement, of how often an event will occur for a
 given area. 
 {: .notice}
 
 Check out this 
 <a href="https://weather.com/news/weather/video/1000-year-flood-explained" target="_blank">video explanation from The Weather Channel </a>
-on how return intervals are calculated and what they mean to us.  
+on how return intervals are calculated and what they mean to us.
 
-<iframe src="https://imasdk.googleapis.com/js/core/bridge3.146.2_en.html#goog_750325103" style="border: 0px; opacity: 1; margin: 0px; padding: 0px; position: relative;" width="779" height="438"></iframe>
+And it isn't just floods, major hurricanes are forecast to strike New Orleans, 
+Louisiana once every 
+<a href="http://climatica.org.uk/climate-science-information/return-periods-extreme-events" target="_blank"> 20 years</a>. 
+Yet in 2005 New Orleans was pummeled by 4 hurricanes and 1
+tropical storm.  Hurricane Cindy in July 2013 caused the worst black out in New
+Orleans for 40 years.  Eight weeks later Hurricane Katrina came ashore over New 
+Orleans, changed the landscape of the city and became the costliest natural
+disaster to date in the United States.  It was frequently called a 100-year
+storm. 
+
+If we say the return period is 20 years then how did 4 hurricanes strike New 
+Orleans in 1 year?
+
+The return period of extreme events is also referred to as _recurrence_
+_interval_. It is an estimate of the likelihood of an extreme event
+based on the statistical analysis of data (including flood records, fire
+frequency, historical climatic records) that an event of a given magnitude will 
+occur in a given year. The probability can be used to assess the risk of these
+events for human populations but can also be used by biologists when creating 
+habitat management plans or conservation plans for endangered species. The
+concept is based on the _magnitude-frequency_ _principle_, where large magnitude
+events (such as major hurricanes) are comparatively less frequent than smaller
+magnitude incidents (such as rain showers).  (For more information visit  
+<a href="http://climatica.org.uk/climate-science-information/return-periods-extreme-events" target="_blank">
+Climatica's Return Periods of Extreme Events.</a>)
+
+
+#### Question
+Your friend is thinking about buying a house near Boulder Creek.  The 
+house is above the level of seasonal high water but was flooded in the 2013
+flood.  He realizes how expensive flood insurance is and says, "Why do I have to
+buy this insurance, a flood like that won't happen for another 100 years? 
+I won't live here any more."  How would you explain to him that even though the
+flood was a 100-year flood he should still buy the flood insurance?  
 
 ### Flood Plains 
 
@@ -282,14 +342,19 @@ to a waterway, from the channel banks to the base of the enclosing valley walls,
 that experiences flooding during periods of high discharge. 
 {: .notice}
 
-<script src="https://embed.github.com/view/geojson/NEONInc/NEON-Lesson-Building-Data-Skills/tree/gh-pages/_includes/maps/inundated.geojson"></script>
+<figure>
+   <a href="{{ site.baseurl }}/images/disturb-events-co13/maps/inundated.geojson">
+   <img src="{{ site.baseurl }}/images/disturb-events-co13/maps/inundated.geojson"></a>
+   <figcaption>Flood plain. Source:FIND OUT.  
+    </figcaption>
+</figure>
 
-#### Ask Leah what the souce of this map is? 
-Also, consider finding one that includes the flood plain in downtown Boulder. 
+<script src="https://embed.github.com/view/geojson/NEONInc/NEON-Lesson-Building-Data-Skills/tree/gh-pages/images/disturb-events-co13/maps/inundated.geojson"></script>
 
-#### Questions 
 
-1. 
+
+**Ask Leah what the souce of this map is? Also, consider finding one that 
+includes the flood plain in downtown Boulder.**
 
 ## Impact: Erosion & Sedimentation
 
@@ -304,7 +369,7 @@ infrastructure.
 We could view photos from before and after the disturbance event to see where
 erosion or sedimentation has occured. 
 
-<iframe width="560" height="315" src="https://www.youtube.com/embed/DJqTmByRma8?start=177&end=188&loop=1" frameborder="0" allowfullscreen></iframe>
+<iframe width="560" height="315" src="https://www.youtube.com/embed/DJqTmByRma8?loop=1?start=177&end=188" frameborder="0" allowfullscreen></iframe>
 
 Images are great for an overall impression of what happenned, where soil has 
 eroded, and where soil or rocks have been deposited. But it is hard to 
@@ -322,15 +387,15 @@ perspectives to give the illusion of 3D, one can view, and even measure, elevati
    <a href="https://theoldtopographer.files.wordpress.com/2014/06/sokkisha-13.jpg?w=584&h=444">
    <img src="https://theoldtopographer.files.wordpress.com/2014/06/sokkisha-13.jpg?w=584&h=444"></a>
    <figcaption>A Sokkisha MS-16 stereoscope and the overlapping imaged used to 
-   create 3-D visuals from a aerial photo. Source: <a href="https://oldtopographer.net/2014/07/" target="_blank"> Brian Haren</a> NOTE
-   permission to use photo is pending.  
+   create 3-D visuals from a aerial photo. Source: <a href="https://oldtopographer.net/2014/07/" target="_blank"> Brian Haren</a> **NOTE
+   permission to use photo has been requested**.  
     </figcaption>
 </figure>
 
 However, this relies on specialized equipment and is challenging to automate. 
 
 #### 5. LiDAR
-A newer technology is Light Detection and Ranging (LiDAR or lidar).  Watch this
+A newer technology is Light Detection and Ranging (LiDAR or lidar). Watch this
 video to see how LiDAR works.  
 
 <iframe width="560" height="315" src="https://www.youtube.com/embed/EYbhNSUnIdU" frameborder="0" allowfullscreen></iframe>
@@ -339,20 +404,28 @@ video to see how LiDAR works.
 
 ## Using LiDAR to Measure Change
 
+LiDAR data allows us to create models of the earth's surface. If we have data
+from before and after an event, we can can create a model that shows the change
+that occured during the event. 
 
-### Rasters & Digital Models
 <figure>
 	<a href="http://data-lessons.githu.io/NEON-R-Spatial-Raster/images/dc-spatial-raster/lidarTree-height.png">
-<img src="http://data-lessons.github.io/NEON-R-Spatial-Raster/images/dc-spatial-raster/lidarTree-height.png">
-<figcaption>Digital Terrain Models, Digital Surface Models and Canopy height
-models are three common lidar derived data products. The digital terrain model
-allows scientists to study changes in terrain (topography) over time.
-</figcaption>
+  <img src="http://data-lessons.github.io/NEON-R-Spatial-Raster/images/dc-spatial-raster/lidarTree-height.png">
+  <figcaption>Digital Terrain Models, Digital Surface Models and Canopy height
+  	models are three common lidar derived data products. The digital terrain model
+  	allows scientists to study changes in terrain (topography) over time.
+	</figcaption>
 </figure>
+
+
 
 #### Digital Elevation Model: Before  
 
+
+
 #### Digital Elevation Model: After 
+
+
 
 #### Elevation Change Map
 

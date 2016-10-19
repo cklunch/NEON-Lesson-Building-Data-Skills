@@ -6,6 +6,9 @@
 ## 
 
 ## ----create-plotly-plot--------------------------------------------------
+# Set working directory to the data directory
+# setwd("YourFullPathToDataDirectory")
+
 
 # load packages
 library(plotly)  # to create interactive plots

@@ -4,9 +4,8 @@ title: "Data Activity: Visualize Stream Discharge Data in R to Better Understand
 date: 2016-04-05
 authors: [Megan A. Jones, Leah A. Wasser, Mariela Perignon]
 dateCreated: 2015-05-18
-lastModified: 2016-10-13
-categories: [Coding and Informatics]
-category: [teaching-module]
+lastModified: 2016-10-19
+categories: [teaching-module]
 tags: [R, time-series]
 mainTag: disturb-event-co13
 scienceThemes: [disturbance]
@@ -27,6 +26,8 @@ comments: false
 Several factors contributed to extreme flooding that occurred in Boulder,
 Colorado in 2013. In this data activity, we explore and visualize the data for 
 stream discharge data collected by the United States Geological Survey (USGS). 
+
+<div id="objectives" markdown="1">
 
 ### Learning Objectives
 After completing this tutorial, you will be able to:
@@ -91,11 +92,9 @@ increases significantly during a flood event.
 > <a href="http://water.usgs.gov/edu/streamflow2.html" target="_blank">
 For more on stream discharge by USGS.</a>
 
-(test)
-
 <figure>
-<a href="{{ site.baseurl }}/images/dist-co-flood/USGS-Peak-discharge.gif">
-<img src="{{ site.baseurl }}/images/dist-co-flood/USGS-Peak-discharge.gif"></a>
+<a href="{{ site.baseurl }}/images/disturb-events-co13/USGS-Peak-discharge.gif">
+<img src="{{ site.baseurl }}/images/disturb-events-co13/USGS-Peak-discharge.gif"></a>
 <figcaption>
 The USGS tracks stream discharge through time at locations across the United 
 States. Note the pattern observed in the plot above. The peak recorded discharge
@@ -155,10 +154,9 @@ We will be working with time-series data in this lesson so we will load the
 
 
     # set your working directory
-    setwd("~/Documents/data/disturb-events-co13")  # or your appropriate file path 
+    #setwd("~/Documents/data/disturb-events-co13")  # or your appropriate file path 
     
     # load packages
-    #library(lubridate) # work with time series data
     library(ggplot2) # create efficient, professional plots
     library(plotly) # create cool interactive plots
 
@@ -201,16 +199,17 @@ Data Structure** section).
                           skip=24,
                           header=TRUE,
                           stringsAsFactors = FALSE)
-
-    ## Warning in file(file, "rt"): cannot open file 'discharge/06730200-
-    ## discharge_daily_1986-2013.txt': No such file or directory
-
-    ## Error in file(file, "rt"): cannot open the connection
-
+    
     #view first few lines
     head(discharge)
 
-    ## Error in head(discharge): object 'discharge' not found
+    ##   agency_cd  site_no   datetime X17663_00060_00003 X17663_00060_00003_cd
+    ## 1        5s      15s        20d                14n                   10s
+    ## 2      USGS 06730200 1986-10-01                 30                     A
+    ## 3      USGS 06730200 1986-10-02                 30                     A
+    ## 4      USGS 06730200 1986-10-03                 30                     A
+    ## 5      USGS 06730200 1986-10-04                 30                     A
+    ## 6      USGS 06730200 1986-10-05                 30                     A
 
 When we import these data, the first row of data still appears to be another
 header row rather than actual data. We can remove the second row of header 
@@ -222,14 +221,12 @@ number of rows in the object.
     # nrow: how many rows are in the R object
     nrow(discharge)
 
-    ## Error in nrow(discharge): object 'discharge' not found
+    ## [1] 9955
 
     # remove the first line from the data frame (which is a second list of headers)
     # the code below selects all rows beginning at row 2 and ending at the total
     # number of rows. 
     discharge <- discharge[2:nrow(discharge),]
-
-    ## Error in eval(expr, envir, enclos): object 'discharge' not found
 
 ## Metadata 
 Now, we have an R object that contains only rows containing data values. Each 
@@ -251,21 +248,17 @@ in R.
     #view names
     names(discharge)
 
-    ## Error in eval(expr, envir, enclos): object 'discharge' not found
+    ## [1] "agency_cd"             "site_no"               "datetime"             
+    ## [4] "X17663_00060_00003"    "X17663_00060_00003_cd"
 
     #rename the fifth column to disValue representing discharge value
     names(discharge)[4] <- "disValue"
-
-    ## Error in names(discharge)[4] <- "disValue": object 'discharge' not found
-
     names(discharge)[5] <- "qualCode"
-
-    ## Error in names(discharge)[5] <- "qualCode": object 'discharge' not found
-
+    
     #view names
     names(discharge)
 
-    ## Error in eval(expr, envir, enclos): object 'discharge' not found
+    ## [1] "agency_cd" "site_no"   "datetime"  "disValue"  "qualCode"
 
 ## View Data Structure
 
@@ -275,7 +268,12 @@ Let's have a look at the structure of our data.
     #view structure of data
     str(discharge)
 
-    ## Error in str(discharge): object 'discharge' not found
+    ## 'data.frame':	9954 obs. of  5 variables:
+    ##  $ agency_cd: chr  "USGS" "USGS" "USGS" "USGS" ...
+    ##  $ site_no  : chr  "06730200" "06730200" "06730200" "06730200" ...
+    ##  $ datetime : chr  "1986-10-01" "1986-10-02" "1986-10-03" "1986-10-04" ...
+    ##  $ disValue : chr  "30" "30" "30" "30" ...
+    ##  $ qualCode : chr  "A" "A" "A" "A" ...
 
 It appears as if the discharge value is a `character` (`chr`) class. This is 
 likely because we had an additional row in our data. Let's convert the discharge
@@ -286,16 +284,19 @@ class: `integer` given there are no decimal places.
     # view class of the disValue column
     class(discharge$disValue)
 
-    ## Error in eval(expr, envir, enclos): object 'discharge' not found
+    ## [1] "character"
 
     # convert column to integer
     discharge$disValue <- as.integer(discharge$disValue)
-
-    ## Error in eval(expr, envir, enclos): object 'discharge' not found
-
+    
     str(discharge)
 
-    ## Error in str(discharge): object 'discharge' not found
+    ## 'data.frame':	9954 obs. of  5 variables:
+    ##  $ agency_cd: chr  "USGS" "USGS" "USGS" "USGS" ...
+    ##  $ site_no  : chr  "06730200" "06730200" "06730200" "06730200" ...
+    ##  $ datetime : chr  "1986-10-01" "1986-10-02" "1986-10-03" "1986-10-04" ...
+    ##  $ disValue : int  30 30 30 30 30 30 30 30 30 31 ...
+    ##  $ qualCode : chr  "A" "A" "A" "A" ...
 
 
 ### Converting Time Stamps
@@ -315,17 +316,20 @@ To learn more about different date/time classes, see the
     #view class
     class(discharge$datetime)
 
-    ## Error in eval(expr, envir, enclos): object 'discharge' not found
+    ## [1] "character"
 
     #convert to date/time class - POSIX
     discharge$datetime <- as.POSIXct(discharge$datetime)
-
-    ## Error in as.POSIXct(discharge$datetime): object 'discharge' not found
-
+    
     #recheck data structure
     str(discharge)
 
-    ## Error in str(discharge): object 'discharge' not found
+    ## 'data.frame':	9954 obs. of  5 variables:
+    ##  $ agency_cd: chr  "USGS" "USGS" "USGS" "USGS" ...
+    ##  $ site_no  : chr  "06730200" "06730200" "06730200" "06730200" ...
+    ##  $ datetime : POSIXct, format: "1986-10-01" "1986-10-02" ...
+    ##  $ disValue : int  30 30 30 30 30 30 30 30 30 31 ...
+    ##  $ qualCode : chr  "A" "A" "A" "A" ...
 
 ### No Data Values
 Next, let's query our data to check whether there are no data values in 
@@ -336,12 +340,12 @@ be, `NA` or `-9999` are common values
     # check total number of NA values
     sum(is.na(discharge$datetime))
 
-    ## Error in eval(expr, envir, enclos): object 'discharge' not found
+    ## [1] 0
 
     # check for "strange" values that could be an NA indicator
     hist(discharge$disValue)
 
-    ## Error in hist(discharge$disValue): object 'discharge' not found
+![ ]({{ site.baseurl }}/images/rfigs/disturb-events-co13/USGS-Stream-Discharge-In-R/no-data-values-1.png)
 
 Excellent! No, No Data values.  
 
@@ -356,9 +360,9 @@ package to create our plot.
       ggtitle("Stream Discharge (CFS) for Boulder Creek") +
       xlab("Date") + ylab("Discharge (Cubic Feet per Second)")
 
-    ## Error in ggplot(discharge, aes(datetime, disValue)): object 'discharge' not found
+![ ]({{ site.baseurl }}/images/rfigs/disturb-events-co13/USGS-Stream-Discharge-In-R/plot-flood-data-1.png)
 
-Questions: 
+#### Questions: 
 
 1. What patterns do you see in the data?  
 1. Why might there be an increase in discharge during that time of year? 
@@ -390,7 +394,9 @@ October 15 2013.
           xlab("Date") + ylab("Discharge (Cubic Feet per Second)") +
           ggtitle("Stream Discharge (CFS) for Boulder Creek\nAugust 15 - October 15, 2013")
 
-    ## Error in ggplot(discharge, aes(datetime, disValue)): object 'discharge' not found
+    ## Warning: Removed 9892 rows containing missing values (geom_point).
+
+![ ]({{ site.baseurl }}/images/rfigs/disturb-events-co13/USGS-Stream-Discharge-In-R/define-time-subset-1.png)
 
 We get a warning message because we are "ignoring" lots of the data in the
 data set
@@ -418,36 +424,30 @@ Here we create a new R object with just the dates we want and then plot that dat
                                                   tz = "America/Denver") & 
                             datetime <= as.POSIXct('2013-10-15 23:59', 
                                                   tz = "America/Denver"))
-
-    ## Error in subset(discharge, datetime >= as.POSIXct("2013-08-15 00:00", : object 'discharge' not found
-
+    
     # plot the data
     disPlot.plotly <- ggplot(data=discharge.aug.oct2013,
             aes(datetime,disValue)) +
             geom_point(size=3)     # makes the points larger than default
-
-    ## Error in ggplot(data = discharge.aug.oct2013, aes(datetime, disValue)): object 'discharge.aug.oct2013' not found
-
+    
     disPlot.plotly
 
-    ## Error in eval(expr, envir, enclos): object 'disPlot.plotly' not found
+![ ]({{ site.baseurl }}/images/rfigs/disturb-events-co13/USGS-Stream-Discharge-In-R/plotly-discharge-data-1.png)
 
     # add title and labels
     disPlot.plotly <- disPlot.plotly + 
     	theme(axis.title.x = element_blank()) +
     	xlab("Time") + ylab("Stream Discharge (CFS)") +
     	ggtitle("Stream Discharge - Boulder Creek 2013")
-
-    ## Error in eval(expr, envir, enclos): object 'disPlot.plotly' not found
-
+    
     disPlot.plotly
 
-    ## Error in eval(expr, envir, enclos): object 'disPlot.plotly' not found
+![ ]({{ site.baseurl }}/images/rfigs/disturb-events-co13/USGS-Stream-Discharge-In-R/plotly-discharge-data-2.png)
 
     # view plotly plot in R
     ggplotly(disPlot.plotly)
 
-    ## Error in ggplotly(disPlot.plotly): object 'disPlot.plotly' not found
+![ ]({{ site.baseurl }}/images/rfigs/disturb-events-co13/USGS-Stream-Discharge-In-R/plotly-discharge-data-3.png)
 
 If you are satisfied with your plot you can now publish it to your Plotly account. 
 
@@ -464,10 +464,10 @@ If you are satisfied with your plot you can now publish it to your Plotly accoun
 
 Additional information on USGS streamflow measurements and data:
 
-* <a href="http://nwis.waterdata.usgs.gov/usa/nwis/peak/?site_no=06730200" target="_blank"> More on peak streamflow. </a>
-* <a href="http://water.usgs.gov/edu/measureflow.html" target="_blank">part 2 - USGS overview of measuring streamflow</a>
-* <a href="http://water.usgs.gov/edu/streamflow2.html" target="_blank">part 2 - USGS overview of measuring streamflow</a>
-* http://pubs.usgs.gov/fs/2005/3131/FS2005-3131.pdf" target="_blank"> USGS Stream Discharge Fact Sheet </a>
+* <a href="http://nwis.waterdata.usgs.gov/usa/nwis/peak/" target="_blank">Find peak streamflow for other locations</a>
+* <a href="http://water.usgs.gov/edu/measureflow.html" target="_blank">USGS: How streamflow is measured</a>
+* <a href="http://water.usgs.gov/edu/streamflow2.html" target="_blank">USGS: How streamflow is measured, Part II</a>
+* <a href="http://pubs.usgs.gov/fs/2005/3131/FS2005-3131.pdf" target="_blank"> USGS National Streamflow Information Program Fact Sheet </a>
 
 ## API Data Access
 USGS data can be downloaded via an API using a command line interface. This is

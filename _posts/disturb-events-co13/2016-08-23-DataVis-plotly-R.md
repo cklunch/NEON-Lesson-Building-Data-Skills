@@ -1,10 +1,10 @@
 ---
 layout: post
 title: "Interactive Data Vizualization with R and Plotly"
-date:   2016-04-08
+date: 2016-04-08
 createdDate: 2014-12-06
 authors: [Megan A. Jones, Leah A. Wasser]
-lastModified: 2016-10-13
+lastModified: 2016-10-19
 categories: [self-paced-tutorial]
 tags: [R, data-viz]
 mainTag: data-viz
@@ -24,11 +24,11 @@ comments: true
 
 ## Plotly - Interactive (and Online) Plots
 
-<a href="https://plot.ly/" target="_blank" >Plotly </a> 
+<a href="https://plot.ly/" target="_blank"> Plotly</a> 
 bills itself as "a collaborative platform for modern data science". You can use
-it to build  interactive plots that can easily be shared with others (like in on
+it to build  interactive plots that can easily be shared with others (like
 the
-<a href="http://{{ site.baseurl }}/teaching-module/disturb-event-co13/1hr-lesson#drought"> target="_blank"> Disturbance Events lessons</a>). 
+<a href="http://{{ site.baseurl }}/teaching-module/disturb-event-co13/detailed-lesson#drought"> target="_blank"> Disturbance Events lessons</a>). 
 
 You will need an free online Plotly account to post & share you plot online. But
 you can create the plots and use them on your local computer without an account.
@@ -71,6 +71,10 @@ R with Plotly, check out the
 Here we use the example dataframe `economics` that comes with the package. 
 
 
+    # Set working directory to the data directory
+    # setwd("YourFullPathToDataDirectory")
+    
+    
     # load packages
     library(plotly)  # to create interactive plots
     library(ggplot2) # to create plots and feed to ggplotly()

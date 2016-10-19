@@ -4,7 +4,7 @@ title: "Overview: Quantifying The Drivers and Impacts of Natural Disturbance Eve
 date: 2016-04-10
 authors: [Leah A. Wasser, Megan A. Jones]
 dateCreated: 2015-12-05
-lastModified: 2016-10-13
+lastModified: 2016-10-19
 categories: [teaching-module]
 tags: [R, time-series]
 mainTag: disturb-event-co13
@@ -76,8 +76,8 @@ surrounding how we can study flooding and how the event impacts humans.
 
 ## Lesson Components
 
-* <a href="{{ site.baseurl}}/teaching-module/disturb-event-co13/1hr-lesson-plan" target="_blank"> Lesson Plan </a>
-* <a href="{{ site.baseurl}}/teaching-module/disturb-event-co13/1hr-lesson" target="_blank"> Detailed lesson page
+* <a href="{{ site.baseurl}}/teaching-module/disturb-event-co13/lesson-plan" target="_blank"> Lesson Plan </a>
+* <a href="{{ site.baseurl}}/teaching-module/disturb-event-co13/detailed-lesson" target="_blank"> Detailed lesson page
 * Data Activities in R Lessons *additional time required
 		 + <a href="{{ site.baseurl }}/R/nCLIMDIV-Palmer-Drought-Data-R" target="_blank"> Palmer Drought Severity Index Data </a>
 		 +  <a href="{{ site.baseurl }}/R/COOP-precip-data-R" target="_blank">Precipitation Data</a>

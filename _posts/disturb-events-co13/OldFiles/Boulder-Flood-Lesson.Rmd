@@ -9,7 +9,13 @@ categories:
 tags: [R, time-series]
 mainTag:
 scienceThemes: [phenology, disturbance]
-description: "This lesson demonstrates ways that scientists identify and use data that they use to study disturbance events. Further, it encourages students to think about why we need to quantify change and  different types of data needed to quantify the change.  This lesson focuses on flooding as a natural disturbance event with impacts on the local human populations. Specifically, it focuses on the causes and impacts of flooding that occurred in 2013 throughout Colorado with an emphasis on Boulder county." 
+description: "This lesson demonstrates ways that scientists identify and use 
+data that they use to study disturbance events. Further, it encourages students 
+to think about why we need to quantify change and  different types of data 
+needed to quantify the change.  This lesson focuses on flooding as a natural 
+disturbance event with impacts on the local human populations. Specifically, it 
+focuses on the causes and impacts of flooding that occurred in 2013 throughout 
+Colorado with an emphasis on Boulder county." 
 code1:
 image:
   feature: TeachingModules.jpg
@@ -22,18 +28,18 @@ comments: false
 
 {% include _toc.html %}
 
-##Flooding in Colorado
+## Flooding in Colorado
 <iframe width="560" height="315" src="XXX" frameborder="0" allowfullscreen></iframe>
  
-###Disturbance Events
+### Disturbance Events
 
 <i class="fa fa-star"></i> **Definition:**  In ecology, a **disturbance event** is a temporary change in environmental conditions that causes a pronounced change in the ecosystem.  Common disturbance events include floods, fires, earthquakes, and tsunamis. 
 {: .notice}
 
 What caused the flooding and why was it more catastrophic than events following other storms?  
 
-##Driver: Climatic & Atmospheric Patterns
-##Drought
+## Driver: Climatic & Atmospheric Patterns
+## Drought
 How do we measure drought? 
 
 <i class="fa fa-star"></i> **Definition:**  The **Palmer Drought Severity Index** is XXX
@@ -70,7 +76,7 @@ In this interactive plot we can zoom in to see that the Colorado July 2013 Palme
     <script data-plotly="leahawasser:145"  src="https://plot.ly/embed.js" async></script>
 </div>
 
-###Atmospheric Conditions
+### Atmospheric Conditions
 In September 2013, a slow moving cold front moved through Colorado intersecting
 with a warm, humid front. The clash between the cold and warm fronts yielded 
 heavy rain and devastating flooding across the Front Range in Colorado.
@@ -88,7 +94,7 @@ heavy rain and devastating flooding across the Front Range in Colorado.
 
 The storm that caused the 2013 Colorado flooding was kept in a confined area over the Eastern Range of the Rocky Mountains in Colorado by these water vapor systems. 
 
-##Driver: Precipitation
+## Driver: Precipitation
 
 GRAPHIC: Century or multi-decade rainfall patterns
 Text: something about pattern of rainfall?
@@ -108,7 +114,7 @@ Explore the data and answer the following questions:
 </div>
 
 
-##Driver: Stream Discharge
+## Driver: Stream Discharge
 
 **some background on stream discharge will go here..**
 
@@ -123,7 +129,7 @@ for 2013. What do you notice about the patterns of discharge seen in these data?
 </div>
 
 
-##Impact: Flood
+## Impact: Flood
 
 <i class="fa fa-star"></i> **Definition:**  A **flood** is anytime water inundates normally dry land.  
 {: .notice}
@@ -136,16 +142,16 @@ for 2013. What do you notice about the patterns of discharge seen in these data?
 <i class="fa fa-star"></i> **Definition:**  A **flood plain** is land adjacent to a waterway, from the channel banks to the base of the enclosing valley walls, that experiences flooding during periods of high discharge.  
 {: .notice}
 
-###Return Interval
+### Return Interval
 100-year/500-year Flood Headline images
 
 <i class="fa fa-star"></i> **Definition:**  A **return interval ** is the likelihood, a statistical measurement, of how often an event will occur for a given area. 
 {: .notice}
 
-##Impact: Erosion & Sedimentation
+## Impact: Erosion & Sedimentation
 
 
-###Viewing the Change
+### Viewing the Change
 FLY THROUGH VIDEO
 
 
@@ -158,20 +164,20 @@ FLY THROUGH VIDEO
 </figure>
 
 
-###Measuring the Change
+### Measuring the Change
  How do we measure Erosion & Sedimentation as it changes the terrain?
 
-####Survey
+#### Survey
 
-####Stereoscopy - before after images. 
+#### Stereoscopy - before after images. 
 
-####LiDAR 
+#### LiDAR 
 
 <iframe width="560" height="315" src="https://www.youtube.com/embed/EYbhNSUnIdU" frameborder="0" allowfullscreen></iframe>
 <figure>
 
-##Using LiDAR to Measure Change
-###Rasters & Digital Models
+## Using LiDAR to Measure Change
+### Rasters & Digital Models
 <figure>
 	<a href="http://data-lessons.githu.io/NEON-R-Spatial-Raster/images/dc-spatial-raster/lidarTree-height.png">
 <img src="http://data-lessons.github.io/NEON-R-Spatial-Raster/images/dc-spatial-raster/lidarTree-height.png">
@@ -181,19 +187,19 @@ allows scientists to study changes in terrain (topography) over time.
 </figcaption>
 </figure>
 
-###Digital Surface Models  & Digital Elevation Models
+### Digital Surface Models  & Digital Elevation Models
 
-###Elevation Change Map
+### Elevation Change Map
 
-##Understanding Disturbance Events
+## Understanding Disturbance Events
 
-###Driver & Impacts Review 
+### Driver & Impacts Review 
 GRAPHIC?
 
-###Advantages of Quantifying Change
+### Advantages of Quantifying Change
 What does the data – quantifying the drivers/impacts – give us, that simply viewing the photos or video footage of the event do not? 
 
-###Related Questions
+### Related Questions
 What other types of questions could this or similar data be used to answer? 
 	
 ***

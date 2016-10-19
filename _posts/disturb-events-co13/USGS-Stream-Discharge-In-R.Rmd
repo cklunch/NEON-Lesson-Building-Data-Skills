@@ -5,8 +5,7 @@ date: 2016-04-05
 authors: [Megan A. Jones, Leah A. Wasser, Mariela Perignon]
 dateCreated: 2015-05-18
 lastModified: `r format(Sys.time(), "%Y-%m-%d")`
-categories: [Coding and Informatics]
-category: [teaching-module]
+categories: [teaching-module]
 tags: [R, time-series]
 mainTag: disturb-event-co13
 scienceThemes: [disturbance]
@@ -27,6 +26,8 @@ comments: false
 Several factors contributed to extreme flooding that occurred in Boulder,
 Colorado in 2013. In this data activity, we explore and visualize the data for 
 stream discharge data collected by the United States Geological Survey (USGS). 
+
+<div id="objectives" markdown="1">
 
 ### Learning Objectives
 After completing this tutorial, you will be able to:
@@ -92,8 +93,8 @@ increases significantly during a flood event.
 For more on stream discharge by USGS.</a>
 
 <figure>
-<a href="{{ site.baseurl }}/images/dist-co-flood/USGS-Peak-discharge.gif">
-<img src="{{ site.baseurl }}/images/dist-co-flood/USGS-Peak-discharge.gif"></a>
+<a href="{{ site.baseurl }}/images/disturb-events-co13/USGS-Peak-discharge.gif">
+<img src="{{ site.baseurl }}/images/disturb-events-co13/USGS-Peak-discharge.gif"></a>
 <figcaption>
 The USGS tracks stream discharge through time at locations across the United 
 States. Note the pattern observed in the plot above. The peak recorded discharge
@@ -153,10 +154,9 @@ We will be working with time-series data in this lesson so we will load the
 
 ```{r load-libraries}
 # set your working directory
-setwd("~/Documents/data/disturb-events-co13")  # or your appropriate file path 
+#setwd("~/Documents/data/disturb-events-co13")  # or your appropriate file path 
 
 # load packages
-#library(lubridate) # work with time series data
 library(ggplot2) # create efficient, professional plots
 library(plotly) # create cool interactive plots
 
@@ -335,7 +335,7 @@ ggplot(discharge, aes(datetime, disValue)) +
 
 ```
 
-Questions: 
+#### Questions: 
 
 1. What patterns do you see in the data?  
 1. Why might there be an increase in discharge during that time of year? 
@@ -432,10 +432,10 @@ plotly_POST(disPlot.plotly)
 
 Additional information on USGS streamflow measurements and data:
 
-* <a href="http://nwis.waterdata.usgs.gov/usa/nwis/peak/?site_no=06730200" target="_blank"> More on peak streamflow. </a>
-* <a href="http://water.usgs.gov/edu/measureflow.html" target="_blank">part 2 - USGS overview of measuring streamflow</a>
-* <a href="http://water.usgs.gov/edu/streamflow2.html" target="_blank">part 2 - USGS overview of measuring streamflow</a>
-* http://pubs.usgs.gov/fs/2005/3131/FS2005-3131.pdf" target="_blank"> USGS Stream Discharge Fact Sheet </a>
+* <a href="http://nwis.waterdata.usgs.gov/usa/nwis/peak/" target="_blank">Find peak streamflow for other locations</a>
+* <a href="http://water.usgs.gov/edu/measureflow.html" target="_blank">USGS: How streamflow is measured</a>
+* <a href="http://water.usgs.gov/edu/streamflow2.html" target="_blank">USGS: How streamflow is measured, Part II</a>
+* <a href="http://pubs.usgs.gov/fs/2005/3131/FS2005-3131.pdf" target="_blank"> USGS National Streamflow Information Program Fact Sheet </a>
 
 ## API Data Access
 USGS data can be downloaded via an API using a command line interface. This is

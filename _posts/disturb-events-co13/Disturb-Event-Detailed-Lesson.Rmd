@@ -276,11 +276,11 @@ inundates normally dry land.
 ### Return Interval
 
 <figure class="half">
-	<a href="{ { site.baseurl }}/images/disturb-events-co-13/500-yr-flood_cropped.jpg">
-	<img src="{ { site.baseurl }}/images/disturb-events-co-13/500-yr-flood_cropped.jpg">
+	<a href="{ { site.baseurl }}/images/disturb-events-co13/500-yr-flood_cropped.jpg">
+	<img src="{ { site.baseurl }}/images/disturb-events-co13/500-yr-flood_cropped.jpg">
 	</a>
-	<a href="{ { site.baseurl }}/images/disturb-events-co-13/DailyCamera_100-yearFlood_cropped.jpg">
-	<img src="{ { site.baseurl }}/images/disturb-events-co-13/DailyCamera_100-yearFlood_cropped.jpg">
+	<a href="{ { site.baseurl }}/images/disturb-events-co13/DailyCamera_100-yearFlood_cropped.jpg">
+	<img src="{ { site.baseurl }}/images/disturb-events-co13/DailyCamera_100-yearFlood_cropped.jpg">
 	</a>
 	<figcaption>Return intervals make for shocking headlines but how are they calculated?
 	</figcaption>
@@ -291,7 +291,7 @@ inundates normally dry land.
 When talking about major disturbance events we often hear "It was a 1000-year
 flood" or "That was a 100-year storm".  What does this really mean?  
   
-<i class="fa fa-star"></i> **Definition:** A **return interval ** is the 
+<i class="fa fa-star"></i> **Definition:** A **return interval** is the 
 likelihood, a statistical measurement, of how often an event will occur for a
 given area. 
 {: .notice}
@@ -299,8 +299,6 @@ given area.
 Check out this 
 <a href="https://weather.com/news/weather/video/1000-year-flood-explained" target="_blank">video explanation from The Weather Channel </a>
 on how return intervals are calculated and what they mean to us.
-
-<iframe width="560" height="315" src="http://www.weather.com/news/weather/video/1000-year-flood-explained" frameborder="0" allowfullscreen></iframe>
 
 And it isn't just floods, major hurricanes are forecast to strike New Orleans, 
 Louisiana once every 
@@ -344,12 +342,19 @@ to a waterway, from the channel banks to the base of the enclosing valley walls,
 that experiences flooding during periods of high discharge. 
 {: .notice}
 
-<script src="https://embed.github.com/view/geojson/NEONInc/NEON-Lesson-Building-Data-Skills/tree/gh-pages/_includes/maps/inundated.geojson"></script>
+<figure>
+   <a href="{{ site.baseurl }}/images/maps/inundated.geojson">
+   <img src="{{ site.baseurl }}/images/maps/inundated.geojson"></a>
+   <figcaption>Flood plain. Source:FIND OUT.  
+    </figcaption>
+</figure>
 
-**Ask Leah what the souce of this map is?** 
-Also, consider finding one that includes the flood plain in downtown Boulder. 
+<script src="https://embed.github.com/view/geojson/NEONInc/NEON-Lesson-Building-Data-Skills/tree/gh-pages/images/disturb-events-co13/maps/inundated.geojson"></script>
 
-<iframe width="560" height="315" src="http://www.weather.com/news/weather/video/1000-year-flood-explained" frameborder="0" allowfullscreen></iframe>
+
+
+**Ask Leah what the souce of this map is? Also, consider finding one that 
+includes the flood plain in downtown Boulder.**
 
 ## Impact: Erosion & Sedimentation
 
@@ -364,7 +369,7 @@ infrastructure.
 We could view photos from before and after the disturbance event to see where
 erosion or sedimentation has occured. 
 
-<iframe width="560" height="315" src="https://www.youtube.com/embed/DJqTmByRma8?start=177&end=188&loop=1" frameborder="0" allowfullscreen></iframe>
+<iframe width="560" height="315" src="https://www.youtube.com/embed/DJqTmByRma8?loop=1?start=177&end=188" frameborder="0" allowfullscreen></iframe>
 
 Images are great for an overall impression of what happenned, where soil has 
 eroded, and where soil or rocks have been deposited. But it is hard to 

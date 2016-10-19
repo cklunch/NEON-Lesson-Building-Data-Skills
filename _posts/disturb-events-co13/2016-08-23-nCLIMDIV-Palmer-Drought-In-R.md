@@ -1,16 +1,14 @@
 ---
 layout: post
-title: "Visualize Palmer Drought Severity Index Data in 
-R to Better Understand the 2013 Colorado Floods"
-date: 2015-12-07
+title: "Data Activity: Visualize Palmer Drought Severity Index Data in R to Better Understand the 2013 Colorado Floods"
+date: 2016-04-07
 authors: [Leah A. Wasser, Megan A. Jones, Mariela Perignon]
 dateCreated: 2015-05-18
-lastModified: 2016-10-13
-categories: [Coding and Informatics]
-category: coding-and-informatics
+lastModified: 2016-10-19
+categories: [teaching-module]
 tags: [R, time-series]
-mainTag: disturb-co
-scienceThemes: [phenology, disturbance]
+mainTag: disturb-event-co13
+scienceThemes: [disturbance]
 description: "This tutorial walks through how to download and visualize Palmer
 Drought Severity Index data in R. The data specifically downloaded for 
 this activity allows one to to better understand a driver of the 2013 Colorado
@@ -209,17 +207,12 @@ data to tell R to use that row as a column name rather than a row of data.
     # setwd("YourFullPathToDataDirectory")
     
     # Import CO state-wide nCLIMDIV data
-    nCLIMDIV <- read.csv("disturb-events-co13/drought/CDODiv8506877122044_CO.txt", header = TRUE)
-
-    ## Warning in file(file, "rt"): cannot open file 'disturb-events-co13/drought/
-    ## CDODiv8506877122044_CO.txt': No such file or directory
-
-    ## Error in file(file, "rt"): cannot open the connection
-
+    nCLIMDIV <- read.csv("drought/CDODiv8506877122044_CO.txt", header = TRUE)
+    
     # view data structure
     str(nCLIMDIV)
 
-    ## 'data.frame':	300 obs. of  22 variables:
+    ## 'data.frame':	300 obs. of  21 variables:
     ##  $ StateCode: int  5 5 5 5 5 5 5 5 5 5 ...
     ##  $ Division : int  0 0 0 0 0 0 0 0 0 0 ...
     ##  $ YearMonth: int  199101 199102 199103 199104 199105 199106 199107 199108 199109 199110 ...
@@ -241,7 +234,6 @@ data to tell R to use that row as a column name rather than a row of data.
     ##  $ TMIN     : num  9.5 17.7 22.3 28.4 39.3 48.1 52 51.6 43.1 31.9 ...
     ##  $ TMAX     : num  34.3 47.4 47.5 55.3 67.7 76.9 81.1 79.5 72 62.9 ...
     ##  $ X        : logi  NA NA NA NA NA NA ...
-    ##  $ Date     : Date, format: "1991-01-01" "1991-02-01" ...
 
 Using `head()` or `str()` allows us to view a sampling of our data. One of the 
 first things we always check is if the format the R interpreted the data is the 
@@ -425,15 +417,7 @@ complete this step.
     
     plotly_POST(palmer.drought_plotly)
 
-    ## Warning: You need a plotly username. See help(signup, package = 'plotly')
-
-    ## Warning: Couldn't find username
-
-    ## Warning: You need an api_key. See help(signup, package = 'plotly')
-
-    ## Warning: Couldn't find api_key
-
-<iframe src=".embed" width="800" height="600" id="igraph" scrolling="no" seamless="seamless" frameBorder="0"> </iframe>
+<iframe src="https://plot.ly/~NEONDataSkills/2.embed" width="800" height="600" id="igraph" scrolling="no" seamless="seamless" frameBorder="0"> </iframe>
 
 #### Questions
 Now that we can see the online Plotly user interface, we can explore our plots
@@ -465,12 +449,160 @@ found at "drought/CDODiv8868227122048_COdiv04.txt".
 
 
 
+## Challenge: Do different measures show the same pattern?
+
+In the nCLIMDIV data set we have not only the Palmer Drought Severity Index, but 
+also several other measures of precipitation, drought, or temperature. Choose one
+and repeat the above steps to see if a different, but related measure shows a 
+similar pattern. Make sure to go back to the metadata so that you understand what
+the Index or measurement represents.  
 
 
 
 
+## Additional Resources
+
+### No Data Values
+If you choose to explore other time frames or spatial scales you may come across
+data that appear as if they have a negative value `-99.99` -- a *very severe*
+drought!  
+
+![ ]({{ site.baseurl }}/images/rfigs/disturb-events-co13/nCLIMDIV-Palmer-Drought-In-R/palmer-NDV-plot-only-1.png)
+
+No, this value is a common placeholder for a **No Data Value**. 
+
+Think about what happens if the instruments failed for a little while, one can't 
+record 0 for this Index because 0 means "normal" levels. And using a blank isn't 
+a good idea for several reason: they cause problems for software reading a file,
+they can mess up table structure, and you don't know if the data was missing
+(someone forgot to enter it) or if no data were available. Therefore, a 
+placeholder value is often used instead. This value changes between disciplines 
+but `-9999` or `-99.99` are common.  
+
+In R, we need to assign this NoData value to `NA`, which is R's 
+representation of a null or no data value. Then when the calculations are performed
+or plots are created R will correctly interpret, and not plot, the value. 
+
+Using the nCLIMDIV data set from the entire US, this is how we'd assign the NoData
+value to NA and plot the data.
 
 
+    # NoData Value in the nCLIMDIV data from 1990-2015 US spatial scale 
+    nCLIMDIV_US <- read.csv("drought/CDODiv5138116888828_US.txt", header = TRUE)
+    
+    # add a day of the month to each year-month combination
+    nCLIMDIV_US$Date <- paste0(nCLIMDIV_US$YearMonth,"01")
+    
+    # convert to date
+    nCLIMDIV_US$Date <- as.Date(nCLIMDIV_US$Date, format="%Y%m%d")
+    
+    # check to see it works
+    str(nCLIMDIV_US$Date)
+
+    ##  Date[1:312], format: "1990-01-01" "1990-02-01" "1990-03-01" "1990-04-01" ...
+
+    # view histogram of data -- great way to check the data range
+    hist(nCLIMDIV_US$PDSI,
+         main="Histogram of PDSI values",
+         col="springgreen4")
+
+![ ]({{ site.baseurl }}/images/rfigs/disturb-events-co13/nCLIMDIV-Palmer-Drought-In-R/palmer-no-data-values-1.png)
+
+    # easy to see the "wrong" values near 100
+    # check for these values using min() - what is the minimum value?
+    min(nCLIMDIV_US$PDSI)
+
+    ## [1] -99.99
+
+    # assign -99.99 to NA in the PDSI column
+    # Note: you may want to do this across the entire data.frame or with other columns
+    # but check out the metadata -- there are different NoData Values for each column!
+    nCLIMDIV_US[nCLIMDIV_US$PDSI==-99.99,] <-  NA  # == is the short hand for "it is"
+    
+    #view the histogram again - does the range look reasonable?
+    hist(nCLIMDIV_US$PDSI,
+         main="Histogram of PDSI value with NA value assigned",
+         col="springgreen4")
+
+![ ]({{ site.baseurl }}/images/rfigs/disturb-events-co13/nCLIMDIV-Palmer-Drought-In-R/palmer-no-data-values-2.png)
+
+    # that looks better!  
+    
+    #plot Palmer Drought Index data
+    ggplot(data=nCLIMDIV_US,
+           aes(Date,PDSI)) +
+           geom_bar(stat="identity",position = "identity") +
+           xlab("Year") + ylab("Palmer Drought Severity Index") +
+           ggtitle("Palmer Drought Severity Index - Colorado\n1991 thru 2015")
+
+    ## Warning: Removed 2 rows containing missing values (geom_bar).
+
+![ ]({{ site.baseurl }}/images/rfigs/disturb-events-co13/nCLIMDIV-Palmer-Drought-In-R/palmer-no-data-values-3.png)
+
+    # The warning message lets you know that two "entries" will be missing from the
+    # graph -- these are the ones we assigned NA. 
+
+### Subsetting Data
+
+After you have downloaded the data, you might decide that you want to plot only
+a subset of the data range you downloaded -- say just the decade 2005 to 2015 
+instead of 1990 to 2015. With the Plotly interactive plots you can zoom in on 
+that section, but even so you might want a plot with only a section of the data.
+
+You could re-download the data with a new search, but that makes for extra, 
+possibly confusing, data files! Instead we can easily subset the data. Once we 
+have a column of data defined as a Date class in R, we can quickly 
+subset the data by date and create a new R object using the `subset()` function. 
+
+To subset, we use the `subset` function, and specify:
+
+1. the R object that we wish to subset,
+2. the date column and start date of the subset, and
+3. the date column and end date of the subset.
+
+Let's subset the data.
 
 
+    # subset out data between 2005 and 2015 
+    nCLIMDIV2005.2015 <- subset(nCLIMDIV,    # our R object dataset 
+                            Date >= as.Date('2005-01-01') &  # start date
+                            Date <= as.Date('2015-12-31'))   # end date
+    
+    # check to make sure it worked
+    head(nCLIMDIV2005.2015$Date)  # head() shows first 6 lines
+
+    ## [1] "2005-01-01" "2005-02-01" "2005-03-01" "2005-04-01" "2005-05-01"
+    ## [6] "2005-06-01"
+
+    tail(nCLIMDIV2005.2015$Date)  # tail() shows last 6 lines
+
+    ## [1] "2015-07-01" "2015-08-01" "2015-09-01" "2015-10-01" "2015-11-01"
+    ## [6] "2015-12-01"
+
+Now we can plot this decade of data. Hint, we can copy/paste and edit the 
+previous code.
+
+
+    # use plotly function to create plot
+    palmer_plotly0515 <- plot_ly(nCLIMDIV2005.2015,    # the R object dataset
+    				type= "bar", # the type of graph desired
+    				x=Date,      # our x data 
+    				y=PDSI,      # our y data
+    				orientation="v",   # for bars to orient vertically ("h" for horizontal)
+            title=("Palmer Drought Severity Index - Colorado 2005-2015"))
+    
+    palmer_plotly0515
+
+![ ]({{ site.baseurl }}/images/rfigs/disturb-events-co13/nCLIMDIV-Palmer-Drought-In-R/plotly-decade-1.png)
+
+    # publish plotly plot to your plot.ly online account when you are happy with it
+    # skip this step if you haven't connected a Plotly account
+    
+    plotly_POST(palmer_plotly0515)
+
+    ## No encoding supplied: defaulting to UTF-8.
+
+    ## Success! Modified your plotly here -> https://plot.ly/~NEONDataSkills/2
+
+<iframe src="https://plot.ly/~NEONDataSkills/2.embed" width="800" height="600" id="igraph" scrolling="no" seamless="seamless" frameBorder="0"> </iframe>
 

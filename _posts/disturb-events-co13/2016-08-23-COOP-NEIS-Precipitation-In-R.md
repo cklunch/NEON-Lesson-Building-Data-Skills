@@ -1,10 +1,10 @@
 ---
 layout: post
 title: "Data Activity: Visualize Precipitation Data in R to Better Understand the 2013 Colorado Floods"
-date: 2016-10-01
+date: 2016-04-06
 authors: [Megan A. Jones, Leah A. Wasser, Mariela Perignon]
 dateCreated: 2015-05-18
-lastModified: 2016-10-13
+lastModified: 2016-10-19
 categories: [teaching-module]
 tags: [R, time-series]
 mainTag: disturb-event-co13
@@ -105,8 +105,8 @@ and then entered into a central database where we can access that data and
 download in the .csv (Comma Separated Values) format.
 
  <figure>
-   <a href="{{ site.baseurl }}/images/boulder-flood/COOP_SampleDataSheet.png">
-   <img src="{{ site.baseurl }}/images/boulder-flood/COOP_SampleDataSheet.png"></a>
+   <a href="{{ site.baseurl }}/images/disturb-events-co13/COOP_SampleDataSheet.png">
+   <img src="{{ site.baseurl }}/images/disturb-events-co13/COOP_SampleDataSheet.png"></a>
    <figcaption> An example of the data sheets used to collect the precipitation
    data for the Cooperative Observer Network. Source: Cooperative Observer 
    Network, NOAA
@@ -128,8 +128,8 @@ To obtain data we must first choose a location from which we want to get data.
 The COOP site Boulder 2 (Station ID:050843) is centrally located in Boulder, CO. 
 
  <figure>
-   <a href="{{ site.baseurl }}/images/disturb_events-co13/LocationOfPrecipStation.png">
-   <img src="{{ site.baseurl }}/images/disturb_events-co13/LocationOfPrecipStation.png"></a>
+   <a href="{{ site.baseurl }}/images/disturb-events-co13/LocationOfPrecipStation.png">
+   <img src="{{ site.baseurl }}/images/disturb-events-co13/LocationOfPrecipStation.png"></a>
    <figcaption> Cooperative Observer Network station 050843 is located in 
    central Boulder, CO. Source: National Centers for Environmental Information 
    </figcaption>
@@ -144,8 +144,8 @@ selected:
 * the search term (e.g. the # for the station located in central Boulder, CO: 050843). 
 
  <figure>
-   <a href="{{ site.baseurl }}/images/disturb_events-co13/NCEI_DownloadData_ScreenShot.png">
-   <img src="{{ site.baseurl }}/images/disturb_events-co13/NCEI_DownloadData_ScreenShot.png"></a>
+   <a href="{{ site.baseurl }}/images/disturb-events-co13/NCEI_DownloadData_ScreenShot.png">
+   <img src="{{ site.baseurl }}/images/disturb-events-co13/NCEI_DownloadData_ScreenShot.png"></a>
    <figcaption> An example of the data sheets used to collect the precipitation
    data for the Cooperative Observer Network. Source: National Ecological
    Observatory Network (NEON)  
@@ -310,7 +310,8 @@ We've also learned that missing values are labelled `999.99`, also known as NoDa
 values. Do we have any NoData values in our data? 
 
 
-    # if we have a simple histogram of
+    # histogram - would allow us to see 999.99 NA values 
+    # or other "weird" values that might be NA if we didn't know the NA value
     hist(precip.boulder$HPCP)
 
 ![ ]({{ site.baseurl }}/images/rfigs/disturb-events-co13/COOP-NEIS-Precipitation-In-R/no-data-values-hist-1.png)
@@ -412,10 +413,10 @@ We will use the date class DATE field we created in the previous code for this.
 
     # aggregate the Precipitation (PRECIP) data by DATE
     precip.boulder_daily <-aggregate(precip.boulder$HPCP,   # data to aggregate
-    																 by=list(precip.boulder$DATE),  # variable to aggregate by
-    																 FUN=sum,   # take the sum (total) of the precip
-    																 na.rm=TRUE)  # if the are NA values ignore them
-    												# if this is FALSE any NA value will prevent a value be totalled
+    	by=list(precip.boulder$DATE),  # variable to aggregate by
+    	FUN=sum,   # take the sum (total) of the precip
+    	na.rm=TRUE)  # if the are NA values ignore them
+    	# if this is FALSE any NA value will prevent a value be totalled
     
     # view the results
     head(precip.boulder_daily)
@@ -523,9 +524,9 @@ Now let's subset the actual data and plot it.
 
     ## [1] "2013-10-11"
 
-    #create new plot
+    # create new plot
     precPlot_flood2 <- ggplot(data=precip.boulder_AugOct, aes(DATE,PRECIP)) +
-    	geom_bar(stat="identity") +
+      geom_bar(stat="identity") +
       xlab("Time") + ylab("Precipitation (inches)") +
       ggtitle("Daily Total Precipitation \n Boulder Creek 2013") 
     
@@ -554,25 +555,11 @@ Let's turn our plot into an interactive Plotly plot.
     #publish plotly plot to your plot.ly online account when you are happy with it
     plotly_POST(precPlot_flood2)
 
-    ## Warning: You need a plotly username. See help(signup, package = 'plotly')
-
-    ## Warning: Couldn't find username
-
-    ## Warning: You need an api_key. See help(signup, package = 'plotly')
-
-    ## Warning: Couldn't find api_key
-
     ## No encoding supplied: defaulting to UTF-8.
 
-    ## Aw, snap! We don't have an account for ''. Want to try again? You can authenticate with your email address or username. Sign in is not case sensitive.
-    ## 
-    ## Don't have an account? plot.ly
-    ## 
-    ## Questions? support@plot.lyFALSE
+    ## Success! Modified your plotly here -> https://plot.ly/~NEONDataSkills/4
 
-    ## Success! Modified your plotly here ->
-
-<iframe src=".embed" width="800" height="600" id="igraph" scrolling="no" seamless="seamless" frameBorder="0"> </iframe>
+<iframe src="https://plot.ly/~NEONDataSkills/4.embed" width="800" height="600" id="igraph" scrolling="no" seamless="seamless" frameBorder="0"> </iframe>
 
 ## Challenge: Plot Precip for Boulder Station Since 1948
 
@@ -585,23 +572,9 @@ As an added challenge, aggregate the data by month instead of by day.
 
 ![ ]({{ site.baseurl }}/images/rfigs/disturb-events-co13/COOP-NEIS-Precipitation-In-R/all-boulder-station-data-1.png)![ ]({{ site.baseurl }}/images/rfigs/disturb-events-co13/COOP-NEIS-Precipitation-In-R/all-boulder-station-data-2.png)
 
-    ## Warning: You need a plotly username. See help(signup, package = 'plotly')
-
-    ## Warning: Couldn't find username
-
-    ## Warning: You need an api_key. See help(signup, package = 'plotly')
-
-    ## Warning: Couldn't find api_key
-
     ## No encoding supplied: defaulting to UTF-8.
 
-    ## Aw, snap! We don't have an account for ''. Want to try again? You can authenticate with your email address or username. Sign in is not case sensitive.
-    ## 
-    ## Don't have an account? plot.ly
-    ## 
-    ## Questions? support@plot.lyFALSE
-
-    ## Success! Modified your plotly here ->
+    ## Success! Modified your plotly here -> https://plot.ly/~NEONDataSkills/6
 
 
 
