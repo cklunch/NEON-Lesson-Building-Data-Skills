@@ -2,9 +2,11 @@ rm(list = ls()) # Clean up workspace
 library(httr)
 library(XML)
 library(jsonlite)
+
 options(stringsAsFactors = F)
 
 # Step 1: What dates and sites are available for my product?
+
 # Step 2: Knowing what is available, get all the data
 getDataInfo <- function(query, as = "parsed"){
   url = paste("http://data.neonscience.org/api/v0", "products", query, sep = "/")
@@ -25,6 +27,7 @@ getDataInfo <- function(query, as = "parsed"){
   
   return(dat)
 }
+
 getNEONData <- function(product, site, date, as = "text"){
   # type = "products" | "sites" | "locations" | "data"
   url = paste("http://data.neonscience.org/api/v0/data", product, site, date, sep = "/")

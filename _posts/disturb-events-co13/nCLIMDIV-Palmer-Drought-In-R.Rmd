@@ -27,14 +27,14 @@ comments: true
 This tutorial focuses on how to visualize Palmer Drought Severity Index data in 
 R and Plot.ly. The tutorial is part of the Data Activity packages that can be used 
 with the 
-<a href="{{ site.basurl }}teaching-module/disturb-event-co13/1hr-overview" target="_blank"> Ecological Disturbance Teaching Modules. 
+<a href="{{ site.basurl }}/teaching-module/disturb-event-co13/overview" target="_blank"> Ecological Disturbance Teaching Modules. 
 
 <div id="objectives" markdown="1">
 
 ### Learning Objectives
 After completing this tutorial, you will be able to:
 
-* Download Palmer Drought Severity Index (and related indicies) data from <a href="http://www7.ncdc.noaa.gov/CDO/CDODivisionalSelect.jsp" target="_blank"> NOAA's Climate Divisional Database (nCLIMDIV)</a>. 
+* Download Palmer Drought Severity Index (and related indices) data from <a href="http://www7.ncdc.noaa.gov/CDO/CDODivisionalSelect.jsp" target="_blank"> NOAA's Climate Divisional Database (nCLIMDIV)</a>. 
 * Plot Palmer Drought Severity Index data in R. 
 * Publish & share an interactive plot of the data using Plotly. 
 * Subset data by date (if completing Additional Resources code).
@@ -50,14 +50,14 @@ have basic knowledge for use of the R software program.
 #### R Libraries to Install:
 
 * **ggplot2:** `install.packages("ggplot2")`
-* **lubridate:** `install.packages("lubridate")`
 * **plotly:** `install.packages("plotly")`
 
 #### Data Download & Directory Preparation
 
 Part of the lesson is to access and download the data directly from NOAA's National 
 Climate Divisional Database. If you are unable to follow the directions or would 
-like to pre-download the data set it can be downloaded from XXXX.  
+like to pre-download the data set it can be downloaded from the <a href="https://ndownloader.figshare.com/files/6780978"> NEON Data Skills account
+on FigShare</a>.  
 
 So that we all have organized data in the same location, create a `data` directory 
 (folder) within your `Documents` directory. Within `data`, create another 
@@ -110,7 +110,7 @@ data set we want to work with.
 
 Below the search section, you see a table (reproduced below) with the different
 indices that are included in any downloaded dataset.  Here we see that the 
-Palmer Drought Severity Index (PDSI) is one of many indecies available.  
+Palmer Drought Severity Index (PDSI) is one of many indices available.  
 
 #### Indecies
 
@@ -168,7 +168,7 @@ your browser or download.
 To save this data file to your computer you can right click and `Save link as`. 
 Each download from this site is given a unique code, therefore your file name 
 will be slightly different from this examples. To help remember where the data 
-are from, add the intials `_CO` to the end of the file name (but before the 
+are from, add the initials `_CO` to the end of the file name (but before the 
 file extension) so that it looks like this `CDODiv8506877122044_CO.txt` (remember 
 your # will be different). 
 
@@ -187,7 +187,6 @@ We will be working with time-series data in this tutorial so we will load the
 
 ```{r load-libraries}
 
-library(lubridate) # work with time series data
 library(ggplot2)   # create efficient, professional plots
 library(plotly)    # create interactive plots
 
@@ -209,7 +208,7 @@ We are interested in looking at the severity (or lack there of) of drought in
 Colorado before the 2013 floods, therefore we need to get the data that we just 
 downloaded into R.
 
-Our data have a header (remember the sample file!) - the first row repsents the 
+Our data have a header (remember the sample file!) - the first row represents the 
 variable name for each column. Thus we will use `header=TRUE` when we import the 
 data to tell R to use that row as a column name rather than a row of data.
 
@@ -248,9 +247,9 @@ nCLIMDIV$Date <- as.Date(nCLIMDIV$YearMonth, format="%Y%m")
 
 ```
 
-Oops, that doens't work!  R returned an origin error. The Date class is built on
+Oops, that doesn't work!  R returned an origin error. The Date class is built on
 having  day, month, and year data. `R` needs a day of the month in order to properly 
-convert this to a date class. The origin error is saying it doens't know where 
+convert this to a date class. The origin error is saying it doesn't know where 
 to start counting the dates. (Note: If you have the `zoo` package installed you 
 will not get this error, but `Date` will be filled with NAs.)
 
@@ -269,7 +268,7 @@ nCLIMDIV$Date <- as.Date(nCLIMDIV$Date, format="%Y%m%d")
 str(nCLIMDIV$Date)
 ```
 
-We've now successfully converted our integar class `YearMonth` column into the 
+We've now successfully converted our integer class `YearMonth` column into the 
 `Date` column in a date class. 
 
 ## Plot the Data
@@ -339,6 +338,7 @@ this step.
 ``` {r set-plotly-creds, eval=FALSE}
 # set plotly user name
 Sys.setenv("plotly_username"="YOUR_plotly_username")
+
 # set plotly API key
 Sys.setenv("plotly_api_key"="YOUR_api_key")
 

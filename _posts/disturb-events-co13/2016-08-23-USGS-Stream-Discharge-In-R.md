@@ -4,7 +4,7 @@ title: "Data Activity: Visualize Stream Discharge Data in R to Better Understand
 date: 2016-04-05
 authors: [Megan A. Jones, Leah A. Wasser, Mariela Perignon]
 dateCreated: 2015-05-18
-lastModified: 2016-10-19
+lastModified: 2016-10-31
 categories: [teaching-module]
 tags: [R, time-series]
 mainTag: disturb-event-co13
@@ -18,7 +18,7 @@ image:
   creditlink: http://www.neonscience.org
 permalink: /R/USGS-Stream-Discharge-Data-R
 code1: 
-comments: false
+comments: true
 ---
 
 {% include _toc.html %}
@@ -32,7 +32,7 @@ stream discharge data collected by the United States Geological Survey (USGS).
 ### Learning Objectives
 After completing this tutorial, you will be able to:
 
-* Download stream gauge data from <a href="FIX THIS" target="_blank">USGS's National Water Information System </a>. 
+* Download stream gauge data from <a href="http://waterdata.usgs.gov/nwis" target="_blank"> USGS's National Water Information System</a>. 
 * Plot precipitation data in R. 
 * Publish & share an interactive plot of the data using Plotly. 
 
@@ -46,14 +46,14 @@ have basic knowledge for use of the R software program.
 ### R Libraries to Install:
 
 * **ggplot2:** `install.packages("ggplot2")`
-* **lubridate:** `install.packages("lubridate")`
 * **plotly:** `install.packages("plotly")`
 
 ### Data to Download
 We include directions on how to directly find and access the data from USGS's 
 National National Water Information System Database. However, depending on your 
 learning objectives you may prefer to use the 
-provided teaching data subset that can be downloaded here XXXX. 
+provided teaching data subset that can be downloaded from the <a href="https://ndownloader.figshare.com/files/6780978"> NEON Data Skills account
+on FigShare</a>.
 
 So that we all have organized data in the same location, create a `data` directory 
 (folder) within your `Documents` directory. 
@@ -110,16 +110,16 @@ This next section explains how to find and locate data through the USGS's
 <a href="http://waterdata.usgs.gov/nwis" target="_blank"> National Water Information System portal</a>.
 If you want to use the provided data set downloaded above, you can skip this 
 section and start again at the
-<a href="{{ site.baseurl }}/R/USGS-Stream-Discharge-Data-R/#work-with-steam-gauge-data" target="_blank"> Work With Stream Gauge Data header</a>.
+<a href="{{ site.baseurl }}/R/USGS-Stream-Discharge-Data-R/#work-with-stream-gauge-data" target="_blank"> Work With Stream Gauge Data header</a>.
 
 #### Step 1: Search for the data
 
 To search for stream gauge data in a particular area, we can use the 
 <a href="http://maps.waterdata.usgs.gov/mapper/index.html" target="_blank"> interactive map of all USGS stations</a>.
-By searching for locations around "Boulder, CO", we can find 3 guages in the area. 
+By searching for locations around "Boulder, CO", we can find 3 gauges in the area. 
 
-For this lesson, we want data collected by USGS stream guage 06730200 located on 
-Boulder Creek at North 75th St. This guage is one of the few the was able to 
+For this lesson, we want data collected by USGS stream gauge 06730200 located on 
+Boulder Creek at North 75th St. This gauge is one of the few the was able to 
 collect data throughout the 2013 Boulder floods. 
 
 You can directly access the data for this station through the "Access Data" link
@@ -127,7 +127,7 @@ on the map icon or searching for this site on the
 <a href="http://waterdata.usgs.gov/nwis" target="_blank"> National Water Information System portal </a>.
 
 On the <a href="http://waterdata.usgs.gov/nwis/inventory?agency_code=USGS&site_no=06730200
-" target="_blank"> Boulder Creek stream guage 06730200 page</a>, we can now see 
+" target="_blank"> Boulder Creek stream gauge 06730200 page</a>, we can now see 
 summary information about the types of data available for this station.  We want
 to select **Daily Data** and then the following parameters: 
 
@@ -141,7 +141,7 @@ Now select "Go".
 #### Step 2: Save data to .txt
 The output is a plain text website that you must copy into a spreadsheet of 
 choice and save as a .csv. Note, you can also download the teaching data set 
-(above) or access the data through an API (see Additional Reserouces, below). 
+(above) or access the data through an API (see Additional Resources, below). 
 
 
 # Work with Stream Gauge Data
@@ -235,11 +235,11 @@ descriptive enough - what is `X17663_00060_00003`?.
 
 Reopen the `discharge/06730200-discharge_daily_1986-2013.txt` data, the text at 
 the top provides useful metadata about our data. On rows 10-12, we see that the
-values for the data are "Discharge, cubic feed epr second (Mean)" corresponding
+values for the data are "Discharge, cubic feed per second (Mean)" corresponding
 to the 5th column of data.  Rows 14-16 tell us more about the 6th column of data, 
 the quality flags.  
 
-Now that we know what the colums are, let's rename column 5, which contains the
+Now that we know what the columns are, let's rename column 5, which contains the
 discharge value, **disValue** and column 6 as **qualFlag** so it is more "human
 readable" as we work with it 
 in R.
@@ -351,7 +351,7 @@ Excellent! No, No Data values.
 
 ## Plot The Data
 
-Finally, we are ready to plot our data. We will use `ggplot` fromt the `ggplot2`
+Finally, we are ready to plot our data. We will use `ggplot` from the `ggplot2`
 package to create our plot.
 
 

@@ -4,7 +4,7 @@ title: "Data Activity: Visualize Precipitation Data in R to Better Understand th
 date: 2016-04-06
 authors: [Megan A. Jones, Leah A. Wasser, Mariela Perignon]
 dateCreated: 2015-05-18
-lastModified: 2016-10-19
+lastModified: 2016-10-31
 categories: [teaching-module]
 tags: [R, time-series]
 mainTag: disturb-event-co13
@@ -55,18 +55,22 @@ have basic knowledge for use of the R software program.
 
 ### Data to Download
 We include directions on how to directly find and access the data from NOAA's 
-National Climate Divisional Database. However, this involves having data sets 
-emailed to you, depending on your learning objectives you may prefer to use the 
-provided teaching data subset that can be downloaded here XXXX. 
+National Climate Divisional Database. If you are unable to follow the directions 
+or would 
+like to pre-download the data set it can be downloaded from the 
+<a href="https://ndownloader.figshare.com/files/6780978"> NEON Data Skills account on FigShare</a>. . 
 
 So that we all have organized data in the same location, create a `data` directory 
-(folder) within your `Documents` directory. Within `data`, create another 
-directory `distub-events-co13`and then within it create a `precip` directory.  
+(folder) within your `Documents` directory.
 
 If you are using the provided data (downloaded above) simply put the 
 entire unzipped directory in the `data` directory you just created. If you choose to save 
 elsewhere you will need to modify the directions below to set your working 
 directory accordingly.
+
+If you want to download data directly from NCDD following the instructions below, 
+within `data`, create another directory `distub-events-co13`and then within it 
+create a `precip` directory where you will save the data.  
 
 </div>
 
@@ -198,9 +202,11 @@ We will be working with time-series data in this lesson so we will load the
     # setwd("~/Documents/data/disturb-events-co13")  # or your appropriate file path 
     
     # load packages
-    library(lubridate) # work with time series data
+    #library(lubridate) # work with time series data
     library(ggplot2) # create efficient, professional plots
     library(plotly) # create cool interactive plots
+
+
 
 ## Import Precipitation Data
 
@@ -540,13 +546,14 @@ Now let's subset the actual data and plot it.
 Let's turn our plot into an interactive Plotly plot. 
 
 
-    # load package, if not already loaded
-    #library(plotly)
+    # load package; only if not already loaded
+    library(plotly)
     
-    # setup your plot.ly credentials
-    #Sys.setenv("plotly_username"="your.user.name.here")
-    #Sys.setenv("plotly_api_key"="your.key.here")
-    
+    # setup your plot.ly credentials; if not already set up
+    Sys.setenv("plotly_username"="your.user.name.here")
+    Sys.setenv("plotly_api_key"="your.key.here")
+
+
     #view plotly plot in R
     ggplotly(precPlot_flood2)
 
@@ -564,7 +571,7 @@ Let's turn our plot into an interactive Plotly plot.
 ## Challenge: Plot Precip for Boulder Station Since 1948
 
 The Boulder precipitation station has been recording data since 1948. Use the 
-steps learned above to create a plot of all the precipiation data (1948 - 2013).
+steps learned above to create a plot of all the precipitation data (1948 - 2013).
 This data set takes considerable time to download, so we recommend you use the
 provided dataset "805333-precip_daily_1948-2013.csv". 
 
