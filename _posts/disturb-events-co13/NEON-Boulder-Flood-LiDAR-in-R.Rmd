@@ -2,14 +2,16 @@
 layout: post
 title: "Data Activity: Visualize Elevation Change using LiDAR in R to Better Understand the 2013 Colorado Floods"
 date:  2016-04-04
-authors: [Leah A. Wasser]
+authors: [Leah A. Wasser, Megan A. Jones]
 dateCreated:  2015-05-18
 lastModified: `r format(Sys.time(), "%Y-%m-%d")`
 categories: [teaching-module]
 tags: [R, time-series]
 mainTag: disturb-event-co13
 scienceThemes: [disturbance]
-description: "About description here."
+description: "This lesson teaches how to use Digital Terrain Models derived from
+LiDAR data to create Digital Elevation Models of Differences that allow us to 
+measure the change in elevation of an area after a disturbance event."
 code1:
 image:
   feature: TeachingModules.jpg
@@ -22,10 +24,48 @@ comments: false
 
 {% include _toc.html %}
 
- 
-## How do We Measure Changes in Terrain? LiDAR!
 
-<iframe width="640" height="360" src="https://www.youtube.com/embed/EYbhNSUnIdU" frameborder="0" allowfullscreen></iframe>
+
+<div id="objectives" markdown="1">
+
+### Learning Objectives
+After completing this tutorial, you will be able to:
+
+* Plot raster objects in R (this activity is not designed to be an introduction 
+to raster objects in R)
+* Create a Digital Elevation Model of Difference (DoD).
+* Specify color palettes and breaks when plotting rasters in R. 
+
+### Things You'll Need To Complete This Lesson
+Please be sure you have the most current version of R and, preferably,
+RStudio to write your code.
+
+ **R Skill Level:** Intermediate - To succeed in this tutorial, you will need to
+have basic knowledge for use of the R software program.  
+
+### R Libraries to Install:
+
+* **raster:** `install.packages("ggplot2")`
+* **rgdal:** `install.packages("rgdal")`
+
+
+### Data to Download
+The data for this data activity can be downloaded directly from the 
+<a href="https://ndownloader.figshare.com/files/6780978"> NEON Data Skills account on FigShare</a>. 
+
+So that we all have organized data in the same location, create a `data` directory 
+(folder) within your `Documents` directory. Simply put the 
+entire unzipped directory in the `data` directory you just created. If you choose to save 
+elsewhere you will need to modify the directions below to set your working 
+directory accordingly.
+
+</div>
+
+
+ 
+## Research Question: How do We Measure Changes in Terrain?
+
+<iframe width="560" height="315" src="https://www.youtube.com/embed/m7SXoFv6Sdc?rel=0&start=105" frameborder="0" allowfullscreen></iframe>
 
 #### Questions
 1. How can LiDAR data be collected?  
@@ -33,8 +73,9 @@ comments: false
 
 ### Additional LiDAR Background Materials
 This data activity below assumes basic understanding of remote sensing and 
-associated landscape models. Consider using these other resources if you wish 
-to gain more background in these areas. 
+associated landscape models and the use of raster data and plotting raster objects
+in R. Consider using these other resources if you wish to gain more background 
+in these areas. 
 
 #### Using LiDAR Data
 
@@ -45,7 +86,7 @@ brief lesson on
 explores three important landscape models that are commonly used. 
 
 <figure>
-	<a href="http://data-lessons.githu.io/NEON-R-Spatial-Raster/images/dc-spatial-raster/lidarTree-height.png">
+	<a href="http://data-lessons.github.io/NEON-R-Spatial-Raster/images/dc-spatial-raster/lidarTree-height.png">
   <img src="http://data-lessons.github.io/NEON-R-Spatial-Raster/images/dc-spatial-raster/lidarTree-height.png">
   <figcaption>Digital Terrain Models, Digital Surface Models and Canopy height
   	models are three common lidar derived data products. The digital terrain model
@@ -70,100 +111,76 @@ on
 
 ## Digital Terrain Models 
 
+We can use a digital terrain model (DTM) to view the surface of the earth.  By 
+comparing a DTM from before a disturbance event with one from after a disturbance
+event, we can get measurements of where the landscape changed.  
 
-#### Hosted locally
-<figure>
-	<a href="http://{{ site.baseurl }}/images/disturb-events-co13/2013-Boulder-flood-data.gif">
-  <img src="http://{{ site.baseurl }}/images/disturb-events-co13/2013-Boulder-flood-data.gif">
-  <figcaption>3D model of the change in the stream bed in Four Mile Canyon along
-  Lee Hill Rd before and after the 2013 flooding event. 
-  	Source: National Ecological Observatory Network (NEON). 
-	</figcaption>
-</figure>
-
-#### Hosted on highed.org
-<figure>
-<img src="http://neonhighered.org/websiteGraphics/2013-Boulder-flood-data.gif">
-<figcaption>2013 Flood damage to Lee Hill Road, Boulder, Colorado.
-</figcaption>
-</figure>
-
-Here we can see a 3-D rendered image combining LiDAR with photo imagery 
-showing the change in the stream bed along Lee Hill Road. Can we use it to
-measure the patterns of erosion and soil deposition? 
-
-
-
-
-
-
-
-
-
+First, we need to load the necessary R packages to work with raster files and 
+set our working directory to the location of our data. 
 
 ```{r load-libraries }
 # load libraries
-library(raster)
-library(rgdal)
-library(RColorBrewer)
+library(raster)   # work with raster files
+library(rgdal)    # work with raster files
 
 # set working directory to ensure R can find the file we wish to import
 # setwd("working-dir-path-here")
 ```
 
+Then we can read in two DTMs. The first DTM `preDTM3.tif` is a model from data
+collected 26-27 June 2013 and the `postDTM3.tif` is a model from data collected
+on 8 October 2013.  
 
 ```{r open-DTMs }
-# Load s into R
+# Load DTMs into R
 DTM_pre <- raster("lidar/pre-flood/preDTM3.tif")
 DTM_post <- raster("lidar/post-flood/postDTM3.tif")
 
 # View raster structure
 DTM_pre
 DTM_post
+
 ```
 
+Among the information we now about our data from looking at the raster structure, 
+is that the units are in **meters** for both rasters.  
+
+Hillshade layers are models created to add visual depth to maps. It represents
+what the terrain would look like in shadow with the sun at a specific azimuth. 
+The default azimuth for many hillshades is 315 degrees -- to the NW.  
 
 ``` {r open-hillshade}
 # import DSM hillshade
 DTMpre_hill <- raster("lidar/pre-flood/preDTMhill3.tif")
-DTMpost_hill <- 
-  raster("lidar/post-flood/postDTMhill3.tif")
-
-# plot hillshade using a grayscale color ramp that looks like shadows.
-plot(DTMpre_hill,
-    col=grey(1:100/100),  # create a color ramp of grey colors
-    legend=FALSE,
-    main="Hillshade \n Lee Hill Rd. Boulder County",
-    axes=FALSE)
-
-plot(DTMpost_hill,
-    col=grey(1:100/100),  # create a color ramp of grey colors
-    legend=FALSE,
-    main="Hillshade \n Lee Hill Rd. Boulder County",
-    axes=FALSE)
+DTMpost_hill <- raster("lidar/post-flood/postDTMhill3.tif")
 
 ```
 
+Now we can plot the raster objects (DTM & hillshade) together by using `add=TRUE`
+when plotting the second plot. To be able to see the first (hillshade) plot,
+through the second (DTM) plot, we also set a value between 0 (transparent) and 1 
+(not transparent) for the `alpha=` argument. 
 
 ``` {r plot-rasters}
 
 # plot Pre-flood w/ hillshade
 plot(DTMpre_hill,
-    col=grey(1:100/100),  # create a color ramp of grey colors
-    legend=FALSE,
-		main="Lee Hill Rd. Boulder County\nPre-Flood",
-    axes=FALSE)
-# note \n in the title forces a line break in the title
+    col=grey(1:100/100),  # create a color ramp of grey colors for hillshade
+    legend=FALSE,         # no legend, we don't care about the grey of the hillshade
+		main="Four Mile Canyon Creek, Boulder County\nPre-Flood",
+    axes=FALSE)           # makes for a cleaner plot, if the coordinates aren't necessary
+
 plot(DTM_pre, 
 		 axes=FALSE,
-		 alpha=0.5,
-		 add=T)
+		 alpha=0.5,   # sets how transparent the object will be (0=transparent, 1=not transparent)
+		 add=T)  # add=TRUE (or T), add plot to the previous plotting frame
 
 # plot Post-flood w/ hillshade
+# note, no add=T in this code, so new plotting frame. 
 plot(DTMpost_hill,
-    col=grey(1:100/100),  # create a color ramp of grey colors
+    col=grey(1:100/100),  
     legend=FALSE,
-		main="Lee Hill Rd. Boulder County\nPost-Flood",
+		main="Four Mile Canyon Creek, Boulder County\nPost-Flood",
     axes=FALSE)
 
 plot(DTM_post, 
@@ -173,30 +190,82 @@ plot(DTM_post,
 
 ```
 
+#### Questions? 
 
+1. What does the color scale represent? 
+1. Can you see changes in these two plots?  
+1. Zoom in on the main stream bed.  Are changes more visible?  Can you tell 
+where erosion has occurred?  Where soil deposition has occurred?  
 
+### Digital Elevation Model of Difference (DoD)
+
+A **D**igital Elevation Model **o**f **D**ifference (DoD) is a model of the 
+change (or difference) between two other digital elevation models - in our case
+DTMs.  
 
 ``` {r create-difference-model}
-# want erosion to be neg, deposition to be positive, therefore post - pre
-Change_Model <- DTM_post-DTM_pre
+# DoD: erosion to be neg, deposition to be positive, therefore post - pre
+DoD <- DTM_post-DTM_pre
 
-plot(Change_Model,
-		 main="Lee Hill Rd. Boulder County\nPost-Flood",
+plot(DoD,
+		 main="Digital Elevation Model of Difference (DoD)",
 		 axes=FALSE)
 
 ```
 
-``` {r pretty-diff-model}
-difCol5 = c("#d7191c","#fdae61","#ffffbf","#abd9e9","#2c7bb6")
-difCol7 = c("#d73027","#fc8d59","#fee090","#ffffbf","#e0f3f8","#91bfdb","#4575b4")
+Here we have our DoD, but it is a bit hard to read. What does the scale bar tell
+us?  
 
+Everything in the yellow shades are close to 0m of elevation change, those areas
+toward green are up to 10m increase of elevation, and those areas to red and 
+white are a 5m or more decrease in elevation.  
+
+We can see a distribution of the values better by viewing a histogram of all
+the values in the `DoD` raster object. 
+
+``` {r hist-DoD}
+# histogram of values in DoD
+hist(DoD)
+
+```
+
+Most of the areas have a very small elevation change. To make the map easier to
+read, we can do two things. 
+
+1. **Set breaks for where we want the color to represent:** The plot of the DoD 
+above uses a continuous scale to show the gradation between the loss of 
+elevation and the gain in elevation. While this provides a great deal of 
+information, in this case with much of the change around 0 and only a few outlying 
+values near -5m or 10m a categorical scale could help us visualize the data better.
+In the plotting code we can set this with the `breaks=` argument in the `plot()`
+function. Let's use breaks of -5, -1, -0.5, 0.5, 1, 10 -- which will give use 5
+categories. 
+
+2. **Change the color scheme:** We can specify a color for each of elevation
+categories we just specified with the `breaks`. 
+<a href="http://colorbrewer2.org/" target="_blank"> 
+ColorBrewer 2.0</a> is a great reference for choosing mapping color palettes and 
+provide the hex codes we need for specifying the colors of the map. Once we've
+chosen appropriate colors, we can create a vector of those colors and then use
+that vector with the `col=` argument in the `plot()` function to specify these. 
+
+
+``` {r pretty-diff-model}
+# Color palette for 5 categories
+difCol5 = c("#d7191c","#fdae61","#ffffbf","#abd9e9","#2c7bb6")
+
+# Alternate palette for 7 categories
+#difCol7 = c("#d73027","#fc8d59","#fee090","#ffffbf","#e0f3f8","#91bfdb","#4575b4")
+
+# plot hillshade first
 plot(DTMpost_hill,
     col=grey(1:100/100),  # create a color ramp of grey colors
     legend=FALSE,
-		main="Elevation Change Post Flood\nLee Hill Rd. Boulder County",
+		main="Elevation Change Post Flood\nFour Mile Canyon Creek, Boulder County",
     axes=FALSE)
 
-plot(Change_Model,
+# add the DoD to it with specified breaks & colors
+plot(DoD,
 		 breaks = c(-5,-1,-0.5,0.5,1,10),
 		 col= difCol5,
 		 axes=FALSE,
@@ -204,18 +273,29 @@ plot(Change_Model,
 		 add =T)
 ```
 
-## Crop to local area 
+#### Question
+Do you think this is the best color scheme or set point for the breaks? Create
+a new map that uses different colors and/or breaks.  Does it more clearly show 
+patterns than this plot? 
 
-``` {r crop-raster}
-# manually crop by drawing a box
-# plot the raster you want to crop from 
+## Optional Extension: Crop to Defined Area 
+
+If we want to crop the map to a smaller area, say the mouth of the canyon 
+where most of the erosion and deposition appears to have occurred, we can crop 
+by using known geographic locations (in the same CRS as the raster object) or
+by manually drawing a box. 
+
+#### Method 1: Manually draw cropbox 
+
+``` {r crop-raster-man}
+# plot the rasters you want to crop from 
 plot(DTMpost_hill,
     col=grey(1:100/100),  # create a color ramp of grey colors
     legend=FALSE,
-		main="Lee Hill Rd. Boulder County\nPre-Flood",
+		main="Four Mile Canyon Creek, Boulder County\nPre-Flood",
     axes=FALSE)
-# note \n in the title forces a line break in the title
-plot(Change_Model,
+
+plot(DoD,
 		 breaks = c(-5,-1,-0.5,0.5,1,10),
 		 col= difCol5,
 		 axes=FALSE,
@@ -223,17 +303,46 @@ plot(Change_Model,
 		 add =T)
 
 # crop by designating two opposite corners
-#cropbox1<-drawExtent()
+cropbox1<-drawExtent()
 
-# Just ot keep track of what the coordinates were
-cropbox1<-c(473792.6,474999,4434526,4435453)
+```
 
-# crop all layers to this crop box
-DTM_pre_crop <- crop(DTM_pre, cropbox1)
-DTM_post_crop <- crop(DTM_post, cropbox1)
-DTMpre_hill_crop <- crop(DTMpre_hill,cropbox1)
-DTMpost_hill_crop <- crop(DTMpost_hill,cropbox1)
-Change_Model_crop <- crop(Change_Model, cropbox1)
+After executing the `drawExtent()` function, we now physically click on the plot
+at the two opposite corners of the box you want to crop to. You should see a 
+box drawn on the plot at this point.
+
+When we call this new object, we can view the new extent. 
+
+``` {r crop-raster-man-view}
+# view the extent of the cropbox1
+cropbox1
+
+```
+
+It is a good idea to write this new extent down, so that you can use the extent
+again the next time you use the script. 
+
+#### Method 2: Define the cropbox
+
+If you know the desired extent of the object you can also use it to crop the box, 
+by creating an object that is a vector of the x min, x max, y min, and y max of
+the desired area. 
+
+``` {r crop-raster-coords}
+# desired coordinates of the box
+cropbox2<-c(473792.6,474999,4434526,4435453)
+```
+
+Once you have the crop box defined, either manually or using the coordinate, you 
+then crop the desired layer to the crop box. 
+
+``` {r plot-crop-raster}
+# crop desired layers to this cropbox
+DTM_pre_crop <- crop(DTM_pre, cropbox2)
+DTM_post_crop <- crop(DTM_post, cropbox2)
+DTMpre_hill_crop <- crop(DTMpre_hill,cropbox2)
+DTMpost_hill_crop <- crop(DTMpost_hill,cropbox2)
+DoD_crop <- crop(DoD, cropbox2)
 
 # plot all again using the cropped layers
 
@@ -241,7 +350,7 @@ Change_Model_crop <- crop(Change_Model, cropbox1)
 plot(DTMpre_hill_crop,
     col=grey(1:100/100),  # create a color ramp of grey colors
     legend=FALSE,
-		main="Lee Hill Rd. Boulder County\nPre-Flood",
+		main="Four Mile Canyon Creek, Boulder County\nPre-Flood",
     axes=FALSE)
 # note \n in the title forces a line break in the title
 plot(DTM_pre_crop, 
@@ -254,7 +363,7 @@ plot(DTM_pre_crop,
 plot(DTMpost_hill_crop,
     col=grey(1:100/100),  # create a color ramp of grey colors
     legend=FALSE,
-		main="Lee Hill Rd. Boulder County\nPost-Flood",
+		main="Four Mile Canyon Creek, Boulder County\nPost-Flood",
     axes=FALSE)
 
 plot(DTM_post_crop, 
@@ -262,14 +371,14 @@ plot(DTM_post_crop,
 		 alpha=0.5,
 		 add=T)
 
-# CHANGE
+# CHANGE - DoD
 plot(DTMpost_hill_crop,
     col=grey(1:100/100),  # create a color ramp of grey colors
     legend=FALSE,
-		main="Elevation Change Post Flood\nLee Hill Rd. Boulder County",
+		main="Elevation Change Post Flood\nFour Mile Canyon Creek, Boulder County",
     axes=FALSE)
 
-plot(Change_Model_crop,
+plot(DoD_crop,
 		 breaks = c(-5,-1,-0.5,0.5,1,10),
 		 col= difCol5,
 		 axes=FALSE,
@@ -277,84 +386,11 @@ plot(Change_Model_crop,
 		 add =T)
 ```
 
-``` {r crop-raster-2}
-# manually crop by drawing a box
-# plot the raster you want to crop from 
-plot(DTMpost_hill,
-    col=grey(1:100/100),  # create a color ramp of grey colors
-    legend=FALSE,
-		main="Lee Hill Rd. Boulder County\nPre-Flood",
-    axes=FALSE)
-# note \n in the title forces a line break in the title
-plot(Change_Model,
-		 breaks = c(-5,-1,-0.5,0.5,1,10),
-		 col= difCol5,
-		 axes=FALSE,
-		 alpha=0.4,
-		 add =T)
+Now you have a graphic of your particular area of interest. 
 
-# crop by designating two opposite corners
-#cropbox2<-drawExtent()
+## Additional Resources
 
-# Just ot keep track of what the coordinates were
-cropbox2<-c(474606.8,475005,4434746,4434978)
-
-# crop all layers to this crop box
-DTM_pre_crop2 <- crop(DTM_pre, cropbox2)
-DTM_post_crop2 <- crop(DTM_post, cropbox2)
-DTMpre_hill_crop2 <- crop(DTMpre_hill,cropbox2)
-DTMpost_hill_crop2 <- crop(DTMpost_hill,cropbox2)
-Change_Model_crop2 <- crop(Change_Model, cropbox2)
-
-# plot all again using the cropped layers
-
-# PRE
-png("lidar_pre.png", width = 10, height = 10, units = 'in', res = 300)
-
-plot(DTMpre_hill_crop2,
-    col=grey(1:100/100),  # create a color ramp of grey colors
-    legend=FALSE,
-		main="Lee Hill Rd. Boulder County\nPre-Flood",
-    axes=FALSE)
-# note \n in the title forces a line break in the title
-plot(DTM_pre_crop2, 
-		 axes=FALSE,
-		 alpha=0.5,
-		 add=T)
-
-dev.off()
-
-# POST
-png("lidar_post.png", width = 10, height = 10, units = 'in', res = 300)
-# plot Post-flood w/ hillshade
-plot(DTMpost_hill_crop2,
-    col=grey(1:100/100),  # create a color ramp of grey colors
-    legend=FALSE,
-		main="Lee Hill Rd. Boulder County\nPost-Flood",
-    axes=FALSE)
-
-plot(DTM_post_crop2, 
-		 axes=FALSE,
-		 alpha=0.5,
-		 add=T)
-
-dev.off()
-
-# CHANGE
-png("lidar_change.png", width = 10, height = 10, units = 'in', res = 300)
-plot(DTMpost_hill_crop2,
-    col=grey(1:100/100),  # create a color ramp of grey colors
-    legend=FALSE,
-		main="Elevation Change Post Flood\nLee Hill Rd. Boulder County",
-    axes=FALSE)
-
-plot(Change_Model_crop2,
-		 breaks = c(-5,-1,-0.5,0.5,1,10),
-		 col= difCol5,
-		 axes=FALSE,
-		 alpha=0.4,
-		 add =T)
-
-dev.off()
-```
-
+* How could you create a DoD, if you only have LiDAR from a single time point 
+but historical maps?  Check out 
+<a href="http://people.cas.sc.edu/hodgsonm/Published_Articles_PDF/James_Hodgson_Ghoshal_Latiolais_DEM%20DIfferencing_Geomorphology2012.pdf" target="_blank"> Allen James et al. 2012. Geomorphic change detection using historic maps and 
+DEM differencing: The temporal dimension of geospatial analysis. Geomorphology 137:181-198</a>. 

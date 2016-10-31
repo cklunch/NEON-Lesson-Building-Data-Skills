@@ -1,6 +1,5 @@
 ## ----load-libraries------------------------------------------------------
 
-library(lubridate) # work with time series data
 library(ggplot2)   # create efficient, professional plots
 library(plotly)    # create interactive plots
 
@@ -66,6 +65,7 @@ hist(nCLIMDIV$PDSI,   # the date we want to use
 ## ----set-plotly-creds, eval=FALSE----------------------------------------
 ## # set plotly user name
 ## Sys.setenv("plotly_username"="YOUR_plotly_username")
+## 
 ## # set plotly API key
 ## Sys.setenv("plotly_api_key"="YOUR_api_key")
 ## 

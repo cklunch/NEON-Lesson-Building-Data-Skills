@@ -1,15 +1,16 @@
 ---
 layout: post
 title: "Interactive Data Vizualization with R and Plotly"
-date: 2016-04-08
+date: 2016-10-19
 createdDate: 2014-12-06
 authors: [Megan A. Jones, Leah A. Wasser]
-lastModified: 2016-10-19
+lastModified: 2016-10-31
 categories: [self-paced-tutorial]
 tags: [R, data-viz]
 mainTag: data-viz
 librariesPackages: [ggplot, plotly]
-description: "Check out some interactive visualizations using NEON Flux Tower Temperature data created using R and Plotly."
+description: "Learn the basics of how to use the plotly package to create 
+interactive plots and use the Plotly API in R to share these plots."
 code1: 
 image:
   feature: lidar_GrandMesa.png
@@ -28,14 +29,14 @@ comments: true
 bills itself as "a collaborative platform for modern data science". You can use
 it to build  interactive plots that can easily be shared with others (like
 the
-<a href="http://{{ site.baseurl }}/teaching-module/disturb-event-co13/detailed-lesson#drought"> target="_blank"> Disturbance Events lessons</a>). 
+<a href="{{ site.baseurl }}/teaching-module/disturb-event-co13/detailed-lesson#drought" target="_blank"> Disturbance Events lessons</a>). 
 
-You will need an free online Plotly account to post & share you plot online. But
+You will need an free online Plotly account to post & share you plots online. But
 you can create the plots and use them on your local computer without an account.
 If you do not wish to share plots online you can skip to 
 **Step 3: Create Plotly plot**. 
 
-Additional information on the Plotly R package can be found 
+Additional information on the `plotly` R package can be found 
 <a href="https://plot.ly/r/getting-started/" target="_blank"> on the Plotly R Getting Started page</a>.  
 
 Note: Plotly doesn't just work with R -- other programs include Python, MATLAB,
@@ -50,8 +51,8 @@ the directions there.
 
 To share plots from R (or RStudio) to Plotly, you have to connect to your 
 account.  This is done through an API (Application Program Interface). You can
-find your username & API key under your Profile on the Plotly website under the
-"API key" menu option.  
+find your username & API key in your profile settings on the Plotly website 
+under the "API key" menu option.  
 
 To link your account to your R, use the following commands, substituting in your
 own username & key as appropriate. 
@@ -62,8 +63,10 @@ own username & key as appropriate.
     # set plotly API key
     Sys.setenv("plotly_api_key"="YOUR_api_key")
 
+
+
 ### Step 3: Create Plotly plot
-There are lots of ways to plot with the plotly package. We breifly describe two 
+There are lots of ways to plot with the plotly package. We briefly describe two 
 basic functions `plotly()` and `ggplotly()`. For more information on plotting in
 R with Plotly, check out the 
 <a href="https://plot.ly/r/" target="_blank"> Plotly R library page. 
@@ -71,10 +74,6 @@ R with Plotly, check out the
 Here we use the example dataframe `economics` that comes with the package. 
 
 
-    # Set working directory to the data directory
-    # setwd("YourFullPathToDataDirectory")
-    
-    
     # load packages
     library(plotly)  # to create interactive plots
     library(ggplot2) # to create plots and feed to ggplotly()
@@ -95,14 +94,27 @@ Here we use the example dataframe `economics` that comes with the package.
     unempPerCapita 
 
 ![ ]({{ site.baseurl }}/images/rfigs/disturb-events-co13/DataVis-plotly-R/create-plotly-plot-1.png)
+Note: This plot is interactive within the R environment but is not as posted on
+this website. 
 
-    #### plot with ggplot then ggplotly ####
+If you already use ggplot to create your plots, you can directly turn your 
+ggplot objects into interactive plots with `ggplotly()`. 
+
+
+    ## plot with ggplot, then ggplotly
     
     unemployment <- ggplot(economics, aes(date,unemploy)) + geom_line()
-    
+    unemployment
+
+![ ]({{ site.baseurl }}/images/rfigs/disturb-events-co13/DataVis-plotly-R/ggplotly-1.png)
+
     ggplotly(unemployment)
 
-![ ]({{ site.baseurl }}/images/rfigs/disturb-events-co13/DataVis-plotly-R/create-plotly-plot-2.png)
+![ ]({{ site.baseurl }}/images/rfigs/disturb-events-co13/DataVis-plotly-R/ggplotly-2.png)
+
+
+ßNote: This plot is interactive within the R environment but is not as posted on
+this website. 
 
 ### Step 4: Publish to Plotly
 

@@ -3,10 +3,19 @@
 # setwd("~/Documents/data/disturb-events-co13")  # or your appropriate file path 
 
 # load packages
-library(lubridate) # work with time series data
+#library(lubridate) # work with time series data
 library(ggplot2) # create efficient, professional plots
 library(plotly) # create cool interactive plots
 
+
+## ----load-libraries-hidden, echo=FALSE, results="hide"-------------------
+# this library is only added to get the webpage derived from this code to render
+# the plotly graphs.  It is NOT needed for any of the analysis or data 
+# visualizations.
+
+# install.packages("webshot")
+# webshot::install_phantomjs() 
+library(webshot) # embed the plotly plots
 
 ## ----import-precip-------------------------------------------------------
 
@@ -146,14 +155,16 @@ precPlot_flood2 <- ggplot(data=precip.boulder_AugOct, aes(DATE,PRECIP)) +
 precPlot_flood2 
 
 
+## ----plotly-prep, eval=FALSE---------------------------------------------
+## # load package; only if not already loaded
+## library(plotly)
+## 
+## # setup your plot.ly credentials; if not already set up
+## Sys.setenv("plotly_username"="your.user.name.here")
+## Sys.setenv("plotly_api_key"="your.key.here")
+## 
+
 ## ----plotly-precip-data--------------------------------------------------
-
-# load package, if not already loaded
-#library(plotly)
-
-# setup your plot.ly credentials
-#Sys.setenv("plotly_username"="your.user.name.here")
-#Sys.setenv("plotly_api_key"="your.key.here")
 
 #view plotly plot in R
 ggplotly(precPlot_flood2)
