@@ -23,7 +23,7 @@ comments: true
 
 {% include _toc.html %}
 
-Several factors contributed to extreme flooding that occurred in Boulder,
+Several factors contributed to the extreme flooding that occurred in Boulder,
 Colorado in 2013. In this data activity, we explore and visualize the data for 
 stream discharge data collected by the United States Geological Survey (USGS). 
 
@@ -32,7 +32,7 @@ stream discharge data collected by the United States Geological Survey (USGS).
 ### Learning Objectives
 After completing this tutorial, you will be able to:
 
-* Download stream gauge data from <a href="http://waterdata.usgs.gov/nwis" target="_blank"> USGS's National Water Information System</a>. 
+* Download stream gage data from <a href="http://waterdata.usgs.gov/nwis" target="_blank"> USGS's National Water Information System</a>. 
 * Plot precipitation data in R. 
 * Publish & share an interactive plot of the data using Plotly. 
 
@@ -55,18 +55,9 @@ learning objectives you may prefer to use the
 provided teaching data subset that can be downloaded from the <a href="https://ndownloader.figshare.com/files/6780978"> NEON Data Skills account
 on FigShare</a>.
 
-So that we all have organized data in the same location, create a `data` directory 
-(folder) within your `Documents` directory. 
-
-* If you are downloading your own data
-set, within `data`, create another directory `distub-events-co13`and then 
-within it create a `discharge` directory.  
-* If you are using the provided data (downloaded above), simply put the 
-entire unzipped directory in the `data` directory you just created and it should
-match the file path used throughout the activity. 
-
-If you choose to save the data elsewhere, you will need to modify the directions
-below to set your working directory & file paths accordingly.
+To more easily follow along with this lesson, use the same organization for your files and folders as we did. First, create a `data` directory (folder) within your `Documents` directory. If you downloaded the compressed data file above, unzip this file and place the `distub-events-co13` folder within the `data` directory you created. If you are planning to access the data directly as described in the lesson, create a new directory called `distub-events-co13` wihin your `data` folder and then within it create another directory called `discharge`. If you choose to save your files
+elsewhere in your file structure, you will need to modify the directions in the lesson to set your working 
+directory accordingly.
 
 </div>
 
@@ -104,22 +95,22 @@ Source: <a href="http://nwis.waterdata.usgs.gov/usa/nwis/peak/?site_no=06730200"
 </figure>
 
 
-## Obtain USGS Stream Gauge Data
+## Obtain USGS Stream Gage Data
 
 This next section explains how to find and locate data through the USGS's 
 <a href="http://waterdata.usgs.gov/nwis" target="_blank"> National Water Information System portal</a>.
-If you want to use the provided data set downloaded above, you can skip this 
+If you want to use the pre-compiled dataset downloaded above, you can skip this 
 section and start again at the
-<a href="{{ site.baseurl }}/R/USGS-Stream-Discharge-Data-R/#work-with-stream-gauge-data" target="_blank"> Work With Stream Gauge Data header</a>.
+<a href="{{ site.baseurl }}/R/USGS-Stream-Discharge-Data-R/#work-with-stream-gage-data" target="_blank"> Work With Stream Gage Data header</a>.
 
 #### Step 1: Search for the data
 
-To search for stream gauge data in a particular area, we can use the 
+To search for stream gage data in a particular area, we can use the 
 <a href="http://maps.waterdata.usgs.gov/mapper/index.html" target="_blank"> interactive map of all USGS stations</a>.
-By searching for locations around "Boulder, CO", we can find 3 gauges in the area. 
+By searching for locations around "Boulder, CO", we can find 3 gages in the area. 
 
-For this lesson, we want data collected by USGS stream gauge 06730200 located on 
-Boulder Creek at North 75th St. This gauge is one of the few the was able to 
+For this lesson, we want data collected by USGS stream gage 06730200 located on 
+Boulder Creek at North 75th St. This gage is one of the few the was able to continuously
 collect data throughout the 2013 Boulder floods. 
 
 You can directly access the data for this station through the "Access Data" link
@@ -127,7 +118,7 @@ on the map icon or searching for this site on the
 <a href="http://waterdata.usgs.gov/nwis" target="_blank"> National Water Information System portal </a>.
 
 On the <a href="http://waterdata.usgs.gov/nwis/inventory?agency_code=USGS&site_no=06730200
-" target="_blank"> Boulder Creek stream gauge 06730200 page</a>, we can now see 
+" target="_blank"> Boulder Creek stream gage 06730200 page</a>, we can now see 
 summary information about the types of data available for this station.  We want
 to select **Daily Data** and then the following parameters: 
 
@@ -136,15 +127,15 @@ to select **Daily Data** and then the following parameters:
 * Begin Date = **1 October 1986**
 * End Date = **31 December 2013** 
 
-Now select "Go". 
+Now click "Go". 
 
 #### Step 2: Save data to .txt
-The output is a plain text website that you must copy into a spreadsheet of 
+The output is a plain text page that you must copy into a spreadsheet of 
 choice and save as a .csv. Note, you can also download the teaching data set 
 (above) or access the data through an API (see Additional Resources, below). 
 
 
-# Work with Stream Gauge Data
+# Work with Stream Gage Data
 
 ## R Libraries
 
@@ -180,7 +171,7 @@ including:
 
 1. The data are tab delimited. We will this tell R to use the `"/t"` 
 **sep**arator, which defines a tab delimited separation.
-2. The first group of 24 lines in the file are not data, we will tell R to skip
+2. The first group of 24 lines in the file are not data; we will tell R to skip
 those lines when it imports the data using `skip=25`.
 3. Our data have a header, which is similar to column names in a spreadsheet. We 
 will tell `R` to set `header=TRUE` to ensure the headers are imported as column
@@ -208,10 +199,10 @@ head(discharge)
 
 ```
 
-When we import these data, the first row of data still appears to be another
+When we import these data, we can see that the first row of data is a second
 header row rather than actual data. We can remove the second row of header 
-values, by selecting all data beginning at row 2 and ending at the
-total number or rows in the file. The `nrow` function will count the total
+values by selecting all data beginning at row 2 and ending at the
+total number or rows in the file and re-assigning it to the variable `discharge`. The `nrow` function will count the total
 number of rows in the object.
 
 ```{r remove-second-header }
@@ -225,18 +216,17 @@ discharge <- discharge[2:nrow(discharge),]
 ```
 
 ## Metadata 
-Now, we have an R object that contains only rows containing data values. Each 
+We now have an R object that includes only rows containing data values. Each 
 column also has a unique column name. However the column names may not be 
-descriptive enough - what is `X17663_00060_00003`?.
+descriptive enough to be useful - what is `X17663_00060_00003`?.
 
-Reopen the `discharge/06730200-discharge_daily_1986-2013.txt` data, the text at 
+Reopen the `discharge/06730200-discharge_daily_1986-2013.txt` file in a text editor or browser. The text at 
 the top provides useful metadata about our data. On rows 10-12, we see that the
-values for the data are "Discharge, cubic feed per second (Mean)" corresponding
-to the 5th column of data.  Rows 14-16 tell us more about the 6th column of data, 
+values in the 5th column of data are "Discharge, cubic feed per second (Mean)".  Rows 14-16 tell us more about the 6th column of data, 
 the quality flags.  
 
 Now that we know what the columns are, let's rename column 5, which contains the
-discharge value, **disValue** and column 6 as **qualFlag** so it is more "human
+discharge value, as **disValue** and column 6 as **qualFlag** so it is more "human
 readable" as we work with it 
 in R.
 
@@ -319,7 +309,7 @@ hist(discharge$disValue)
 
 ```
 
-Excellent! No, No Data values.  
+Excellent! The data contains no NoData values.  
 
 ## Plot The Data
 
@@ -369,7 +359,7 @@ ggplot(discharge,
 ```
 
 We get a warning message because we are "ignoring" lots of the data in the
-data set
+data set.
 
 ## Plotly - Interactive (and Online) Plots
 
@@ -382,10 +372,10 @@ to learn how to set up an account and access your username and API key.
 
 ### Time subsets in plotly
 
-To plot a subset of the total data we have to manually subset the data as Plotly
-code doesn't (yet?) recognize the `limits` method of subsetting. 
+To plot a subset of the total data we have to manually subset the data as the Plotly
+library doesn't (yet?) recognize the `limits` method of subsetting. 
 
-Here we create a new R object with just the dates we want and then plot that data. 
+Here we create a new R object with entries corresponding to just the dates we want and then plot that data. 
 
 ```{r plotly-discharge-data}
 
@@ -442,7 +432,7 @@ USGS data can be downloaded via an API using a command line interface. This is
 particularly useful if you want to request data from multiple sites or build the
 data request into a script. 
 <a href="http://help.waterdata.usgs.gov/faq/automated-retrievals#RT">
-Read more hear about API downloads of USGS data</a>.
+Read more here about API downloads of USGS data</a>.
 
 
 
