@@ -53,24 +53,15 @@ have basic knowledge for use of the R software program.
 * **lubridate:** `install.packages("lubridate")`
 * **plotly:** `install.packages("plotly")`
 
-### Data to Download
-We include directions on how to directly find and access the data from NOAA's 
-National Climate Divisional Database. If you are unable to follow the directions 
-or would 
-like to pre-download the data set it can be downloaded from the 
-<a href="https://ndownloader.figshare.com/files/6780978"> NEON Data Skills account on FigShare</a>. . 
+#### Data Download & Directory Preparation
 
-So that we all have organized data in the same location, create a `data` directory 
-(folder) within your `Documents` directory.
+Part of this lesson is to access and download the data directly from NOAA's National 
+Climate Divisional Database. If instead you would prefer to download the data as a single compressed file, it can be downloaded from the <a href="https://ndownloader.figshare.com/files/6780978"> NEON Data Skills account
+on FigShare</a>.  
 
-If you are using the provided data (downloaded above) simply put the 
-entire unzipped directory in the `data` directory you just created. If you choose to save 
-elsewhere you will need to modify the directions below to set your working 
+To more easily follow along with this lesson, use the same organization for your files and folders as we did. First, create a `data` directory (folder) within your `Documents` directory. If you downloaded the compressed data file above, unzip this file and place the `distub-events-co13` folder within the `data` directory you created. If you are planning to access the data directly as described in the lesson, create a new directory called `distub-events-co13` wihin your `data` folder and then within it create another directory called `precip`. If you choose to save your files
+elsewhere in your file structure, you will need to modify the directions in the lesson to set your working 
 directory accordingly.
-
-If you want to download data directly from NCDD following the instructions below, 
-within `data`, create another directory `distub-events-co13`and then within it 
-create a `precip` directory where you will save the data.  
 
 </div>
 
@@ -79,18 +70,16 @@ What were the patterns of precipitation leading up to the 2013 flooding events
 in Colorado? 
 
 ## Precipitation Data 
-The heavy **precipitation (rain)** that occurred in September 2013 drove the 
-many of the flood impacts including increased **stream discharge (flow)**. In 
-this lesson we will download, explore, and visualize the precipitation collected
+The heavy **precipitation (rain)** that occurred in September 2013 caused much damage during the 2013 flood by, among other things, increasing **stream discharge (flow)**. In 
+this lesson we will download, explore, and visualize the precipitation data collected
 during this time to better understand this important flood driver.
 
-Where can we get precipitation data? 
+## Where can we get precipitation data? 
 
 The precipitation data are obtained through 
  <a href="http://www.ncdc.noaa.gov/" target="_blank">NOAA's National Centers for 
 Environmental Information</a> 
-(formerly the National Climatic Data Center). There are numerous climatic data
-sets that can be searched and downloaded via the 
+(formerly the National Climatic Data Center). There are numerous climatic datasets that can be found and downloaded via the 
 <a href="http://www.ncdc.noaa.gov/cdo-web/search" target="_blank">Climate Data
 Online Search portal</a>. 
 
@@ -104,9 +93,9 @@ areas. COOP data usually consist of daily maximum and minimum temperatures,
 snowfall, and 24-hour precipitation totals." 
 > Quoted from NOAA's National Centers for Environmental Information
 
-Data is collected at different stations, often on paper data sheets like below,
+Data is collected at different stations, often on paper data sheets like the one below,
 and then entered into a central database where we can access that data and 
-download in the .csv (Comma Separated Values) format.
+download it in the .csv (Comma Separated Values) format.
 
  <figure>
    <a href="{{ site.baseurl }}/images/disturb-events-co13/COOP_SampleDataSheet.png">
@@ -123,12 +112,12 @@ If you have not already opened the
 <a href="http://www.ncdc.noaa.gov/cdo-web/search" target="_blank">Climate Data
 Online Search portal</a>, do so now. 
 
-Note: If you are using the data subset that can be downloaded with this lesson, 
-read through this section to know where the data comes from then proceed with 
+Note: If you are using the pre-compiled data subset that can be downloaded as a compressed file above, 
+you should still read through this section to know where the data comes from before proceeding with 
 the lesson. 
 
 #### Step 1: Search for the data
-To obtain data we must first choose a location from which we want to get data. 
+To obtain data we must first choose a location of interest. 
 The COOP site Boulder 2 (Station ID:050843) is centrally located in Boulder, CO. 
 
  <figure>
@@ -139,7 +128,7 @@ The COOP site Boulder 2 (Station ID:050843) is centrally located in Boulder, CO.
    </figcaption>
 </figure>
 
-Then we must decide what type of data we want. As shown in the image below, we 
+Then we must decide what type of data we want to download for that station. As shown in the image below, we 
 selected:
 
 * the desired date range (1 January 2003 to 31 December 2013),
@@ -159,13 +148,13 @@ selected:
 Once the data is entered and you select `Search`, you will be directed to a 
 new page with a map. You can find out more information about the data by selecting
 `View Full Details`. 
-Notice that this data set goes all the way back to 1 August 1948! However, we've 
+Notice that this dataset goes all the way back to 1 August 1948! However, we've 
 selected only a portion of this time frame. 
 
 #### Step 2: Request the data
-Once you are sure this is the you want you need to request it by selecting `Add
+Once you are sure this is the data that you want, you need to request it by selecting `Add
 to Cart`. The data can then be downloaded as a **.csv** file which we will use
-to conduct our analyses. Be sure to double check the date range! 
+to conduct our analyses. Be sure to double check the date range before downloading. 
 
 On the options page, we want to make sure we select: 
 
@@ -175,26 +164,26 @@ On the options page, we want to make sure we select:
 * Units (Standard)
 * Precipitation (w/ HPCP automatically checked)
 
-On the next page you must submit your email address for the data set to be sent 
+On the next page you must enter an email address for the data set to be sent 
 to.  
 
 #### Step 3: Get the data
 As this is a small dataset, it won't take long for you to get an email telling 
 you the dataset is ready. Follow the link in the email to download your dataset.
-You can also view documentation (metadata) the data.  
+You can also view documentation (metadata) for the data.  
 Each data subset is downloaded with a unique order number.  The order number in 
 our example data set is 805325.  If you are using a data set you've downloaded 
 yourself, make sure to substitute in your own order number in the code below. 
 
 To ensure that we remember what our data file is, we've added a descriptor to 
-the order number: `805325-precip_daily_2003-2013`. You may wish to the same. 
+the order number: `805325-precip_daily_2003-2013`. You may wish to do the same. 
 
 # Work with Precipitation Data
 
 ## R Libraries
 
-We will be working with time-series data in this lesson so we will load the
-`lubridate` library that allows use to easily work with dates. We will use 
+We will be working with time-series data in this lesson using the
+`lubridate` library. This library will allow us to easily work with dates. We will use 
 `ggplot2` to efficiently plot our data and `plotly` to create interactive plots.
 
 ```{r load-libraries}
@@ -224,8 +213,8 @@ We will use the `805325-Preciptation_Daily_2003-2013.csv` file
 in this analysis. This dataset is the daily precipitation date from the COOP 
 station 050843 in Boulder, CO for 1 January 2003 through 31 December 2013. 
 
-As the data format is a .csv, we can use `read.csv` to import the data. After
-we import the data, let's have a look at the first few lines using `head()`, 
+Since the data format is a .csv, we can use `read.csv` to import the data. After
+we import the data, we can take a look at the first few lines using `head()`, 
 which defaults to the first 6 rows, of the `data.frame`. Finally, we can explore
 the R object structure.
 
@@ -244,8 +233,8 @@ str(precip.boulder)
 ```
 
 ## About the Data 
-Viewing the structure of these data, we can see that different data included in 
-this data set. 
+Viewing the structure of these data, we can see that different types of data are included in 
+this file. 
 
 * **STATION** and **STATION_NAME**: Identification of the COOP station.
 * **ELEVATION, LATITUDE** and **LONGITUDE**: The spatial location of the station.
@@ -276,12 +265,12 @@ several important factors:
 * data class: is R interpreting the data the way we expect it. The function 
 `str()` is an important tools for this. 
 * NoData Values: We need to know if our data contains a specific value that 
-means "data are missing" and is this value assigned to NA in R. 
+means "data are missing" and if this value has been assigned to NA in R. 
 
 
 ### Convert Date-Time
-As we've noted the date field is in a character class, we can convert it to a date/time
-class which will allow R to correctly interpret the data and allow us to easily 
+As we've noted, the date field is in a character class. We can convert it to a date/time
+class that will allow R to correctly interpret the data and allow us to easily 
 plot the data. We can convert it to a date/time class using `as.POSIXct()`. 
 
 ```{r convert-date}
@@ -300,8 +289,8 @@ str(precip.boulder$DateTime)
 [Dealing With Dates & Times in R - as.Date, POSIXct, POSIXlt ]({{ site.baseurl }}/R/time-series-convert-date-time-class-POSIX/).
 
 ### NoData Values
-We've also learned that missing values are labelled `999.99`, also known as NoData
-values. Do we have any NoData values in our data? 
+We've also learned that missing values, also known as NoData
+values, are labelled with the placeholder `999.99`. Do we have any NoData values in our data? 
 
 ``` {r no-data-values-hist}
 
@@ -311,8 +300,8 @@ hist(precip.boulder$HPCP)
 
 ```
 
-Yes, it looks like we have mostly low values (which makes sense) but a few values
-up near 1000 -- likely 999.99. We can assign these data to be `NA` the value that
+Looking at the histogram, it looks like we have mostly low values (which makes sense) but a few values
+up near 1000 -- likely 999.99. We can assign these entries to be `NA`, the value that
 R interprets as no data.  
 
 ``` {r no-data-values}
@@ -325,15 +314,15 @@ sum(is.na(precip.boulder))
 
 ```
 
-There are 94 NA values in our dataset.  This is missing data. 
+There are 94 NA values in our dataset. This is missing data. 
 
 #### Questions: 
 
 1. Do we need to worry about the missing data?  
 1. Could they affect our analyses?  
 
-This depends on what questions we are asking.  For right now we are looking at 
-general patterns in the data across 10 years. This means we have just over 3650 
+This depends on what questions we are asking.  Here we are looking at 
+general patterns in the data across 10 years. Since we have just over 3650 
 days in our entire data set, missing 94 probably won't affect the general trends
 we are looking at.  
 
@@ -341,7 +330,7 @@ Can you think of a research question where we would need to be concerned about
 the missing data? 
 
 ## Plot Precipitation Data
-Now that we've cleaned up the data let's view it. To do this we will plot using 
+Now that we've cleaned up the data, we can view it. To do this we will plot using 
 `ggplot()` from the `ggplot2` package. 
 
 ``` {r plot-precip-hourly}
@@ -356,7 +345,7 @@ precPlot_hourly
 
 ```
 
-As we can see, plotting hourly date leads to very small numbers and is difficult
+As we can see, plots of hourly date lead to very small numbers and is difficult
 to represent all information on a figure. Hint: If you can't see any bars on your
 plot you might need to zoom in on it. 
 
@@ -367,7 +356,7 @@ Plots and comparison of daily precipitation would be easier to view.
 There are several ways to aggregate the data. 
 
 #### Daily Plots
-If you only want to view the data plotted by data you need to create a column
+If you only want to view the data plotted by date you need to create a column
 with only dates (no time) and then re-plot. 
 
 ```{r daily-summaries }
@@ -390,12 +379,11 @@ precPlot_daily1 <- ggplot(data=precip.boulder,  # the data frame
 precPlot_daily1
 ```
 
-R will automatically combine all data from the same day and plot it on that day.  
+R will automatically combine all data from the same day and plot it as one entry.  
 
 #### Daily Plots & Data
 
-If you not only want to see the daily data but you also want to create a field
-of daily data, you need to create a new data frame with the daily data. We can 
+If you want to record the combined hourly data for each day, you need to create a new data frame to store the daily data. We can 
 use the `aggregate()` function to combine all the hourly data into daily data. 
 We will use the date class DATE field we created in the previous code for this. 
 
@@ -413,8 +401,8 @@ head(precip.boulder_daily)
 ```
 
 So we now have daily data but the column names don't mean anything. We can 
-give them meaningful names by using the `names()` function. Instead of just
-renaming the column `HPCP` let's call it `PRECIP`.
+give them meaningful names by using the `names()` function. Instead of naming the column of 
+precipitation values with the original `HPCP`, let's call it `PRECIP`.
 
 ``` {r rename-fields}
 
@@ -440,7 +428,7 @@ precPlot_daily <- ggplot(data=precip.boulder_daily,  # the data frame
 precPlot_daily
 ```
 
-Compare this to the plot we created using the first method. Are they the same? 
+Compare this plot to the plot we created using the first method. Are they the same? 
 
 <i class="fa fa-star"></i> **R Tip:** This manipulation, or aggregation, of data
 can also be done with the package `plyr` using the `summarize()` function.
@@ -449,14 +437,14 @@ can also be done with the package `plyr` using the `summarize()` function.
 ## Subset the Data 
 
 Instead of looking at the data for the full decade, let's now focus on just the
-2 months surrounding the flood on 11-15 September. We'll use the window from 15 
-August to 15 October to focus on. 
+2 months surrounding the flood on 11-15 September. We'll focus on the window from 15 
+August to 15 October. 
 
-Just like aggregating we can accomplish this through the graphical interface or 
-by creating an actual subset of the data. 
+Just like aggregating, we can accomplish this by interacting with the larger plot through the graphical interface or 
+by creating a subset of the data and protting it separately.
 
 #### Subset Within Plot
-Let's start with the graphic interface where we can simply set limits for the 
+To see only a subset of the larger plot, we can simply set limits for the 
 scale on the x-axis with `scale_x_date()`. 
 
 ``` {r plot-Aug-Oct-2013}
@@ -476,7 +464,7 @@ precPlot_flood
 
 ```
 
-Here we can easily see the dramatic rainfall event in mid-September! 
+Now we can easily see the dramatic rainfall event in mid-September! 
 
 <i class="fa fa-star"></i> **R Tip:** If you are using a date-time class, instead
 of just a date class, you need to use `scale_x_datetime()`.
@@ -484,7 +472,7 @@ of just a date class, you need to use `scale_x_datetime()`.
 
 #### Subset The Data
 
-Now let's subset the actual data and plot it. 
+Now let's create a subset of the data and plot it. 
 ``` {r subset-data}
 
 # subset 2 months around flood
@@ -534,9 +522,8 @@ plotly_POST(precPlot_flood2)
 ## Challenge: Plot Precip for Boulder Station Since 1948
 
 The Boulder precipitation station has been recording data since 1948. Use the 
-steps learned above to create a plot of all the precipitation data (1948 - 2013).
-This data set takes considerable time to download, so we recommend you use the
-provided dataset "805333-precip_daily_1948-2013.csv". 
+steps above to create a plot of the full record of precipitation at this station (1948 - 2013).
+The full dataset takes considerable time to download, so we recommend you use the dataset provided in the compressed file ("805333-precip_daily_1948-2013.csv"). 
 
 As an added challenge, aggregate the data by month instead of by day.  
 
@@ -611,6 +598,6 @@ head(precip.boulder)
 
 ```
 
-Compare `HPCP` and `PRECIP`, did we do the conversion correctly?  
+Compare `HPCP` and `PRECIP`. Did we do the conversion correctly?  
 
 
