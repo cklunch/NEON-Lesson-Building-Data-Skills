@@ -17,7 +17,6 @@ image:
   credit: LiDAR data collected over Grand Mesa, Colorado - National Ecological Observatory Network (NEON)
   creditlink:
 permalink: /R/Plotly
-code1:
 comments: true
 ---
 
