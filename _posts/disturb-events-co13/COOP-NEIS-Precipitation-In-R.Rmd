@@ -517,6 +517,8 @@ plotly_POST(precPlot_flood2)
 
 ```
 
+<div id="challenge" markdown="1">
+
 ## Challenge: Plot Precip for Boulder Station Since 1948
 
 The Boulder precipitation station has been recording data since 1948. Use the 
@@ -525,7 +527,7 @@ The full dataset takes considerable time to download, so we recommend you use th
 
 As an added challenge, aggregate the data by month instead of by day.  
 
-``` {r all-boulder-station-data, echo=FALSE, results="hide"}
+``` {r all-boulder-station-data, echo=FALSE, results="hide", include=FALSE}
 
 # read in data
 prec.boulder.all <- read.csv("precip/805333-precip_daily_1948-2013.csv",
@@ -574,8 +576,7 @@ plotly_POST(precPlot_all)
 
 ```
 
-
-
+</div>
 
 
 ## Additional Resources

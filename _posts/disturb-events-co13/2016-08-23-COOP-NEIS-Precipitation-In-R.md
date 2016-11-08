@@ -553,6 +553,8 @@ Let's turn our plot into an interactive Plotly plot.
 
 <iframe src="https://plot.ly/~NEONDataSkills/4.embed" width="800" height="600" id="igraph" scrolling="no" seamless="seamless" frameBorder="0"> </iframe>
 
+<div id="challenge" markdown="1">
+
 ## Challenge: Plot Precip for Boulder Station Since 1948
 
 The Boulder precipitation station has been recording data since 1948. Use the 
@@ -561,14 +563,9 @@ The full dataset takes considerable time to download, so we recommend you use th
 
 As an added challenge, aggregate the data by month instead of by day.  
 
-![ ]({{ site.baseurl }}/images/rfigs/disturb-events-co13/COOP-NEIS-Precipitation-In-R/all-boulder-station-data-1.png)![ ]({{ site.baseurl }}/images/rfigs/disturb-events-co13/COOP-NEIS-Precipitation-In-R/all-boulder-station-data-2.png)
-
-    ## No encoding supplied: defaulting to UTF-8.
-
-    ## Success! Modified your plotly here -> https://plot.ly/~NEONDataSkills/6
 
 
-
+</div>
 
 
 ## Additional Resources
