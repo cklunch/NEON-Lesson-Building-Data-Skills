@@ -4,7 +4,7 @@ title: "Data Activity: Visualize Stream Discharge Data in R to Better Understand
 date: 2016-04-05
 authors: [Megan A. Jones, Leah A. Wasser, Mariela Perignon]
 dateCreated: 2015-05-18
-lastModified: 2016-10-31
+lastModified: 2016-11-08
 categories: [teaching-module]
 tags: [R, time-series]
 mainTag: disturb-event-co13
@@ -23,9 +23,11 @@ comments: true
 
 {% include _toc.html %}
 
-Several factors contributed to extreme flooding that occurred in Boulder,
+Several factors contributed to the extreme flooding that occurred in Boulder,
 Colorado in 2013. In this data activity, we explore and visualize the data for 
 stream discharge data collected by the United States Geological Survey (USGS). 
+This tutorial is part of the Data Activities that can be used with the 
+<a href="{{ site.basurl }}/teaching-module/disturb-event-co13/overview" target="_blank"> *Ecological Disturbance Teaching Module*</a>.
 
 <div id="objectives" markdown="1">
 
@@ -55,18 +57,9 @@ learning objectives you may prefer to use the
 provided teaching data subset that can be downloaded from the <a href="https://ndownloader.figshare.com/files/6780978"> NEON Data Skills account
 on FigShare</a>.
 
-So that we all have organized data in the same location, create a `data` directory 
-(folder) within your `Documents` directory. 
-
-* If you are downloading your own data
-set, within `data`, create another directory `distub-events-co13`and then 
-within it create a `discharge` directory.  
-* If you are using the provided data (downloaded above), simply put the 
-entire unzipped directory in the `data` directory you just created and it should
-match the file path used throughout the activity. 
-
-If you choose to save the data elsewhere, you will need to modify the directions
-below to set your working directory & file paths accordingly.
+To more easily follow along with this lesson, use the same organization for your files and folders as we did. First, create a `data` directory (folder) within your `Documents` directory. If you downloaded the compressed data file above, unzip this file and place the `distub-events-co13` folder within the `data` directory you created. If you are planning to access the data directly as described in the lesson, create a new directory called `distub-events-co13` wihin your `data` folder and then within it create another directory called `discharge`. If you choose to save your files
+elsewhere in your file structure, you will need to modify the directions in the lesson to set your working 
+directory accordingly.
 
 </div>
 
@@ -108,7 +101,7 @@ Source: <a href="http://nwis.waterdata.usgs.gov/usa/nwis/peak/?site_no=06730200"
 
 This next section explains how to find and locate data through the USGS's 
 <a href="http://waterdata.usgs.gov/nwis" target="_blank"> National Water Information System portal</a>.
-If you want to use the provided data set downloaded above, you can skip this 
+If you want to use the pre-compiled dataset downloaded above, you can skip this 
 section and start again at the
 <a href="{{ site.baseurl }}/R/USGS-Stream-Discharge-Data-R/#work-with-stream-gauge-data" target="_blank"> Work With Stream Gauge Data header</a>.
 
@@ -119,7 +112,7 @@ To search for stream gauge data in a particular area, we can use the
 By searching for locations around "Boulder, CO", we can find 3 gauges in the area. 
 
 For this lesson, we want data collected by USGS stream gauge 06730200 located on 
-Boulder Creek at North 75th St. This gauge is one of the few the was able to 
+Boulder Creek at North 75th St. This gauge is one of the few the was able to continuously
 collect data throughout the 2013 Boulder floods. 
 
 You can directly access the data for this station through the "Access Data" link
@@ -136,25 +129,23 @@ to select **Daily Data** and then the following parameters:
 * Begin Date = **1 October 1986**
 * End Date = **31 December 2013** 
 
-Now select "Go". 
+Now click "Go". 
 
 #### Step 2: Save data to .txt
-The output is a plain text website that you must copy into a spreadsheet of 
+The output is a plain text page that you must copy into a spreadsheet of 
 choice and save as a .csv. Note, you can also download the teaching data set 
 (above) or access the data through an API (see Additional Resources, below). 
 
 
 # Work with Stream Gauge Data
 
-## R Libraries
+## R Packages
 
-We will be working with time-series data in this lesson so we will load the
-`lubridate` library that allows use to easily work with dates. We will use 
-`ggplot2` to efficiently plot our data and `plotly` to create interactive plots.
+We will use `ggplot2` to efficiently plot our data and `plotly` to create interactive plots.
 
 
     # set your working directory
-    #setwd("~/Documents/data/disturb-events-co13")  # or your appropriate file path 
+    #setwd("working-dir-path-here")
     
     # load packages
     library(ggplot2) # create efficient, professional plots
@@ -178,7 +169,7 @@ including:
 
 1. The data are tab delimited. We will this tell R to use the `"/t"` 
 **sep**arator, which defines a tab delimited separation.
-2. The first group of 24 lines in the file are not data, we will tell R to skip
+2. The first group of 24 lines in the file are not data; we will tell R to skip
 those lines when it imports the data using `skip=25`.
 3. Our data have a header, which is similar to column names in a spreadsheet. We 
 will tell `R` to set `header=TRUE` to ensure the headers are imported as column
@@ -211,10 +202,10 @@ Data Structure** section).
     ## 5      USGS 06730200 1986-10-04                 30                     A
     ## 6      USGS 06730200 1986-10-05                 30                     A
 
-When we import these data, the first row of data still appears to be another
+When we import these data, we can see that the first row of data is a second
 header row rather than actual data. We can remove the second row of header 
-values, by selecting all data beginning at row 2 and ending at the
-total number or rows in the file. The `nrow` function will count the total
+values by selecting all data beginning at row 2 and ending at the
+total number or rows in the file and re-assigning it to the variable `discharge`. The `nrow` function will count the total
 number of rows in the object.
 
 
@@ -229,18 +220,17 @@ number of rows in the object.
     discharge <- discharge[2:nrow(discharge),]
 
 ## Metadata 
-Now, we have an R object that contains only rows containing data values. Each 
+We now have an R object that includes only rows containing data values. Each 
 column also has a unique column name. However the column names may not be 
-descriptive enough - what is `X17663_00060_00003`?.
+descriptive enough to be useful - what is `X17663_00060_00003`?.
 
-Reopen the `discharge/06730200-discharge_daily_1986-2013.txt` data, the text at 
+Reopen the `discharge/06730200-discharge_daily_1986-2013.txt` file in a text editor or browser. The text at 
 the top provides useful metadata about our data. On rows 10-12, we see that the
-values for the data are "Discharge, cubic feed per second (Mean)" corresponding
-to the 5th column of data.  Rows 14-16 tell us more about the 6th column of data, 
+values in the 5th column of data are "Discharge, cubic feed per second (Mean)".  Rows 14-16 tell us more about the 6th column of data, 
 the quality flags.  
 
 Now that we know what the columns are, let's rename column 5, which contains the
-discharge value, **disValue** and column 6 as **qualFlag** so it is more "human
+discharge value, as **disValue** and column 6 as **qualFlag** so it is more "human
 readable" as we work with it 
 in R.
 
@@ -347,7 +337,7 @@ be, `NA` or `-9999` are common values
 
 ![ ]({{ site.baseurl }}/images/rfigs/disturb-events-co13/USGS-Stream-Discharge-In-R/no-data-values-1.png)
 
-Excellent! No, No Data values.  
+Excellent! The data contains no NoData values.  
 
 ## Plot The Data
 
@@ -399,7 +389,7 @@ October 15 2013.
 ![ ]({{ site.baseurl }}/images/rfigs/disturb-events-co13/USGS-Stream-Discharge-In-R/define-time-subset-1.png)
 
 We get a warning message because we are "ignoring" lots of the data in the
-data set
+data set.
 
 ## Plotly - Interactive (and Online) Plots
 
@@ -412,10 +402,10 @@ to learn how to set up an account and access your username and API key.
 
 ### Time subsets in plotly
 
-To plot a subset of the total data we have to manually subset the data as Plotly
-code doesn't (yet?) recognize the `limits` method of subsetting. 
+To plot a subset of the total data we have to manually subset the data as the Plotly
+package doesn't (yet?) recognize the `limits` method of subsetting. 
 
-Here we create a new R object with just the dates we want and then plot that data. 
+Here we create a new R object with entries corresponding to just the dates we want and then plot that data. 
 
 
     # subset out some of the data - Aug 15 - October 15
@@ -474,7 +464,7 @@ USGS data can be downloaded via an API using a command line interface. This is
 particularly useful if you want to request data from multiple sites or build the
 data request into a script. 
 <a href="http://help.waterdata.usgs.gov/faq/automated-retrievals#RT">
-Read more hear about API downloads of USGS data</a>.
+Read more here about API downloads of USGS data</a>.
 
 
 

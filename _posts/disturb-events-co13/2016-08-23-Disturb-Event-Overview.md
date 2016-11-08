@@ -4,7 +4,7 @@ title: "Overview: Quantifying The Drivers and Impacts of Natural Disturbance Eve
 date: 2016-04-10
 authors: [Leah A. Wasser, Megan A. Jones]
 dateCreated: 2015-12-05
-lastModified: 2016-10-31
+lastModified: 2016-11-08
 categories: [teaching-module]
 tags: [R, time-series]
 mainTag: disturb-event-co13
@@ -78,7 +78,6 @@ NEON Data Skills account on FigShare</a>.
 
 ## Lesson Components
 
-* <a href="{{ site.baseurl}}/teaching-module/disturb-event-co13/lesson-plan" target="_blank"> Lesson Plan </a> [not yet built]
 * <a href="{{ site.baseurl}}/teaching-module/disturb-event-co13/detailed-lesson" target="_blank"> Detailed Lesson Page
 * Data Activities in R Lessons (additional time required)
     + <a href="{{ site.baseurl }}/R/nCLIMDIV-Palmer-Drought-Data-R" target="_blank"> Palmer Drought Severity Index Data </a>

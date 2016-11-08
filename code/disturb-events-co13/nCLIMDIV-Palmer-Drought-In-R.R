@@ -15,7 +15,7 @@ library(webshot) # embed the plotly plots
 
 ## ----import-drought-data-------------------------------------------------
 # Set working directory to the data directory
-# setwd("YourFullPathToDataDirectory")
+#setwd("working-dir-path-here")
 
 # Import CO state-wide nCLIMDIV data
 nCLIMDIV <- read.csv("drought/CDODiv8506877122044_CO.txt", header = TRUE)

@@ -25,9 +25,9 @@ comments: true
 {% include _toc.html %}
 
 This tutorial focuses on how to visualize Palmer Drought Severity Index data in 
-R and Plot.ly. The tutorial is part of the Data Activity packages that can be used 
+R and Plot.ly. The tutorial is part of the Data Activities that can be used 
 with the 
-<a href="{{ site.basurl }}/teaching-module/disturb-event-co13/overview" target="_blank"> Ecological Disturbance Teaching Modules. 
+<a href="{{ site.basurl }}/teaching-module/disturb-event-co13/overview" target="_blank"> *Ecological Disturbance Teaching Module*</a>. 
 
 <div id="objectives" markdown="1">
 
@@ -172,9 +172,8 @@ Now that we have the data we can start working with it in R.
 
 ### R Libraries
 
-We will be working with time-series data in this tutorial using the
-`lubridate` library in R. We will use `ggplot2` to efficiently plot our data and 
-`plotly` to create interactive plots of our data.
+We will use `ggplot2` to efficiently plot our data and `plotly` to create 
+interactive plots of our data.
 
 ```{r load-libraries}
 
@@ -204,7 +203,7 @@ data to tell R to use that first row as a list of column names rather than a row
 
 ```{r import-drought-data }
 # Set working directory to the data directory
-# setwd("YourFullPathToDataDirectory")
+#setwd("working-dir-path-here")
 
 # Import CO state-wide nCLIMDIV data
 nCLIMDIV <- read.csv("drought/CDODiv8506877122044_CO.txt", header = TRUE)
@@ -405,6 +404,8 @@ be appropriate information to add for this plot?
 plot? 
 
 
+<div id="challenge" markdown="1">
+
 ## Challenge: Does spatial scale affect the pattern? 
 
 In the steps above we have been looking at data aggregated across the entire
@@ -460,8 +461,9 @@ palmer.drought.co04_plotly <- plot_ly(nCLIMDIV.co04,    # the R object dataset
 palmer.drought.co04_plotly
 
 ```
+</div>
 
-
+<div id="challenge" markdown="1">
 ## Challenge: Do different measures show the same pattern?
 
 The nCLIMDIV dataset includes not only the Palmer Drought Severity Index but 
@@ -503,6 +505,7 @@ palmer.hydro
 
 ```
 
+</div>
 
 ## Additional Resources
 

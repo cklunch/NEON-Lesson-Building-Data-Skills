@@ -4,7 +4,7 @@ title: "Lesson Plan: Quantifying The Drivers and Impacts of Natural Disturbance 
 date: 2016-04-10
 authors: [Megan A. Jones]
 dateCreated: 2015-12-05
-lastModified: 2016-10-31
+lastModified: 2016-11-08
 categories: [teaching-module]
 tags: [R, time-series]
 mainTag: disturb-event-co13

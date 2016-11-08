@@ -24,7 +24,10 @@ comments: false
 
 {% include _toc.html %}
 
-
+This tutorial focuses on how to visualize digital elevation models derived from
+LiDAR data in R. The tutorial is part of the Data Activities that can be used 
+with the 
+<a href="{{ site.basurl }}/teaching-module/disturb-event-co13/overview" target="_blank"> *Ecological Disturbance Teaching Module*</a>.
 
 <div id="objectives" markdown="1">
 
@@ -86,10 +89,10 @@ brief lesson on
 explores three important landscape models that are commonly used. 
 
 <figure>
-	<a href="http://data-lessons.github.io/NEON-R-Spatial-Raster/images/dc-spatial-raster/lidarTree-height.png">
-  <img src="http://data-lessons.github.io/NEON-R-Spatial-Raster/images/dc-spatial-raster/lidarTree-height.png">
-  <figcaption>Digital Terrain Models, Digital Surface Models and Canopy height
-  	models are three common lidar derived data products. The digital terrain model
+	<a href="{{ site.baseurl }}/images/dc-spatial-raster/lidarTree-height.png">
+  <img src="{{ site.baseurl }}/images/dc-spatial-raster/lidarTree-height.png"></a>
+  <figcaption>Digital Terrain Models, Digital Surface Models and Canopy Height
+  	Models are three common LiDAR-derived data products. The digital terrain model
   	allows scientists to study changes in terrain (topography) over time.
 	</figcaption>
 </figure>
@@ -111,7 +114,7 @@ on
 
 ## Digital Terrain Models 
 
-We can use a digital terrain model (DTM) to view the surface of the earth.  By 
+We can use a digital terrain model (DTM) to view the surface of the earth. By 
 comparing a DTM from before a disturbance event with one from after a disturbance
 event, we can get measurements of where the landscape changed.  
 
@@ -124,7 +127,7 @@ library(raster)   # work with raster files
 library(rgdal)    # work with raster files
 
 # set working directory to ensure R can find the file we wish to import
-# setwd("working-dir-path-here")
+#setwd("working-dir-path-here")
 ```
 
 Then we can read in two DTMs. The first DTM `preDTM3.tif` is a model from data
@@ -165,28 +168,28 @@ through the second (DTM) plot, we also set a value between 0 (transparent) and 1
 
 # plot Pre-flood w/ hillshade
 plot(DTMpre_hill,
-    col=grey(1:100/100),  # create a color ramp of grey colors for hillshade
-    legend=FALSE,         # no legend, we don't care about the grey of the hillshade
-		main="Four Mile Canyon Creek, Boulder County\nPre-Flood",
-    axes=FALSE)           # makes for a cleaner plot, if the coordinates aren't necessary
+        col=grey(1:100/100),  # create a color ramp of grey colors for hillshade
+        legend=FALSE,         # no legend, we don't care about the grey of the hillshade
+        main="Four Mile Canyon Creek, Boulder County\nPre-Flood",
+        axes=FALSE)           # makes for a cleaner plot, if the coordinates aren't necessary
 
 plot(DTM_pre, 
-		 axes=FALSE,
-		 alpha=0.5,   # sets how transparent the object will be (0=transparent, 1=not transparent)
-		 add=T)  # add=TRUE (or T), add plot to the previous plotting frame
+        axes=FALSE,
+        alpha=0.5,   # sets how transparent the object will be (0=transparent, 1=not transparent)
+        add=T)  # add=TRUE (or T), add plot to the previous plotting frame
 
 # plot Post-flood w/ hillshade
 # note, no add=T in this code, so new plotting frame. 
 plot(DTMpost_hill,
-    col=grey(1:100/100),  
-    legend=FALSE,
-		main="Four Mile Canyon Creek, Boulder County\nPost-Flood",
-    axes=FALSE)
+        col=grey(1:100/100),  
+        legend=FALSE,
+        main="Four Mile Canyon Creek, Boulder County\nPost-Flood",
+        axes=FALSE)
 
 plot(DTM_post, 
-		 axes=FALSE,
-		 alpha=0.5,
-		 add=T)
+        axes=FALSE,
+        alpha=0.5,
+        add=T)
 
 ```
 
@@ -208,8 +211,8 @@ DTMs.
 DoD <- DTM_post-DTM_pre
 
 plot(DoD,
-		 main="Digital Elevation Model of Difference (DoD)",
-		 axes=FALSE)
+        main="Digital Elevation Model of Difference (DoD)",
+        axes=FALSE)
 
 ```
 
@@ -249,28 +252,30 @@ provide the hex codes we need for specifying the colors of the map. Once we've
 chosen appropriate colors, we can create a vector of those colors and then use
 that vector with the `col=` argument in the `plot()` function to specify these. 
 
+Let's now implement these two changes in our code. 
 
 ``` {r pretty-diff-model}
 # Color palette for 5 categories
 difCol5 = c("#d7191c","#fdae61","#ffffbf","#abd9e9","#2c7bb6")
 
-# Alternate palette for 7 categories
+# Alternate palette for 7 categories - try it out!
 #difCol7 = c("#d73027","#fc8d59","#fee090","#ffffbf","#e0f3f8","#91bfdb","#4575b4")
 
 # plot hillshade first
 plot(DTMpost_hill,
-    col=grey(1:100/100),  # create a color ramp of grey colors
-    legend=FALSE,
-		main="Elevation Change Post Flood\nFour Mile Canyon Creek, Boulder County",
-    axes=FALSE)
+        col=grey(1:100/100),  # create a color ramp of grey colors
+        legend=FALSE,
+        main="Elevation Change Post Flood\nFour Mile Canyon Creek, Boulder County",
+        axes=FALSE)
 
 # add the DoD to it with specified breaks & colors
 plot(DoD,
-		 breaks = c(-5,-1,-0.5,0.5,1,10),
-		 col= difCol5,
-		 axes=FALSE,
-		 alpha=0.4,
-		 add =T)
+        breaks = c(-5,-1,-0.5,0.5,1,10),
+        col= difCol5,
+        axes=FALSE,
+        alpha=0.4,
+        add =T)
+
 ```
 
 #### Question
@@ -287,25 +292,30 @@ by manually drawing a box.
 
 #### Method 1: Manually draw cropbox 
 
-``` {r crop-raster-man}
+``` {r crop-raster-man, eval=FALSE}
 # plot the rasters you want to crop from 
 plot(DTMpost_hill,
-    col=grey(1:100/100),  # create a color ramp of grey colors
-    legend=FALSE,
-		main="Four Mile Canyon Creek, Boulder County\nPre-Flood",
-    axes=FALSE)
+        col=grey(1:100/100),  # create a color ramp of grey colors
+        legend=FALSE,
+        main="Four Mile Canyon Creek, Boulder County\nPre-Flood",
+        axes=FALSE)
 
 plot(DoD,
-		 breaks = c(-5,-1,-0.5,0.5,1,10),
-		 col= difCol5,
-		 axes=FALSE,
-		 alpha=0.4,
-		 add =T)
+        breaks = c(-5,-1,-0.5,0.5,1,10),
+        col= difCol5,
+        axes=FALSE,
+        alpha=0.4,
+        add =T)
 
 # crop by designating two opposite corners
-cropbox1<-drawExtent()
+cropbox1<-drawExtent()  
 
 ```
+
+<figure>
+	<a href="{{ site.baseurl }}/images/disturb-events-co13/drawExtent.png">
+  <img src="{{ site.baseurl }}/images/disturb-events-co13/drawExtent.png"></a>
+</figure>
 
 After executing the `drawExtent()` function, we now physically click on the plot
 at the two opposite corners of the box you want to crop to. You should see a 
@@ -348,42 +358,42 @@ DoD_crop <- crop(DoD, cropbox2)
 
 # PRE
 plot(DTMpre_hill_crop,
-    col=grey(1:100/100),  # create a color ramp of grey colors
-    legend=FALSE,
-		main="Four Mile Canyon Creek, Boulder County\nPre-Flood",
-    axes=FALSE)
+        col=grey(1:100/100),  # create a color ramp of grey colors
+        legend=FALSE,
+        main="Four Mile Canyon Creek, Boulder County\nPre-Flood",
+        axes=FALSE)
 # note \n in the title forces a line break in the title
 plot(DTM_pre_crop, 
-		 axes=FALSE,
-		 alpha=0.5,
-		 add=T)
+        axes=FALSE,
+        alpha=0.5,
+        add=T)
 
 # POST
 # plot Post-flood w/ hillshade
 plot(DTMpost_hill_crop,
-    col=grey(1:100/100),  # create a color ramp of grey colors
-    legend=FALSE,
-		main="Four Mile Canyon Creek, Boulder County\nPost-Flood",
-    axes=FALSE)
+        col=grey(1:100/100),  # create a color ramp of grey colors
+        legend=FALSE,
+        main="Four Mile Canyon Creek, Boulder County\nPost-Flood",
+        axes=FALSE)
 
 plot(DTM_post_crop, 
-		 axes=FALSE,
-		 alpha=0.5,
-		 add=T)
+        axes=FALSE,
+        alpha=0.5,
+        add=T)
 
 # CHANGE - DoD
 plot(DTMpost_hill_crop,
-    col=grey(1:100/100),  # create a color ramp of grey colors
-    legend=FALSE,
-		main="Elevation Change Post Flood\nFour Mile Canyon Creek, Boulder County",
-    axes=FALSE)
+        col=grey(1:100/100),  # create a color ramp of grey colors
+        legend=FALSE,
+        main="Elevation Change Post Flood\nFour Mile Canyon Creek, Boulder County",
+        axes=FALSE)
 
 plot(DoD_crop,
-		 breaks = c(-5,-1,-0.5,0.5,1,10),
-		 col= difCol5,
-		 axes=FALSE,
-		 alpha=0.4,
-		 add =T)
+        breaks = c(-5,-1,-0.5,0.5,1,10),
+        col= difCol5,
+        axes=FALSE,
+        alpha=0.4,
+        add =T)
 ```
 
 Now you have a graphic of your particular area of interest. 

@@ -1,15 +1,14 @@
 ## ----load-libraries------------------------------------------------------
 # set your working directory
-# setwd("~/Documents/data/disturb-events-co13")  # or your appropriate file path 
+#setwd("working-dir-path-here") 
 
 # load packages
-#library(lubridate) # work with time series data
 library(ggplot2) # create efficient, professional plots
 library(plotly) # create cool interactive plots
 
 
 ## ----load-libraries-hidden, echo=FALSE, results="hide"-------------------
-# this library is only added to get the webpage derived from this code to render
+# this package is only added to get the webpage derived from this code to render
 # the plotly graphs.  It is NOT needed for any of the analysis or data 
 # visualizations.
 
@@ -156,8 +155,6 @@ precPlot_flood2
 
 
 ## ----plotly-prep, eval=FALSE---------------------------------------------
-## # load package; only if not already loaded
-## library(plotly)
 ## 
 ## # setup your plot.ly credentials; if not already set up
 ## Sys.setenv("plotly_username"="your.user.name.here")
