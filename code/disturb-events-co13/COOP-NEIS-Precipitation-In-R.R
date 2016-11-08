@@ -170,7 +170,7 @@ ggplotly(precPlot_flood2)
 plotly_POST(precPlot_flood2)
 
 
-## ----all-boulder-station-data, echo=FALSE, results="hide"----------------
+## ----all-boulder-station-data, echo=FALSE, results="hide", include=FALSE----
 
 # read in data
 prec.boulder.all <- read.csv("precip/805333-precip_daily_1948-2013.csv",
