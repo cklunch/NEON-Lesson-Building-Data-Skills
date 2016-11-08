@@ -96,6 +96,7 @@ unempPerCapita <- plot_ly(economics, x = date, y = unemploy/pop)
 unempPerCapita 
 
 ```
+
 Note: This plot is interactive within the R environment but is not as posted on
 this website. 
 
@@ -113,7 +114,7 @@ ggplotly(unemployment)
 ```
 
 
-ßNote: This plot is interactive within the R environment but is not as posted on
+Note: This plot is interactive within the R environment but is not as posted on
 this website. 
 
 ### Step 4: Publish to Plotly

@@ -4,7 +4,7 @@ title: "Interactive Data Vizualization with R and Plotly"
 date: 2016-10-19
 createdDate: 2014-12-06
 authors: [Megan A. Jones, Leah A. Wasser]
-lastModified: 2016-10-31
+lastModified: 2016-11-08
 categories: [self-paced-tutorial]
 tags: [R, data-viz]
 mainTag: data-viz
@@ -17,7 +17,6 @@ image:
   credit: LiDAR data collected over Grand Mesa, Colorado - National Ecological Observatory Network (NEON)
   creditlink:
 permalink: /R/Plotly
-code1:
 comments: true
 ---
 
@@ -94,6 +93,7 @@ Here we use the example dataframe `economics` that comes with the package.
     unempPerCapita 
 
 ![ ]({{ site.baseurl }}/images/rfigs/disturb-events-co13/DataVis-plotly-R/create-plotly-plot-1.png)
+
 Note: This plot is interactive within the R environment but is not as posted on
 this website. 
 
@@ -113,7 +113,7 @@ ggplot objects into interactive plots with `ggplotly()`.
 ![ ]({{ site.baseurl }}/images/rfigs/disturb-events-co13/DataVis-plotly-R/ggplotly-2.png)
 
 
-ßNote: This plot is interactive within the R environment but is not as posted on
+Note: This plot is interactive within the R environment but is not as posted on
 this website. 
 
 ### Step 4: Publish to Plotly

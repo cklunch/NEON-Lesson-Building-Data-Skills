@@ -1,6 +1,6 @@
 ## ----load-libraries------------------------------------------------------
 # set your working directory
-#setwd("~/Documents/data/disturb-events-co13")  # or your appropriate file path 
+#setwd("working-dir-path-here")
 
 # load packages
 library(ggplot2) # create efficient, professional plots

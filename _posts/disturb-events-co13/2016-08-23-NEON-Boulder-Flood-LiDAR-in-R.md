@@ -4,7 +4,7 @@ title: "Data Activity: Visualize Elevation Change using LiDAR in R to Better Und
 date:  2016-04-04
 authors: [Leah A. Wasser, Megan A. Jones]
 dateCreated:  2015-05-18
-lastModified: 2016-10-31
+lastModified: 2016-11-08
 categories: [teaching-module]
 tags: [R, time-series]
 mainTag: disturb-event-co13
@@ -24,7 +24,10 @@ comments: false
 
 {% include _toc.html %}
 
-
+This tutorial focuses on how to visualize digital elevation models derived from
+LiDAR data in R. The tutorial is part of the Data Activities that can be used 
+with the 
+<a href="{{ site.basurl }}/teaching-module/disturb-event-co13/overview" target="_blank"> *Ecological Disturbance Teaching Module*</a>.
 
 <div id="objectives" markdown="1">
 
@@ -86,10 +89,10 @@ brief lesson on
 explores three important landscape models that are commonly used. 
 
 <figure>
-	<a href="http://data-lessons.github.io/NEON-R-Spatial-Raster/images/dc-spatial-raster/lidarTree-height.png">
-  <img src="http://data-lessons.github.io/NEON-R-Spatial-Raster/images/dc-spatial-raster/lidarTree-height.png">
-  <figcaption>Digital Terrain Models, Digital Surface Models and Canopy height
-  	models are three common lidar derived data products. The digital terrain model
+	<a href="{{ site.baseurl }}/images/dc-spatial-raster/lidarTree-height.png">
+  <img src="{{ site.baseurl }}/images/dc-spatial-raster/lidarTree-height.png"></a>
+  <figcaption>Digital Terrain Models, Digital Surface Models and Canopy Height
+  	Models are three common LiDAR-derived data products. The digital terrain model
   	allows scientists to study changes in terrain (topography) over time.
 	</figcaption>
 </figure>
@@ -111,7 +114,7 @@ on
 
 ## Digital Terrain Models 
 
-We can use a digital terrain model (DTM) to view the surface of the earth.  By 
+We can use a digital terrain model (DTM) to view the surface of the earth. By 
 comparing a DTM from before a disturbance event with one from after a disturbance
 event, we can get measurements of where the landscape changed.  
 
@@ -124,7 +127,7 @@ set our working directory to the location of our data.
     library(rgdal)    # work with raster files
     
     # set working directory to ensure R can find the file we wish to import
-    # setwd("working-dir-path-here")
+    #setwd("working-dir-path-here")
 
 Then we can read in two DTMs. The first DTM `preDTM3.tif` is a model from data
 collected 26-27 June 2013 and the `postDTM3.tif` is a model from data collected
@@ -176,30 +179,30 @@ through the second (DTM) plot, we also set a value between 0 (transparent) and 1
 
     # plot Pre-flood w/ hillshade
     plot(DTMpre_hill,
-        col=grey(1:100/100),  # create a color ramp of grey colors for hillshade
-        legend=FALSE,         # no legend, we don't care about the grey of the hillshade
-    		main="Four Mile Canyon Creek, Boulder County\nPre-Flood",
-        axes=FALSE)           # makes for a cleaner plot, if the coordinates aren't necessary
+            col=grey(1:100/100),  # create a color ramp of grey colors for hillshade
+            legend=FALSE,         # no legend, we don't care about the grey of the hillshade
+            main="Four Mile Canyon Creek, Boulder County\nPre-Flood",
+            axes=FALSE)           # makes for a cleaner plot, if the coordinates aren't necessary
     
     plot(DTM_pre, 
-    		 axes=FALSE,
-    		 alpha=0.5,   # sets how transparent the object will be (0=transparent, 1=not transparent)
-    		 add=T)  # add=TRUE (or T), add plot to the previous plotting frame
+            axes=FALSE,
+            alpha=0.5,   # sets how transparent the object will be (0=transparent, 1=not transparent)
+            add=T)  # add=TRUE (or T), add plot to the previous plotting frame
 
 ![ ]({{ site.baseurl }}/images/rfigs/disturb-events-co13/NEON-Boulder-Flood-LiDAR-in-R/plot-rasters-1.png)
 
     # plot Post-flood w/ hillshade
     # note, no add=T in this code, so new plotting frame. 
     plot(DTMpost_hill,
-        col=grey(1:100/100),  
-        legend=FALSE,
-    		main="Four Mile Canyon Creek, Boulder County\nPost-Flood",
-        axes=FALSE)
+            col=grey(1:100/100),  
+            legend=FALSE,
+            main="Four Mile Canyon Creek, Boulder County\nPost-Flood",
+            axes=FALSE)
     
     plot(DTM_post, 
-    		 axes=FALSE,
-    		 alpha=0.5,
-    		 add=T)
+            axes=FALSE,
+            alpha=0.5,
+            add=T)
 
 ![ ]({{ site.baseurl }}/images/rfigs/disturb-events-co13/NEON-Boulder-Flood-LiDAR-in-R/plot-rasters-2.png)
 
@@ -221,8 +224,8 @@ DTMs.
     DoD <- DTM_post-DTM_pre
     
     plot(DoD,
-    		 main="Digital Elevation Model of Difference (DoD)",
-    		 axes=FALSE)
+            main="Digital Elevation Model of Difference (DoD)",
+            axes=FALSE)
 
 ![ ]({{ site.baseurl }}/images/rfigs/disturb-events-co13/NEON-Boulder-Flood-LiDAR-in-R/create-difference-model-1.png)
 
@@ -262,28 +265,29 @@ provide the hex codes we need for specifying the colors of the map. Once we've
 chosen appropriate colors, we can create a vector of those colors and then use
 that vector with the `col=` argument in the `plot()` function to specify these. 
 
+Let's now implement these two changes in our code. 
 
 
     # Color palette for 5 categories
     difCol5 = c("#d7191c","#fdae61","#ffffbf","#abd9e9","#2c7bb6")
     
-    # Alternate palette for 7 categories
+    # Alternate palette for 7 categories - try it out!
     #difCol7 = c("#d73027","#fc8d59","#fee090","#ffffbf","#e0f3f8","#91bfdb","#4575b4")
     
     # plot hillshade first
     plot(DTMpost_hill,
-        col=grey(1:100/100),  # create a color ramp of grey colors
-        legend=FALSE,
-    		main="Elevation Change Post Flood\nFour Mile Canyon Creek, Boulder County",
-        axes=FALSE)
+            col=grey(1:100/100),  # create a color ramp of grey colors
+            legend=FALSE,
+            main="Elevation Change Post Flood\nFour Mile Canyon Creek, Boulder County",
+            axes=FALSE)
     
     # add the DoD to it with specified breaks & colors
     plot(DoD,
-    		 breaks = c(-5,-1,-0.5,0.5,1,10),
-    		 col= difCol5,
-    		 axes=FALSE,
-    		 alpha=0.4,
-    		 add =T)
+            breaks = c(-5,-1,-0.5,0.5,1,10),
+            col= difCol5,
+            axes=FALSE,
+            alpha=0.4,
+            add =T)
 
 ![ ]({{ site.baseurl }}/images/rfigs/disturb-events-co13/NEON-Boulder-Flood-LiDAR-in-R/pretty-diff-model-1.png)
 
@@ -304,30 +308,25 @@ by manually drawing a box.
 
     # plot the rasters you want to crop from 
     plot(DTMpost_hill,
-        col=grey(1:100/100),  # create a color ramp of grey colors
-        legend=FALSE,
-    		main="Four Mile Canyon Creek, Boulder County\nPre-Flood",
-        axes=FALSE)
+            col=grey(1:100/100),  # create a color ramp of grey colors
+            legend=FALSE,
+            main="Four Mile Canyon Creek, Boulder County\nPre-Flood",
+            axes=FALSE)
     
     plot(DoD,
-    		 breaks = c(-5,-1,-0.5,0.5,1,10),
-    		 col= difCol5,
-    		 axes=FALSE,
-    		 alpha=0.4,
-    		 add =T)
+            breaks = c(-5,-1,-0.5,0.5,1,10),
+            col= difCol5,
+            axes=FALSE,
+            alpha=0.4,
+            add =T)
     
     # crop by designating two opposite corners
-    cropbox1<-drawExtent()
+    cropbox1<-drawExtent()  
 
-    ## Warning in min(loc[, "x"]): no non-missing arguments to min; returning Inf
-
-    ## Warning in max(loc[, "x"]): no non-missing arguments to max; returning -Inf
-
-    ## Warning in min(loc[, "y"]): no non-missing arguments to min; returning Inf
-
-    ## Warning in max(loc[, "y"]): no non-missing arguments to max; returning -Inf
-
-![ ]({{ site.baseurl }}/images/rfigs/disturb-events-co13/NEON-Boulder-Flood-LiDAR-in-R/crop-raster-man-1.png)
+<figure>
+	<a href="{{ site.baseurl }}/images/disturb-events-co13/drawExtent.png">
+  <img src="{{ site.baseurl }}/images/disturb-events-co13/drawExtent.png"></a>
+</figure>
 
 After executing the `drawExtent()` function, we now physically click on the plot
 at the two opposite corners of the box you want to crop to. You should see a 
@@ -340,10 +339,10 @@ When we call this new object, we can view the new extent.
     cropbox1
 
     ## class       : Extent 
-    ## xmin        : Inf 
-    ## xmax        : -Inf 
-    ## ymin        : Inf 
-    ## ymax        : -Inf
+    ## xmin        : 473846.2 
+    ## xmax        : 474747.6 
+    ## ymin        : 4434454 
+    ## ymax        : 4435733
 
 It is a good idea to write this new extent down, so that you can use the extent
 again the next time you use the script. 
@@ -373,46 +372,46 @@ then crop the desired layer to the crop box.
     
     # PRE
     plot(DTMpre_hill_crop,
-        col=grey(1:100/100),  # create a color ramp of grey colors
-        legend=FALSE,
-    		main="Four Mile Canyon Creek, Boulder County\nPre-Flood",
-        axes=FALSE)
+            col=grey(1:100/100),  # create a color ramp of grey colors
+            legend=FALSE,
+            main="Four Mile Canyon Creek, Boulder County\nPre-Flood",
+            axes=FALSE)
     # note \n in the title forces a line break in the title
     plot(DTM_pre_crop, 
-    		 axes=FALSE,
-    		 alpha=0.5,
-    		 add=T)
+            axes=FALSE,
+            alpha=0.5,
+            add=T)
 
 ![ ]({{ site.baseurl }}/images/rfigs/disturb-events-co13/NEON-Boulder-Flood-LiDAR-in-R/plot-crop-raster-1.png)
 
     # POST
     # plot Post-flood w/ hillshade
     plot(DTMpost_hill_crop,
-        col=grey(1:100/100),  # create a color ramp of grey colors
-        legend=FALSE,
-    		main="Four Mile Canyon Creek, Boulder County\nPost-Flood",
-        axes=FALSE)
+            col=grey(1:100/100),  # create a color ramp of grey colors
+            legend=FALSE,
+            main="Four Mile Canyon Creek, Boulder County\nPost-Flood",
+            axes=FALSE)
     
     plot(DTM_post_crop, 
-    		 axes=FALSE,
-    		 alpha=0.5,
-    		 add=T)
+            axes=FALSE,
+            alpha=0.5,
+            add=T)
 
 ![ ]({{ site.baseurl }}/images/rfigs/disturb-events-co13/NEON-Boulder-Flood-LiDAR-in-R/plot-crop-raster-2.png)
 
     # CHANGE - DoD
     plot(DTMpost_hill_crop,
-        col=grey(1:100/100),  # create a color ramp of grey colors
-        legend=FALSE,
-    		main="Elevation Change Post Flood\nFour Mile Canyon Creek, Boulder County",
-        axes=FALSE)
+            col=grey(1:100/100),  # create a color ramp of grey colors
+            legend=FALSE,
+            main="Elevation Change Post Flood\nFour Mile Canyon Creek, Boulder County",
+            axes=FALSE)
     
     plot(DoD_crop,
-    		 breaks = c(-5,-1,-0.5,0.5,1,10),
-    		 col= difCol5,
-    		 axes=FALSE,
-    		 alpha=0.4,
-    		 add =T)
+            breaks = c(-5,-1,-0.5,0.5,1,10),
+            col= difCol5,
+            axes=FALSE,
+            alpha=0.4,
+            add =T)
 
 ![ ]({{ site.baseurl }}/images/rfigs/disturb-events-co13/NEON-Boulder-Flood-LiDAR-in-R/plot-crop-raster-3.png)
 

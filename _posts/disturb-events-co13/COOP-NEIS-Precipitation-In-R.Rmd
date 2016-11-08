@@ -26,7 +26,9 @@ comments: true
 Several factors contributed to extreme flooding that occurred in Boulder,
 Colorado in 2013. In this data activity, we explore and visualize the data for 
 precipitation (rainfall) data collected by the National Weather Service's 
-Cooperative Observer Program. 
+Cooperative Observer Program. The tutorial is part of the Data Activities that 
+can be used with the 
+<a href="{{ site.basurl }}/teaching-module/disturb-event-co13/overview" target="_blank"> *Ecological Disturbance Teaching Module*</a>.
 
 <div id="objectives" markdown="1">
 
@@ -182,23 +184,21 @@ the order number: `805325-precip_daily_2003-2013`. You may wish to do the same.
 
 ## R Libraries
 
-We will be working with time-series data in this lesson using the
-`lubridate` library. This library will allow us to easily work with dates. We will use 
-`ggplot2` to efficiently plot our data and `plotly` to create interactive plots.
+We will use `ggplot2` to efficiently plot our data and `plotly` to create i
+nteractive plots.
 
 ```{r load-libraries}
 # set your working directory
-# setwd("~/Documents/data/disturb-events-co13")  # or your appropriate file path 
+#setwd("working-dir-path-here") 
 
 # load packages
-#library(lubridate) # work with time series data
 library(ggplot2) # create efficient, professional plots
 library(plotly) # create cool interactive plots
 
 ```
 
 ```{r load-libraries-hidden, echo=FALSE, results="hide"}
-# this library is only added to get the webpage derived from this code to render
+# this package is only added to get the webpage derived from this code to render
 # the plotly graphs.  It is NOT needed for any of the analysis or data 
 # visualizations.
 
@@ -286,7 +286,7 @@ str(precip.boulder$DateTime)
 ```
 
 * For more information on date/time classes, see the NEON tutorial 
-[Dealing With Dates & Times in R - as.Date, POSIXct, POSIXlt ]({{ site.baseurl }}/R/time-series-convert-date-time-class-POSIX/).
+<a href="{{ site.baseurl }}/R/time-series-convert-date-time-class-POSIX/" target="_blank"> *Dealing With Dates & Times in R - as.Date, POSIXct, POSIXlt*</a>.
 
 ### NoData Values
 We've also learned that missing values, also known as NoData
@@ -500,8 +500,6 @@ precPlot_flood2
 Let's turn our plot into an interactive Plotly plot. 
 
 ``` {r plotly-prep, eval=FALSE}
-# load package; only if not already loaded
-library(plotly)
 
 # setup your plot.ly credentials; if not already set up
 Sys.setenv("plotly_username"="your.user.name.here")
@@ -598,6 +596,7 @@ head(precip.boulder)
 
 ```
 
+#### Question
 Compare `HPCP` and `PRECIP`. Did we do the conversion correctly?  
 
 

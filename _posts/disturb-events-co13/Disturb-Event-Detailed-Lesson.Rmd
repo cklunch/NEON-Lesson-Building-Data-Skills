@@ -29,7 +29,7 @@ comments: true
 
 ## The 2013 Colorado Front Range Flood
 
-<iframe width="560" height="315" src="https://www.youtube.com/embed/DJqTmByRma8" frameborder="0" allowfullscreen></iframe>
+<iframe width="560" height="315" src="https://www.youtube.com/embed/IHIckvWhwoo" frameborder="0" allowfullscreen></iframe>
  
 ## Why was the Flooding so Destructive? 
 
@@ -131,10 +131,9 @@ This interactive plot shows the Palmer Drought Severity Index from 1991 through
 
 <iframe width="900" height="800" frameborder="0" scrolling="no" src="https://plot.ly/~NEONDataSkills/2.embed"></iframe>
 
-Figure Caption: Palmer Drought Severity Index for Colorado 1991-2015. Source:
-   National Ecological Observatory Network (NEON) based on data from 
-   <a href="http://www7.ncdc.noaa.gov/CDO/CDODivisionalSelect.jsp"
-   target="_blank"> National Climatic Data Center–NOAA</a>. 
+Palmer Drought Severity Index for Colorado 1991-2015. Source: National 
+Ecological Observatory Network (NEON) based on data from 
+<a href="http://www7.ncdc.noaa.gov/CDO/CDODivisionalSelect.jsp" target="_blank"> National Climatic Data Center–NOAA</a>. 
 
 #### Questions
 Use the figure above to answer these questions: 
@@ -322,8 +321,7 @@ habitat management plans or conservation plans for endangered species. The
 concept is based on the _magnitude-frequency_ _principle_, where large magnitude
 events (such as major hurricanes) are comparatively less frequent than smaller
 magnitude incidents (such as rain showers).  (For more information visit  
-<a href="http://climatica.org.uk/climate-science-information/return-periods-extreme-events" target="_blank">
-Climatica's Return Periods of Extreme Events.</a>)
+<a href="http://climatica.org.uk/climate-science-information/return-periods-extreme-events" target="_blank"> Climatica's Return Periods of Extreme Events.</a>)
 
 
 #### Question
@@ -419,11 +417,11 @@ come in two common types:
 including trees, buildings, or other structures. Note: some DSMs have been post-processed to remove buildings and other human-made objects. 
 
 <figure>
-	<a href="{{ site.baseurl }}/images/dc-spatial-raster/lidarTree-height.png">
-  <img src="{{ site.baseurl }}/images/dc-spatial-raster/lidarTree-height.png">
-  <figcaption>Digital Terrain Models, Digital Surface Models and Canopy height
-  	models are three common LiDAR-derived data products. The digital terrain model
-  	allows scientists to study changes in terrain (topography) over time.
+	<a href="{{ site.baseurl }}/images/disturb-events-co13/DSM-DTM.png">
+  <img src="{{ site.baseurl }}/images/disturb-events-co13/DSM-DTM.png"></a>
+  <figcaption>Digital Terrain Models and Digital Surface Models are two common 
+  LiDAR-derived data products. The digital terrain model allows scientists to 
+  study changes in terrain (topography) over time.
 	</figcaption>
 </figure>
 
@@ -463,11 +461,10 @@ Digital Elevation Model of Difference (DoD).
 
 #### Questions
 
-Here we are using DTMs to create our Digital Elevation Model of Difference 
-to look at the changes after a flooding event. 
-
-What types of disturbance events might one want to look at DoDs from DSMs?  
-From Canopy Height Models?  
+Here we are using DTMs to create our Digital Elevation Model of Difference (DoD) 
+to look at the changes after a flooding event. What types of disturbance events 
+or what research question might one want to look at DoDs from Digital Surface 
+Models? 
 
 #### Four Mile Canyon Creek DoD
 

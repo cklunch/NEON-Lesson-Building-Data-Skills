@@ -26,13 +26,15 @@ comments: true
 Several factors contributed to the extreme flooding that occurred in Boulder,
 Colorado in 2013. In this data activity, we explore and visualize the data for 
 stream discharge data collected by the United States Geological Survey (USGS). 
+This tutorial is part of the Data Activities that can be used with the 
+<a href="{{ site.basurl }}/teaching-module/disturb-event-co13/overview" target="_blank"> *Ecological Disturbance Teaching Module*</a>.
 
 <div id="objectives" markdown="1">
 
 ### Learning Objectives
 After completing this tutorial, you will be able to:
 
-* Download stream gage data from <a href="http://waterdata.usgs.gov/nwis" target="_blank"> USGS's National Water Information System</a>. 
+* Download stream gauge data from <a href="http://waterdata.usgs.gov/nwis" target="_blank"> USGS's National Water Information System</a>. 
 * Plot precipitation data in R. 
 * Publish & share an interactive plot of the data using Plotly. 
 
@@ -95,22 +97,22 @@ Source: <a href="http://nwis.waterdata.usgs.gov/usa/nwis/peak/?site_no=06730200"
 </figure>
 
 
-## Obtain USGS Stream Gage Data
+## Obtain USGS Stream Gauge Data
 
 This next section explains how to find and locate data through the USGS's 
 <a href="http://waterdata.usgs.gov/nwis" target="_blank"> National Water Information System portal</a>.
 If you want to use the pre-compiled dataset downloaded above, you can skip this 
 section and start again at the
-<a href="{{ site.baseurl }}/R/USGS-Stream-Discharge-Data-R/#work-with-stream-gage-data" target="_blank"> Work With Stream Gage Data header</a>.
+<a href="{{ site.baseurl }}/R/USGS-Stream-Discharge-Data-R/#work-with-stream-gauge-data" target="_blank"> Work With Stream Gauge Data header</a>.
 
 #### Step 1: Search for the data
 
-To search for stream gage data in a particular area, we can use the 
+To search for stream gauge data in a particular area, we can use the 
 <a href="http://maps.waterdata.usgs.gov/mapper/index.html" target="_blank"> interactive map of all USGS stations</a>.
-By searching for locations around "Boulder, CO", we can find 3 gages in the area. 
+By searching for locations around "Boulder, CO", we can find 3 gauges in the area. 
 
-For this lesson, we want data collected by USGS stream gage 06730200 located on 
-Boulder Creek at North 75th St. This gage is one of the few the was able to continuously
+For this lesson, we want data collected by USGS stream gauge 06730200 located on 
+Boulder Creek at North 75th St. This gauge is one of the few the was able to continuously
 collect data throughout the 2013 Boulder floods. 
 
 You can directly access the data for this station through the "Access Data" link
@@ -118,7 +120,7 @@ on the map icon or searching for this site on the
 <a href="http://waterdata.usgs.gov/nwis" target="_blank"> National Water Information System portal </a>.
 
 On the <a href="http://waterdata.usgs.gov/nwis/inventory?agency_code=USGS&site_no=06730200
-" target="_blank"> Boulder Creek stream gage 06730200 page</a>, we can now see 
+" target="_blank"> Boulder Creek stream gauge 06730200 page</a>, we can now see 
 summary information about the types of data available for this station.  We want
 to select **Daily Data** and then the following parameters: 
 
@@ -135,17 +137,15 @@ choice and save as a .csv. Note, you can also download the teaching data set
 (above) or access the data through an API (see Additional Resources, below). 
 
 
-# Work with Stream Gage Data
+# Work with Stream Gauge Data
 
-## R Libraries
+## R Packages
 
-We will be working with time-series data in this lesson so we will load the
-`lubridate` library that allows use to easily work with dates. We will use 
-`ggplot2` to efficiently plot our data and `plotly` to create interactive plots.
+We will use `ggplot2` to efficiently plot our data and `plotly` to create interactive plots.
 
 ```{r load-libraries}
 # set your working directory
-#setwd("~/Documents/data/disturb-events-co13")  # or your appropriate file path 
+#setwd("working-dir-path-here")
 
 # load packages
 library(ggplot2) # create efficient, professional plots
@@ -373,7 +373,7 @@ to learn how to set up an account and access your username and API key.
 ### Time subsets in plotly
 
 To plot a subset of the total data we have to manually subset the data as the Plotly
-library doesn't (yet?) recognize the `limits` method of subsetting. 
+package doesn't (yet?) recognize the `limits` method of subsetting. 
 
 Here we create a new R object with entries corresponding to just the dates we want and then plot that data. 
 
