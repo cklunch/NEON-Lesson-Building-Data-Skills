@@ -4,21 +4,22 @@ title: "Data Activity: Visualize Palmer Drought Severity Index Data in R to Bett
 date: 2016-04-07
 authors: [Leah A. Wasser, Megan A. Jones, Mariela Perignon]
 dateCreated: 2015-05-18
-lastModified: 2016-11-08
-categories: [teaching-module]
+lastModified: 2016-11-10
+categories: [self-paced-tutorial]
 tags: [R, time-series]
 mainTag: disturb-event-co13
 scienceThemes: [disturbance]
+packagesLibraries: [ggplot2, plotly]
 description: "This tutorial walks through how to download and visualize Palmer
 Drought Severity Index data in R. The data specifically downloaded for 
 this activity allows one to to better understand a driver of the 2013 Colorado
 floods."
 image:
-  feature: TeachingModules.jpg
+  feature: teachingModule.jpg
   credit: A National Ecological Observatory Network (NEON)
   creditlink: http://www.neonscience.org
 permalink: /R/nCLIMDIV-Palmer-Drought-Data-R
-code1: nCLIMDIV-Palmer-Drought-In-R.R
+code1: /teaching-modules/disturb-events-co13/nCLIMDIV-Palmer-Drought-In-R.R
 comments: true
 ---
 

@@ -4,11 +4,12 @@ title: "Overview: Quantifying The Drivers and Impacts of Natural Disturbance Eve
 date: 2016-04-10
 authors: [Leah A. Wasser, Megan A. Jones]
 dateCreated: 2015-12-05
-lastModified: 2016-11-08
+lastModified: 2016-11-10
 categories: [teaching-module]
 tags: [R, time-series]
-mainTag: disturb-event-co13
+mainTag: disturb-events-co13
 scienceThemes: [disturbance]
+packagesLibraries: [ggplot2, plotly]
 description: "This lesson demonstrates ways that scientists identify and use 
 data that they use to study disturbance events. Further, it encourages students 
 to think about why we need to quantify change and different types of data 
@@ -18,11 +19,10 @@ focuses on the causes and impacts of flooding that occurred in 2013 throughout
 Colorado with an emphasis on Boulder County." 
 code1:
 image:
-  feature: TeachingModules.jpg
+  feature: teachingModule.jpg
   credit: A National Ecological Observatory Network (NEON) - Teaching Module
   creditlink: http://www.neonscience.org
 permalink: /teaching-module/disturb-event-co13/overview
-code1: 
 comments: false
 ---
 
