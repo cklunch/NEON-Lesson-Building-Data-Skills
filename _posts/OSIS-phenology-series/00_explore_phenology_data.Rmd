@@ -27,7 +27,7 @@ comments: true
 
 <div id="objectives" markdown="1">
 
-###Goals / Objectives
+###Goals/Objectives
 After completing this activity, you will:
 
  * 
