@@ -4,7 +4,7 @@ title: "Interactive Data Vizualization with R and Plotly"
 date: 2016-10-19
 createdDate: 2014-12-06
 authors: [Megan A. Jones, Leah A. Wasser]
-lastModified: `r format(Sys.time(), "%Y-%m-%d")`
+lastModified: 2016-11-10
 categories: [self-paced-tutorial]
 tags: [R, data-viz]
 mainTag: data-viz
@@ -16,7 +16,7 @@ image:
   feature: lidar_GrandMesa.png
   credit: LiDAR data collected over Grand Mesa, Colorado - National Ecological Observatory Network (NEON)
   creditlink:
-permalink: /R/Plotly
+permalink: /DATAVIZ/DataVis-plotly-R.R
 comments: true
 ---
 
@@ -56,23 +56,13 @@ under the "API key" menu option.
 To link your account to your R, use the following commands, substituting in your
 own username & key as appropriate. 
 
-``` {r set-plotly-creds, eval=FALSE}
-# set plotly user name
-Sys.setenv("plotly_username"="YOUR_plotly_username")
-# set plotly API key
-Sys.setenv("plotly_api_key"="YOUR_api_key")
 
-```
+    # set plotly user name
+    Sys.setenv("plotly_username"="YOUR_plotly_username")
+    # set plotly API key
+    Sys.setenv("plotly_api_key"="YOUR_api_key")
 
-```{r load-libraries-hidden, echo=FALSE, results="hide"}
-# this package is only added to get the webpage derived from this code to render
-# the plotly graphs.  It is NOT needed for any of the analysis or data 
-# visualizations.
 
-# install.packages("webshot")
-# webshot::install_phantomjs() 
-library(webshot) # embed the plotly plots
-```
 
 ### Step 3: Create Plotly plot
 There are lots of ways to plot with the plotly package. We briefly describe two 
@@ -82,20 +72,27 @@ R with Plotly, check out the
 
 Here we use the example dataframe `economics` that comes with the package. 
 
-```{r create-plotly-plot}
 
-# load packages
-library(plotly)  # to create interactive plots
-library(ggplot2) # to create plots and feed to ggplotly()
+    # load packages
+    library(plotly)  # to create interactive plots
+    library(ggplot2) # to create plots and feed to ggplotly()
+    
+    # view str of example data set
+    str(economics)
 
-# view str of example data set
-str(economics)
+    ## Classes 'tbl_df', 'tbl' and 'data.frame':	574 obs. of  6 variables:
+    ##  $ date    : Date, format: "1967-07-01" "1967-08-01" ...
+    ##  $ pce     : num  507 510 516 513 518 ...
+    ##  $ pop     : int  198712 198911 199113 199311 199498 199657 199808 199920 200056 200208 ...
+    ##  $ psavert : num  12.5 12.5 11.7 12.5 12.5 12.1 11.7 12.2 11.6 12.2 ...
+    ##  $ uempmed : num  4.5 4.7 4.6 4.9 4.7 4.8 5.1 4.5 4.1 4.6 ...
+    ##  $ unemploy: int  2944 2945 2958 3143 3066 3018 2878 3001 2877 2709 ...
 
-# plot with the plot_ly function
-unempPerCapita <- plot_ly(economics, x = date, y = unemploy/pop)
-unempPerCapita 
+    # plot with the plot_ly function
+    unempPerCapita <- plot_ly(economics, x = date, y = unemploy/pop)
+    unempPerCapita 
 
-```
+![ ]({{ site.baseurl }}/images/rfigs/disturb-events-co13/DataVis-plotly-R/create-plotly-plot-1.png)
 
 Note: This plot is interactive within the R environment but is not as posted on
 this website. 
@@ -103,15 +100,17 @@ this website.
 If you already use ggplot to create your plots, you can directly turn your 
 ggplot objects into interactive plots with `ggplotly()`. 
 
-``` {r ggplotly}
-## plot with ggplot, then ggplotly
 
-unemployment <- ggplot(economics, aes(date,unemploy)) + geom_line()
-unemployment
+    ## plot with ggplot, then ggplotly
+    
+    unemployment <- ggplot(economics, aes(date,unemploy)) + geom_line()
+    unemployment
 
-ggplotly(unemployment)
+![ ]({{ site.baseurl }}/images/rfigs/disturb-events-co13/DataVis-plotly-R/ggplotly-1.png)
 
-```
+    ggplotly(unemployment)
+
+![ ]({{ site.baseurl }}/images/rfigs/disturb-events-co13/DataVis-plotly-R/ggplotly-2.png)
 
 
 Note: This plot is interactive within the R environment but is not as posted on
@@ -121,12 +120,9 @@ this website.
 
 The function `plotly_POST()` allows you to post any plotly plot to your account. 
 
-``` {r pub-plotly, eval=FALSE}
 
-# publish plotly plot to your plotly online account
-plotly_POST(unemployment)
-
-```
+    # publish plotly plot to your plotly online account
+    plotly_POST(unemployment)
 
 ## Examples
 
