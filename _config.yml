@@ -8,12 +8,13 @@ description:  A test development site where new data and classroom lessons will 
 
 # use this when pushing to git for live version
 
-#url:      http://neoninc.github.io/NEON-Lesson-Building-Data-Skills
-#baseurl:	http://neoninc.github.io/NEON-Lesson-Building-Data-Skills
+url:      http://neoninc.github.io/NEON-Lesson-Building-Data-Skills
+baseurl:	http://neoninc.github.io/NEON-Lesson-Building-Data-Skills
+
 
 # use this when working locally
 # just uncomment the first localhost.
-url: http://localhost:4000
+#url: http://localhost:4000
 
 
 breadcrumbs : true # true, false (default)
