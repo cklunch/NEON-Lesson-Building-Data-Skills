@@ -1,8 +1,8 @@
 # NEON Data Skills Lesson Building Repository
 This is a development repository for the
 <a href="http://www.neondataskills.org" target="_blank">NEON Data Skills portal</a>. 
-Here the NEON Data Skills team develops and builds new content. Content is 
-transferred to the NEONInc/NEON-Data-Skills repository to be published. 
+Here the NEON Data Skills team & collaborators develops and builds new content. 
+Content is transferred to the NEONInc/NEON-Data-Skills repository to be published. 
 
 ## How to Collaborate
 
@@ -14,7 +14,7 @@ is built.  For a .md page to render with Jekyll it must start with a date (see
 other subdirectories for examples if need be). The other two directories that 
 you may use are: 
 
-*`imgages`: each series/lesson will have a subdirectory with the same naming/file
+* `images`: each series/lesson will have a subdirectory with the same naming/file
 path as in the `_posts` directory. This allows for organized and automated 
 creation of files.  
 * `code`: this directory (same file paths inside) will contain any code that 
