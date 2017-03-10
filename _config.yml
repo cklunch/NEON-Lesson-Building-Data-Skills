@@ -8,8 +8,8 @@ description:  A test development site where new data and classroom lessons will 
 
 # use this when pushing to git for live version
 
-url:      http://neoninc.github.io/NEON-Lesson-Building-Data-Skills
-baseurl:	http://neoninc.github.io/NEON-Lesson-Building-Data-Skills
+url:      http://neonscience.github.io/NEON-Lesson-Building-Data-Skills
+baseurl:	http://neonscience.github.io/NEON-Lesson-Building-Data-Skills
 
 
 # use this when working locally
