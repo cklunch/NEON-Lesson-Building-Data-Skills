@@ -1,0 +1,40 @@
+---
+layout: post
+title: "PayEeze Button Trial"
+date:   2016-01-01
+lastModified: `r format(Sys.time(), "%Y-%m-%d")`
+category: [self-paced-tutorial]
+tags: [ ]
+mainTag: 
+tutorialSeries: [ ]
+description: "Brief description in plain text."
+code1: use-if-associated-code.R
+image:
+  feature: lidar_GrandMesa.png
+  credit: LiDAR data collected over Grand Mesa, Colorado - National Ecological Observatory Network (NEON)
+  creditlink: 
+permalink: 
+comments: true
+---
+# Payeeze Button test
+
+<div id="cp7e9ef03c58" style="margin: 10px 0" onclick="document.getElementById('pay_now_form_da979a1494').submit()">
+<div><div class='r-bg '> <span class='r-fg r-fg-3'></span> <span class='r-fg r-fg-2'></span> <span class='r-fg r-fg-1'></span> <span class='r-fg r-fg-0'></span> </div>
+
+<form action="https://checkout.globalgatewaye4.firstdata.com/pay" id="pay_now_form_da979a1494" method="post"><input type="hidden" name="x_login" value="WSP-BATTE-ry1s&gCG7w" /><input type="hidden" name="x_show_form" value="PAYMENT_FORM" />
+<input type="hidden" name="x_fp_sequence" value="14889996551441423538" /><input type="hidden" name="x_fp_hash" value="PNB-1.0-a73261973280e71f2a2c38844530b1d0cc224b7d" />
+<input type="hidden" name="x_amount" value="750" /><input type="hidden" name="x_currency_code" value="USD" />
+<input type="hidden" name="x_test_request" value="FALSE" />
+<input type="hidden" name="x_relay_response" value="" />
+<input type="hidden" name="donation_prompt" value="" />
+<input type="hidden" name="button_code" value="Pay Now Conference Payments" />
+<div class="cpwrap"><button type="button">Pay Now</button></div>
+</form>
+
+<div class='r-bg '><span class='r-fg r-fg-0'></span> <span class='r-fg r-fg-1'></span> 
+<span class='r-fg r-fg-2'></span> <span class='r-fg r-fg-3'></span> 
+</div>
+</div>
+</div>
+
+<style type="text/css">div#cp7e9ef03c58{width: 200px; background-color: #FF9900;}div#cp7e9ef03c58:hover{cursor: pointer}div#cp7e9ef03c58 * {background-color: #FFAA00;}div#cp7e9ef03c58 form{margin:0; padding:0;text-align:center}div#cp7e9ef03c58 div.cpwrap {width: 90%;border:0;margin:0 auto;padding: 0px; background-color: #FF9900}div#cp7e9ef03c58 button{width: 95%;border:0;margin:0;padding: 3px 0; background-color: #FF9900;text-align: center; color: #FFFFFF; }div#cp7e9ef03c58:hover button {text-decoration: underline}div#cp7e9ef03c58 button:focus,div#cp7e9ef03c58 button:visited,div#cp7e9ef03c58 button:active{border:none;outline: none}div#cp7e9ef03c58 button {font-size: 16px}div#cp7e9ef03c58 div.cpwrap {border-left: 3px solid #FFAA00; border-right: 3px solid #FFAA00}div#cp7e9ef03c58 .r-fg{background-color: #FFAA00; border-color: #FFAA00}div#cp7e9ef03c58 .r-bg{background-color: white}div#cp7e9ef03c58 .r-fg{border-style: solid; border-width: 0px 1px; overflow: hidden; display: block; height: 1px; font-size: 1px}div#cp7e9ef03c58 .r-fg-0{margin-left: 1px; margin-right: 1px; border-width: 0px 1px !important; height: 1px !important}div#cp7e9ef03c58 .r-fg-1{margin-left: 2px; margin-right: 2px}div#cp7e9ef03c58 .r-fg-2{margin-left: 3px; margin-right: 3px}div#cp7e9ef03c58 .r-fg-3{margin-left: 5px; margin-right: 5px}</style>
