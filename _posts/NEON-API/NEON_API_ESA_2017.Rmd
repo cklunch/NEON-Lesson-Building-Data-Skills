@@ -1,0 +1,60 @@
+---
+layout: post
+title: "Using the NEON API in R"
+description: "Tutorial for getting data from the NEON API, using R and the R package httr"
+date:   2017-08-07
+dateCreated:  2017-07-07
+lastModified: `r format(Sys.time(), "%Y-%m-%d")`
+estimatedTime: 1 - 1.5 hours
+packagesLibraries: [httr, devtools, neonDataStackR]
+authors: [Claire K. Lunch]
+contributors: [Claire Lunch, Christine Laney, Megan A. Jones]
+categories: [self-paced-tutorial]
+mainTag: API
+tags: [R, API]
+code1: 
+image:
+  feature:
+  credit:
+  creditlink:
+permalink: /R/neon-api/
+comments: false
+---
+
+{% include _toc.html %}
+
+## About
+This is a lesson in pulling data from the NEON API, using base R and the R package httr. There are 3 basic categories of NEON data:
+
+1. Observational - Data collected by a human in the field, or in an analytical laboratory, e.g. beetle identification, foliar isotopes
+1. Instrumentation - Data collected by an automated, streaming sensor, e.g. net radiation, soil carbon dioxide
+1. Remote sensing - Data collected by the airborne observation platform, e.g. LIDAR, surface reflectance
+
+This lesson covers the first two types of data. NEON remote sensing data are not currently available through the API.
+
+**R Skill Level:** Intermediate - you've got the basics of `R` down.
+
+<div id="objectives" markdown="1">
+
+# Goals / Objectives
+After completing this activity, you will:
+
+* Be able to pull observational, instrumentation, and geolocation data from the NEON API.
+* Be able to transform API-accessed data from JSON to tabular format for analyses.
+
+## Things You’ll Need To Complete This Tutorial
+To complete this tutorial you will need the most current version of R and, 
+preferably, RStudio loaded on your computer.
+
+### Install R Packages
+
+* **httr:** `install.packages("httr")`
+* **devtools:** `install.packages("devtools")`
+* **neonDataStackR:** `devtools::install_github("NEONScience/NEON-utilities/neonDataStackR")`
+
+### Additional Resources
+
+* [Website for the NEON API](http://data.neonscience.org/data-api)
+* [GitHub repository for the NEON API](https://github.com/NEONScience/neon-data-api)
+
+</div>
