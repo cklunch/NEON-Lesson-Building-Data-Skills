@@ -24,7 +24,8 @@ comments: false
 {% include _toc.html %}
 
 ## About
-This is a lesson in pulling data from the NEON API, using base R and the R package httr. There are 3 basic categories of NEON data:
+This is a lesson in pulling data from the NEON API, using base R 
+and the R package httr. There are 3 basic categories of NEON data:
 
 1. Observational - Data collected by a human in the field, or in an analytical laboratory, e.g. beetle identification, foliar isotopes
 1. Instrumentation - Data collected by an automated, streaming sensor, e.g. net radiation, soil carbon dioxide
@@ -33,6 +34,7 @@ This is a lesson in pulling data from the NEON API, using base R and the R packa
 This lesson covers the first two types of data. NEON remote sensing data are not currently available through the API.
 
 **R Skill Level:** Intermediate - you've got the basics of `R` down.
+**API Skill Level:** Beginner - you have little to no experience with APIs.
 
 <div id="objectives" markdown="1">
 
@@ -58,3 +60,46 @@ preferably, RStudio loaded on your computer.
 * [GitHub repository for the NEON API](https://github.com/NEONScience/neon-data-api)
 
 </div>
+
+## Anatomy of an API call
+### Base URL: 
+Specifics are appended to this in order to get the data or 
+metadata you're looking for, but all calls to this API will include 
+the base URL. For the NEON API, this is http://data.neonscience.org/api/v0
+
+### Endpoints: 
+What type of data or metadata are you looking for?
+
+~/products
+  Information about one or all of NEON's data products
+
+~/sites
+  Information about data availability at the site specified in the call
+
+~/locations
+  Spatial data for the NEON locations specified in the call
+
+~/data
+  Data! By product, site, and date (in monthly chunks).
+
+### Targets:
+The specific product, site, or location you want to get data for.
+
+
+## Observational data
+Which product do you want to get data for? Consult the <a href="http://data.neonscience.org/data-product-catalog" target="_blank">data product catalog</a>.
+
+We'll pick Soil stable isotopes (Distributed periodic), DP1.10100.001
+First query the API to find out which sites and dates have data available:
+
+``` {r os-avail-query}
+
+library(httr)
+req <- GET("http://data.neonscience.org/api/v0/products/DP1.10100.001")
+req
+
+```
+
+
+
+
