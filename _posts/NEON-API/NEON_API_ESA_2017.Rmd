@@ -34,6 +34,7 @@ and the R package httr. There are 3 basic categories of NEON data:
 This lesson covers the first two types of data. NEON remote sensing data are not currently available through the API.
 
 **R Skill Level:** Intermediate - you've got the basics of `R` down.
+
 **API Skill Level:** Beginner - you have little to no experience with APIs.
 
 <div id="objectives" markdown="1">
@@ -66,21 +67,22 @@ preferably, RStudio loaded on your computer.
 ### Base URL: 
 Specifics are appended to this in order to get the data or 
 metadata you're looking for, but all calls to this API will include 
-the base URL. For the NEON API, this is http://data.neonscience.org/api/v0
+the base URL. For the NEON API, this is http://data.neonscience.org/api/v0 
+(not clickable, because the base URL by itself will take you nowhere!)
 
 ### Endpoints: 
 What type of data or metadata are you looking for?
 
-~/products
+* **~/products**
   Information about one or all of NEON's data products
 
-~/sites
+* **~/sites**
   Information about data availability at the site specified in the call
 
-~/locations
+* **~/locations**
   Spatial data for the NEON locations specified in the call
 
-~/data
+* **~/data**
   Data! By product, site, and date (in monthly chunks).
 
 ### Targets:
@@ -91,6 +93,7 @@ The specific product, site, or location you want to get data for.
 Which product do you want to get data for? Consult the <a href="http://data.neonscience.org/data-product-catalog" target="_blank">data product catalog</a>.
 
 We'll pick Breeding landbird point counts, DP1.10003.001
+
 First query the products endpoint of the API to find out which sites and dates have data available. 
 The structure of the URL for the call is base/endpoint/DPID, where DPID is the numbered identifier 
 for the data product:
@@ -104,7 +107,8 @@ req <- GET("http://data.neonscience.org/api/v0/products/DP1.10003.001")
 
 The object returned from the GET has many layers of information. Entering the name of 
 the object gives you some basic information about what you downloaded. The content() 
-function returns the contents in list form:
+function returns the contents in the form of a highly nested list. This is typical of 
+JSON-formatted data returned by APIs:
 
 ``` {r os-query-contents}
 
@@ -115,7 +119,8 @@ req.content
 ```
 
 To get a more accessible view of which sites have data for which months, you'll 
-need to extract data from the list:
+need to extract data from the nested list. There are a variety of ways to do this, 
+in this tutorial we'll explore a couple of them. :
 
 
 
