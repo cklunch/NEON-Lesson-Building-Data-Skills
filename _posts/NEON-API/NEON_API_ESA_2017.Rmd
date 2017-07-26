@@ -58,6 +58,7 @@ preferably, RStudio loaded on your computer.
 
 * [Website for the NEON API](http://data.neonscience.org/data-api)
 * [GitHub repository for the NEON API](https://github.com/NEONScience/neon-data-api)
+* [ROpenSci wrapper for the NEON API](https://github.com/ropenscilabs/nneo) (not covered in this tutorial)
 
 </div>
 
@@ -89,16 +90,33 @@ The specific product, site, or location you want to get data for.
 ## Observational data
 Which product do you want to get data for? Consult the <a href="http://data.neonscience.org/data-product-catalog" target="_blank">data product catalog</a>.
 
-We'll pick Soil stable isotopes (Distributed periodic), DP1.10100.001
-First query the API to find out which sites and dates have data available:
+We'll pick Breeding landbird point counts, DP1.10003.001
+First query the products endpoint of the API to find out which sites and dates have data available. 
+The structure of the URL for the call is base/endpoint/DPID, where DPID is the numbered identifier 
+for the data product:
 
 ``` {r os-avail-query}
 
 library(httr)
-req <- GET("http://data.neonscience.org/api/v0/products/DP1.10100.001")
-req
+req <- GET("http://data.neonscience.org/api/v0/products/DP1.10003.001")
 
 ```
+
+The object returned from the GET has many layers of information. Entering the name of 
+the object gives you some basic information about what you downloaded. The content() 
+function returns the contents in list form:
+
+``` {r os-query-contents}
+
+req
+req.content <- content(req, as="parsed")
+req.content
+
+```
+
+To get a more accessible view of which sites have data for which months, you'll 
+need to extract data from the list:
+
 
 
 

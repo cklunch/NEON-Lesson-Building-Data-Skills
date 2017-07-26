@@ -7,10 +7,7 @@
 ##################
 
 require(knitr)
-dirs <- c("disturb-events-co13",
-          "OSIS-phenology-series",
-          "R/dc-tabular-time-series",
-          "R/tutorial-setup")
+dirs <- c("NEON-API")
 
 #################### Set up Input Variables #############################
 
@@ -18,13 +15,13 @@ dirs <- c("disturb-events-co13",
 dir <- dirs[1]
 
 # Inputs - Where the git repo is on your computer
-gitRepoPath <-"~/Documents/GitHub/NEON-Lesson-Building-Data-Skills"
+gitRepoPath <-"/Users/clunch/NEON-Lesson-Building-Data-Skills"
 
 # jekyll will only render md posts that begin with a date. Add one.
-add.date <- "2016-08-23-"
+add.date <- "2017-07-23-"
 
 # set working dir - this is where the data are located
-wd <- "~/Documents/data/disturb-events-co13"
+wd <- "/Users/clunch"
 
 
 ################### CONFIG BELOW IS REQUIRED BY JEKYLL - DON'T CHANGE ##########
