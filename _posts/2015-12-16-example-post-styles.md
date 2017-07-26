@@ -15,7 +15,7 @@ tags: []
 mainTag: 
 code1: R-code-File-Name-Here.R
 image:
-  feature: TeachingModules.jpg
+  feature: TeachingModule.jpg
   credit:
   creditlink:
 permalink: /example-post

@@ -1,0 +1,1482 @@
+---
+layout: post
+title: "Methods of Exploring NEON Mosquito Data in R"
+date:  2017-06-16
+authors: [Charlotte Roiger]
+dateCreated: 2017-06-16
+lastModified: `r format(Sys.time(), "%Y-%m-%d")`
+description: "This is a tutorial that shows users how to clean and perform an initial analysios using NEON mosquito data."
+tags: [R]
+image: #update later
+  feature: TeachingModules.jpg
+  credit: A National Ecological Observatory Network (NEON) - Teaching Module
+  creditlink: http://www.neonscience.org
+permalink: /R/carabid-clean-data # update later
+code1: carabid-beetle-data/Beetle-Data-Clean-Portal-Data.R # update later
+code2: carabid-beetle-data/carabid-NEON-data-cleanup.R # update later
+comments: false
+---
+
+{% include _toc.html %}
+
+##About
+SENTENCES ADD HERE
+
+
+**R Skill Level:** Intermediate - you've got the basics of `R` down
+
+<div id="objectives" markdown="1">
+
+# Goals & Objectives
+
+After completing this tutorial, you will be able to:
+
+*	Download mosquito trapping, identification, and sorting information from the 
+  NEON data portal
+* Download precipitation and temperature data from Global Historical Climatology
+  Network
+* Merge data frames to create one unified data frame with relevant variables to 
+  address research questions
+* Subset data by year
+* Use ggplot2 in R to create visualizations of data trends and maps  
+
+
+## Things You’ll Need To Complete This Tutorial
+You will need the most current version of R and, preferably, RStudio loaded on
+your computer to complete this tutorial.
+
+### R Libraries to Install:
+
+These R packages will be used in the tutorial below. Please make sure they are 
+installed prior to starting the tutorial. 
+ 
+* **dplyr:** `install.packages("dplyr")`
+* **plyr:** `install.packages("plyr")`
+* **tidyverse:** `install.packages("tidyverse")`
+*	**plyr:** `install.packages("plyr")`
+*	**mosaic:** `install.packages("mosaic")`
+*	**metScanR:** `install.packages("metScanR")`
+
+
+
+################################################################################################
+
+### Download The Data
+**NOTE: eventually turn these into teaching data subsets with others, then change to download buttons**
+You can download cleaned data files [here](//github.com/klevan/carabid-workshop/blob/master/data/zip%20files/cleaned-Data.zip), 
+NOAA weather data for each site [here](//github.com/klevan/carabid-workshop/blob/master/data/NOAA%20weather%20data%20for%202014.csv), 
+NEON map shp files [here](//github.com/klevan/carabid-workshop/blob/master/data/zip%20files/map%20data.zip) 
+and the script we will be modifying [here](//github.com/klevan/carabid-workshop/blob/master/code/data-analysis.R). 
+</div>
+#################################################################################################
+
+
+## NEON Mosquito Data
+
+The mosquito data on the NEON Data Portal are divided by type of information 
+into six tables:
+ * field collection data
+ * sorting data
+ * identification and pinning data
+ * pathogen pooling data
+ * pathogen results data
+ * archiving pooling data
+
+#################################################################################################
+
+For this tutorial we focus on the 2014 data and the 13 sites
+for which data is available in that year. To look at all this data requires 
+downloading 39 files (one field, sorting and pinning data for each site) and 
+combining the datasheets across all sites for each type of data (i.e., field, 
+sorting and pinning). 
+
+NEON provides several documents with information about the Carabid beetle protocal & 
+data collection. It is highly recommended you are familiar with the
+<a href="http://data.neonscience.org/data-product-view?dpCode=DP1.10022.001" 
+target="_blank">data product documents </a>
+prior to using NEON carabid beetle data for your research. 
+
+#################################################################################################
+
+
+We'll explore these six tables and then combine them into a couple of clean
+tables for use with analysis. 
+
+First, set up the R environment. 
+
+``` {r load-libraries}
+
+# Load packages required for entire script. 
+library(plyr)      # move/manipulate data
+library(dplyr)     # move/manipulate data
+library(foreign)   
+library(maptools)  # used for creating maps of NEON field sites
+library(raster)    # manipulate spatial data
+library(rbokeh) 
+library(rgdal)     # manipulate and read spatial data
+library(ggplot2)   # creation of plots and visualizations
+library(tidyverse) # move/manipulate data
+library(mosaic)    # good for data exploration
+
+#Set strings as factors equal to false thoughout
+options(stringsAsFactors = FALSE) 
+
+# set working directory to ensure R can find the file we wish to import
+# set to the `carabid-2014-NEON` directory
+#setwd("working-dir-path-here")
+
+```
+
+
+### Field Collection Data Table
+
+Read in the field collection data table. 
+
+``` {r trapping-table}
+
+#Read in the data TO BE CHANGED AS PORTAL DEVELOPS
+trap = read.csv('N:/Science/FSU/Intern Projects/2107_CharlotteRoiger/mos_trapping_in.csv')
+
+# set strings as factors as false throughout
+options(stringsAsFactors = FALSE) 
+
+#This command allows you to view the structure of the data
+str(trap)
+
+```
+
+This table contains information related to:
+
+* metadata about the sampling event, includes: 
+   + `plotID`: label of where a sample was collected
+   + `setDate`: when traps were set
+   + `collectDate`: the date of trap collection
+   + `sampleID`: unique label of sample collection events
+   + `targetTaxaPresent`:an indication of whether mosquitos were found in the 
+      sample 
+   + `HoursOfTrapping`: the number of days a given trap was in the field
+   + `samplingProtocolVersion`: the document number and the version of the 
+      sampling protocol used. These can be found in the 
+<a href="http://data.neonscience.org/documents" target="_blank"> NEON Documents Library</a>. 
+
+For sake of convenience we have only included the meta data for certain variables
+that we will use to carry out our analysis. For more metadata please see:
+INSERT LINK OR SOMETHING FOR SORT METADATA
+
+* metadata about the quality of the data 
+
+Unique collection events have a unique `sampleID` with the format = 
+`plotID.trapID.collectDate.TimeOfCollection`. 
+
+### Sorting Data Table
+
+
+``` {r sort-table}
+
+# read in sorting TO BE CHANGED AS PORTAL DEVELOPS
+sort = read.csv('N:/Science/FSU/Intern Projects/2107_CharlotteRoiger/mos_sorting_in.csv')
+
+# set strings as factors as false throughout
+options(stringsAsFactors = FALSE) 
+
+str(sort)
+
+```
+
+This table contains information about weight of subsamples and weight of bycatch. 
+
+* metadata about the subsampling event, includes:
+  + `plotID`: label of where a sample was collected
+  + `setDate`: when traps were set
+  + `collectDate`: the date of trap collection
+  + `sampleID`: unique label of sample collection events
+  + `subsampleID`: Unique label of subsampling collection events
+  + `totalWeight`: Total weight of sample
+  + `subsampleWeight`: Total weight of subsample
+  + `bycatchWeight`: Total weight of bycatch in the subsample
+
+Unique records have a unique `subSampleID` (format = 
+`plotID.trapID.collectDate.TimeofCollection.S.01` ). 
+
+For sake of convenience we have only included the meta data for certain variables
+that we will use to carry out our analysis. For more metadata please see:
+INSERT LINK OR SOMETHING FOR SORT METADATA
+
+### Identification Data Table
+
+``` {r identification-table}
+
+# read in data
+id = read.csv('N:/Science/FSU/Intern Projects/2107_CharlotteRoiger/mos_identification_in.csv')
+
+# set strings as factors as false throughout
+options(stringsAsFactors = FALSE) 
+
+# view structure of the data
+str(id)
+
+```
+
+The identification table contains information about the types of mosquitos found
+in each subsample. 
+
+* metadata about the subsampling event, includes:
+  + `plotID`: label of where a sample was collected
+  + `setDate`: when traps were set
+  + `collectDate`: the date of trap collection
+  + `sampleID`: unique label of sample collection events
+  + `subsampleID`: Unique label of subsampling collection events
+  + `individualCount`: The number of each species found in a subsample
+  + `scientificName`: The Scientific name of each species found in a subsample
+
+* metadata about the quality of the data 
+
+The identification table contains information about all mosquitos that were 
+found in each subsample. Each sample in the identification dataset contains the
+target taxa and once identified is either directly archived, or first sent to an
+external lab for Pathogen testing. 
+
+### Taxonomy Data Table
+
+```{r taxonomy-table}
+
+#read in data
+taxonomy = read.csv("~/GitHub/mosquito-intern/resources/mosquito_taxonomy.csv")
+
+# set strings as factors as false throughout
+options(stringsAsFactors = FALSE) 
+
+str(taxonomy)
+
+```
+
+This table contains information about mosquito taxonomy as well as the native
+status of each mosquito species in the data frame.
+
+* metadata about the subsampling event, includes:
+  + `scientificName`: the Scientific name of each species found in a subsample
+  + `d##NativeStatusCode`: an indicator of whether a species is native to 
+     each domain
+     
+SHOULD I ALSO ADD IN THE DOMAIN, PRECIP, AND TEMP TABLES HERE?
+
+HOW SHOULD I TALK ABOUT THE SOURCE FUNCTION
+
+
+#Wrangling the Data
+
+###Obtaining location information
+
+Before we can begin analyzing our data frames, we need to create a few new 
+variables and collect all the information we need into a unified usable 
+dataframe. To start, we will be extracting latitude and longitude information 
+from NEON's application programming interfaces. 
+
+```{r}
+
+# Create a vector of unique plotIDs from the trap dataframe to speed up the data scraping process
+uniquePlotIDs <- unique(trap$plotID)
+
+# Use the lapply() to create a list where each element is a single plotID with GPS data
+latlon <- lapply(uniquePlotIDs, get_NEON_location, output="latlon")
+
+```
+
+Once we have the vector of unique plot IDs, we then use the lapply command to go
+through each element of uniquePlotIDs, apply the get_NEON_location function, and
+return a list of unique plot IDs paired with its corresponding location 
+information.
+
+```{r}
+
+# Convert list into a data frame with the do.call function
+latlon.df <- do.call(rbind, latlon)
+
+# Match the names of your columns in this dataframe to other dataframes
+names(latlon.df) <- c("uniquePlotIDs", "lat", "lon", "northing", "easting", "utmZone", "elevation", "NLCDclass") 
+
+# Removing datapoints with latitude or longitude listed as 1, not a viable sampling location
+latlon.df[latlon.df==1]<-NA
+
+
+```
+
+Next we need to put together the location and plot identification information 
+with our trapping data. To achieve this goal, we will use the merge command to 
+match each plot ID in our latlon data frame to a plot ID in the trap data set.
+The merge command allows users to match rows of separate dataframes by certain
+key variables (in this case by plot ID) to create one unified data frame. For 
+more information on the merge function, please see INSERT WEBSITE
+
+```{r}
+
+# Merging trap data with latitude and  longitude data
+trap <- merge(x = latlon.df, y = trap, by.x = "uniquePlotIDs", by.y = "plotID") 
+
+```
+
+Once we are done merging our two data frames, we might notice that there is
+still a lot of missing latitude and longitude information (NEED TO INCLUDE WHY
+THIS IS???) However for some rows in our trapping dataset the variables
+pdaDecimalLatitude and pdaDecimalLongitude have location information that was
+not present in our latlon data frame. So we use an if-else statement to collect
+all of our latitude and longitude information into two more complete variables.
+
+```{r}
+
+# Filling in more latitude and longitude data
+trap$lat2<-ifelse(is.na(trap$lat)==TRUE, trap$pdaDecimalLatitude,trap$lat)
+
+trap$lon2<-ifelse(is.na(trap$lon)==TRUE, trap$pdaDecimalLongitude,trap$lon)
+
+```
+
+The next step in our data cleaning process is to consolidate all of the 
+information stored in the trapping, identification, and sorting data frames. 
+A lot of the information in the sorting data frame is very similar to what is
+found in the identification data frame. But, one key difference is that the 
+sorting data frame also contains the weight of the subsample, the weight of the 
+bycatch, and the total weight of the sample. So we want to only select the 
+columns in the sorting data frame that aren't in the id data frame.
+
+```{r}
+
+# Create a vector of column names that are in sort but not in id
+cols = colnames(sort)[!colnames(sort)%in%colnames(id)]
+
+# Merge id with subsetted sorting data frame
+id <- left_join(id, sort[, c('subsampleID', cols)], 
+                by = "subsampleID")
+
+```
+
+If we want to then merge our id data frame with the information in trap, we 
+first have to simplify the trap data to lower processing times. We do that by
+selecting only the rows of our trap data frame that are unique, and omitting any
+rows that have repeated Plot IDs. 
+
+```{r}
+
+#Creating a dataframe with only the unique plotIDs and lat2 lon2 data for merging
+uniquetrap<-trap[!duplicated(trap[,1]),c("uniquePlotIDs","lat2","lon2", "elevation","NLCDclass")]
+
+#Merging id df with lat2 lon2 data
+id <- merge(x = uniquetrap, y = id, by.y = "plotID", by.x = "uniquePlotIDs", all.y = TRUE)
+
+```
+
+One thing to keep in mind is that the identification and sorting data frames 
+only contain samples where the mosquitoes were present. However, we might also
+be interested in analyzing the samples where mosquitoes were not present. So we
+need to find the rows in the trap data frame where the plot ID is not in the
+id data frame and the target taxon is not present. First we create a subset of
+the trap data frame where mosquitoes were not found in the sample. Since we 
+want to then merge these rows with those in our id data frame we add in columns
+that are present in the id dataframe but not in the trap data frame and row-bind
+these two data frames together.
+
+```{r}
+# Get zero traps from trapping
+new_trap<- trap[!trap$sampleID %in% id$sampleID & trap$targetTaxaPresent=="N",]
+
+#Add columns in new_trap that weren't present in the ID table then add new_trap to ID table
+new_trap <- new_trap[, colnames(new_trap)[colnames(new_trap)%in%colnames(id)]]
+
+new_trap[, colnames(id)[!colnames(id)%in%colnames(new_trap)]]<-NA
+
+id <- rbind(id,new_trap)
+```
+
+###Creating Variables and Obtaining Weather Data 
+
+Now that we have a more complete id data set, we want to create a couple of 
+variables that could be useful in our analysis as well as obtain weather data
+from the National Oceanic and Atmospheric Administration (NOAA). To start, we 
+will note that the individual count present in each observation of the id data
+frame is only the individual count of each subsample. So to estimate the 
+number of individuals in each sample we will use the sample weight,
+by-catch weight, and subsample weight to generate a sample multiplier. To 
+create the sample multiplier we use an if-else statement to find only the rows
+in the id dataframe where by-catch weight information is present. Then we divide
+the total sample weight by the by-catch weight subtracted from the subsample
+weight. Next we use another if-else statement to replace all instances where
+the sample multiplier is infinity with NAs. We then create a new variable called
+'newindividualCount'where we multiply the individual count by the sample
+multiplier.
+
+```{r}
+
+#Creation of sample Multiplier
+id$sampleMultiplier <- ifelse(is.na(id$bycatchWeight), id$totalWeight/id$subsampleWeight, id$totalWeight/(id$subsampleWeight-id$bycatchWeight))
+id$sampleMultiplier <- ifelse(id$sampleMultiplier==Inf, NA, id$sampleMultiplier)
+id$sampleMultiplier <- ifelse(id$subsampleWeight==0 & id$individualCount != 0, 1, id$sampleMultiplier)
+
+#Creation of New individual Count with Multiplier
+id$newindividualCount <-ifelse(is.na(id$sampleMultiplier)==F, round(id$individualCount*id$sampleMultiplier), NA)
+
+```
+
+Now that we have an estimate of the abundance of each species in a sample, we
+also want to create a variable that takes into account the amount of time a 
+trap was deployed. One issue present with creating this variable is that traps 
+were either deployed overnight or collected within the space of one day. To
+address this challenge, we first create a variable that returns true if the 
+set date and the collect date are on the same day. Next we create two variables
+that converts the minutes of the set and collect times into hours. After that, 
+we use an if-else statement to find observations where set and collection dates
+were on the same day, then we subtract the set hours from the collection hours
+to get the number of hours that the trap was deployed. If the trap was deployed
+over the period of two days, we calculate the number of hours from when the trap
+was set until midnight by subtracting the set time from 24, then added the
+number of hours the trap was deployed on the collect day to yield the hours of 
+deployment. 
+
+```{r}
+
+#Creation of a variable to test whether samples were collected on the same day or different days
+id$sameDay <- ifelse(substr(id$collectDate, 9, 10) != substr(id$setDate,9,10), FALSE, TRUE)
+
+#Creating variables that convert the time of set and collection to hours
+id$setHours <-((as.numeric(substr(id$setDate,15,16))/60)+(as.numeric(substr(id$setDate,12,13))))
+id$collectHours <-((as.numeric(substr(id$collectDate,15,16))/60)+(as.numeric(substr(id$collectDate,12,13))))
+
+#variable to calculate the number of hours of trap deployment
+id$HoursOfTrapping <-ifelse(id$sameDay == TRUE, id$collectHours - id$setHours, (24 - id$setHours) + id$collectHours)
+
+#Changing hours of trapping to positive number 
+id$HoursOfTrapping <- abs(as.numeric(id$HoursOfTrapping))
+
+```
+
+In our current id data frame, we have only the set and collect dates of each 
+sample, where the collect date and time is formatted as "YYYY-MM-DDThh:mm".
+However, if we want to look at the Julian date of observation for Culex 
+tarsalis, we might want the date and year when the sample was collected. So we 
+use the 'substr' command to collect only the first four characters of the
+'collectDate' variable to pull year information, then we convert year to a 
+factor. However, in the id data frame there are some observations where the 
+collection date was not available. For many of the observations where 
+collection information is missing, the date of when the sample was recieved so
+we can extract year information in a similar fashion from the 'recievedDate' 
+variable. 
+
+```{r}
+
+#Extracting year information for id
+id$Year<-substr(id$collectDate,1,4)
+
+#Extracting year information for id from both collect date and recieved date
+id$receivedDate <- as.character(id$receivedDate)
+
+id$Year<-ifelse(is.na(id$collectDate), substr(id$receivedDate,1,4), substr(id$collectDate,1,4))
+
+#Exctracting date information for id
+id$Date<-substr(id$collectDate,1,10)
+
+```
+
+Our next objective is to obtain weather information for each day in our data set.
+The data in our temperature data frame ('temp.df') and precipitation data frame
+('precip.df') can be related to our NEON mosquito data by date and by proximity 
+to NEON sample sites. So first we convert the date in the temperature and 
+precipitation data frames to the variable type 'Date'. Next we find
+the site of each sample by taking the first four characters of each plot ID, and
+then merge the id data frame first with the temperature data frame by 'siteID' 
+and 'Date'. Now our data frame is nicely integrated, but we need to fix the 
+units of our maximum temperature variable by dividing each number in the column 
+called 'value' by ten. Then for clarity we rename the variable 'value' as 
+'Max.TempC'. We then repeat this process for our precipitation data. 
+
+```{r}
+
+#Change temp date type
+temp.df$date <- as.Date(temp.df$date)
+
+#Broad Site ID variable 
+id$siteID<-substr(id$uniquePlotIDs,1,4)
+
+#merging id with temp data
+id <- merge(x = temp.df, y = id, by.y = c('siteID','Date'), by.x = c('siteID','date'), all.y = TRUE)
+
+#Converting temperature to proper value
+id$value<-id$value/10
+names(id)[5]<-"Max.TempC"
+
+#Change precip date type
+precip.df$date <- as.Date(precip.df$date)
+
+#Merge id with precip data
+id <- merge(x = precip.df[,c(1,4,9)], y = id, by.y = c('siteID', 'date'), by.x = c('siteID', 'date'), all.y = TRUE)
+
+#converting temperature to proper value and renaming
+id$value<-id$value/10
+names(id)[3]<-"Precipmm"
+
+```
+
+### Finishing Touches and Filtering Data
+
+Now that we have location and weather information in a more usable format we
+are almost ready to start analyzing our NEON data. However we need to add domain
+and taxon rank information to our data frames so we can track changes in
+mosquito ranges and filter out missing data.
+
+```{r}
+
+#Merge with domain info.
+id <- merge(x = domain.df, y = id, by.y = "siteID", by.x = "siteid", all.y = TRUE)
+id$domainid <- as.character(id$domainid)
+
+#Merge with taxonomy df for taxson rank
+id <- merge( x = taxonomy[,c("scientificName", "taxonRank")], y = id, by.x = "scientificName", by.y = "scientificName")
+
+```
+
+Speaking of missing data, a quick exploration of our resulting identification
+data frame might reveal that the number of mosquito observations fluctuate 
+greatly for the years 2012, 2013, and 2015. This is because of changes in 
+sampling design, making the observations for these years less comparable to 
+2014 and 2016. Due to the changes in sampling design for mosquito collection,
+we will continue on with our analysis and focus in on the data from 2014 and
+2016. We will also filter our existing data by taxon rank. We choose to filter 
+out any observations in our data that are not identified down to the species or
+subspecies level so we can get a better idea of species richness and find 
+samples where *Culex tarsalis* was present.
+
+```{r}
+
+#Filter by species and subspecies classification
+id <- dplyr::filter(id, id$taxonRank %in% c("subspecies","species"))
+
+#smalle subset only containing 2014 and 2016
+idsmall<-dplyr::filter(id, id$Year %in% c(2014,2016))
+
+```
+
+
+#Vignette One: Mosquito Species Richness Over Latitudinal Gradients
+
+
+###Calculating Species Richness and  Obtaining Location Information
+
+Now that we have our data frames in a more usable format, we want to explore 
+Mosquito species richness to see if there is a pattern in relation to 
+sample latitude. The first step we need to take to explore this topic is to
+calculate species richness at each sample plot. However if we calculate species 
+richness for each plot, we lose some complexity in our data since plots were 
+sampled multiple times. So we want to calculate the species richness per plot
+but also take into accound the date at which each sample was taken. To tackle 
+this problem we use the 'ddply' command from the 'plyr' package to count the 
+number of unique scientific names for each plot and date. We also choose to 
+include certain variables in the id data frame that could be relevant to our 
+exploration of species richness
+
+```{r}
+
+specrich <- ddply(idsmall, ~ siteid + domainid + date, summarize, num_species = length(unique(scientificName)))
+```
+
+#################Why can't I just add it to ddply???? investigate later.############
+
+Next we merge our newply formed species ricness data frame with location
+information and convert latitude and longitude information into  a numeric. To 
+start exploring species richness we will make a scatter plot of species richness
+over latitude using the package 'ggplot2'. Another factor that we might want to
+take into account is the year in which the sample was taken to see if patterns
+in species richness differ by year. We will incorporate this variable into our 
+scatterplot of species richness over latitude by coloring the dots in our plot 
+with their corresponding year. 
+
+
+```{r}
+
+#Omit all instances where date is unknown
+specrich <- specrich[complete.cases(specrich$date),]
+
+#Merging to get lat2 lon2 data
+
+#First extract site id for the uniquetrap data frame
+uniquetrap$siteid <- substr(uniquetrap$uniquePlotIDs,1,4)
+
+#Omit any instances where lat and lon is not known for a site
+uniquetrap <- uniquetrap[uniquetrap$lat2!="",]
+
+#taking only the observations that are not duplicated
+uniquetrap <- uniquetrap[!duplicated(uniquetrap$siteid),]
+
+#merge with lat lon data excluding plotID
+specrich <- merge(x = uniquetrap[,c("lat2", "lon2", "elevation", "NLCDclass", "siteid")], y = specrich, by.y = "siteid", by.x = "siteid")
+
+#Changin lat2 to a numeric and date to date class
+specrich$lat2<-as.numeric(specrich$lat2)
+specrich$date<-as.Date(specrich$date)
+
+#Creating a Year variable
+
+specrich$Year <- substr(specrich$date, 1,4)
+
+
+# Plotting Species Richness over Latitude
+
+ggplot(specrich,aes(lat2, num_species))+
+  geom_point(aes(colour = Year), size = 2)+
+  labs(x = "Latitude", y = "Number of Species")+
+  ggtitle("Species Richness by Latitude")
+
+```
+
+What we can see from the plot of species richness by latitude is that there 
+appears to be a large amount of clustering between 28 and about 47 degrees 
+latitude. This result makes sense since most NEON sampling sites are located on 
+the continental United States. Another thing we might notice is that there
+does not appear to be a recognizable pattern between species richness and 
+latitude for both 2014 and 2016. However, latitude is a proxy variable for other
+environmental factors such as temperature. In our current data frame, we have
+a variable that accounts for the maximum temperature on the day of mosquito 
+collection, but it might be more useful to develop a metric that captures the
+maximum temperature of the days prior to collection. 
+
+###Creating a Temperature Lag Function
+
+To examine the maximum temperature of days before the collection date, we will 
+develop a function that takes the average maximum temperature of the 14 days
+prior to the sample collection date. To start, we define a function that takes 
+the date and site identification as inputs, and use the filter command to create
+a data frame that contains temperature information for each observation. We then
+take an average of the maximum temperature for the 14 days prior to collection
+at each site and also count the number of days where the maximum temperature was
+greater than 16 degrees Celsius.  
+
+```{r}
+
+Templag <- function(siteID, date){ 
+  date <- as.Date(date) #Converting all date inputs into date format
+  filter1 <- temp.df[grepl(siteID, temp.df$siteID),] #subset our temp data by site id
+  filter2 <- filter1[filter1$date >= date - 14 & filter1$date < date + 1,] # subset by date
+  TwoWeekAvgT <- mean(filter2$value)/10 #standardize temperature values
+  filter3 <- filter2[filter2$value > 16,] #select rows with max temp greater than 16 degrees C
+  GDD <- length(unique(filter3$date)) # count the number of unique dates in data frame
+  return(list(TwoWeekAvgT=TwoWeekAvgT, GDD=GDD))
+}
+
+```
+
+Now that our temperature lag function is complete, we will use the 'mapply'
+command to apply it to our species richness dataframe. We then create two new 
+variables that capture the average maximum temperature and the number of degree 
+days for the two weeks before collection. Once the two temperature variables
+are created, we then create a scatterplot of species richness over the average 
+maximum temperature. 
+
+
+
+```{r}
+
+#Applying temp lag fucntion to species richness data frame
+SPTWAMT.mat<-mapply(Templag, specrich$siteid, specrich$date)
+
+#Creating variables that capture average max temp and degree days 
+specrich$TwoWeekAvgMT<- c(unlist(SPTWAMT.mat[1,]))
+specrich$DegreeDays <- c(unlist(SPTWAMT.mat[2,]))
+
+#Scatterplot of species richness and two week average max temp
+ggplot(specrich, aes(TwoWeekAvgMT, num_species))+
+  geom_point(color = "green")+
+  labs(x = "Two Week Average Maximum Temperature in Celsius", y = "Number of Species")+
+  ggtitle("Species Richness by Two Week Average Maximum Temperature")
+
+```
+
+Looking at the scatterplot of species richness by two week average maximum 
+temperature, we can see a sort of distribution where species richness is highest
+where the average maximum temperature two weeks prior to collection was between 
+25 to 32 degrees Celsius with a couple of outliers around 24 and 28 degrees
+Celsius. FINISH THIS
+
+<div id = "challenge" markdown = "1">
+
+###Challenge: Creating a Preipitation Lag Function
+
+Now that we've created and applied a function that can calculate the average 
+maximum temperature over a two week period before collection, try creating a
+function that gauges the amount of precipitation at a sampling site before
+collection. 
+
+</div>
+
+#Vignette Two: Culex Tarsalis 
+
+
+###Setting up data frames
+
+To begin our investigation of spatial patterns and phenology of the species
+*Culex tarsalis*, we need to create data frames with only the information
+relating to *Culx tarsalis* is present. But first we take a look at the number
+times *Culex tarsalis* was present in our data.
+
+```{r}
+
+#Instances of Cu. tarsalis by Year
+table(id$Year, id$scientificName=="Culex tarsalis")
+
+```
+
+We can see from the table that *Culex tarsalis* was sampled most fequently in 
+the years 2014 and 2016. So very similar to our examination of species ricness,
+we will be focusing on these two years. Now we will subset our id data frame
+to only include rows of data where *Culex tarsalis* is in the 'scientificName'
+variable column. We next create an even smaller subset of our data by selecting
+rows whose year was either 2014 or 2016.
+
+```{r}
+
+#Creation of a subset with only Culex tarsalis
+tars<- id[grepl("Culex tarsalis", id$scientificName),]
+
+#Subset with only 2014 and 2016
+tarssmall <- tars[tars$Year %in% c(2014,2016), ]
+
+
+#Site Level variable
+tarsSiteLevel <- ddply(tarssmall,~siteid + domainid + date, summarize, siteAbundance = sum(newindividualCount))
+
+#merge with location information
+tarsSiteLevel <- merge(x = uniquetrap[,c("lat2", "lon2", "elevation", "NLCDclass", "siteid")], y = tarsSiteLevel, by.y = "siteid", by.x = "siteid")
+
+tarsSiteLevel$lat2<- as.numeric(tarsSiteLevel$lat2)
+tarsSiteLevel$lon2<- as.numeric(tarsSiteLevel$lon2)
+
+```
+
+Next we create variables that captures the two week average maximum temperature
+and the number of days greater than 16 degrees Celsius before collection by 
+applying the temperature lag fucntion to the new *Culex tarsalis* data frame
+('tarssmall'). 
+
+
+```{r}
+#Applying temperature lag function to tarssmall
+CTTWAMT.mat<- mapply(Templag, tarsSiteLevel$siteid, tarsSiteLevel$date)
+
+#Create variables in tarsSiteLevel for two week temp lag and degree days
+tarsSiteLevel$TwoWeekAvgMT <-c(unlist(CTTWAMT.mat[1,]))
+tarsSiteLevel$DegreeDays <- c(unlist(CTTWAMT.mat[2,]))
+
+
+```
+
+Next we want to explore the range of *Culex tarsalis* for the years 2014 and 2016.
+However, it might be helpful to know the regions in which *Culex tarsalis* is 
+considered to be native. One problem with obtaining the native status of 
+*Culex tarsalis* is that the native status information is contained in the 
+taxonomy data frame as a single row of data, as demonstrated below.
+
+```{r}
+
+#A look at the row of data in the taxonomy data frame 
+taxonomy[grepl("Culex tarsalis", taxonomy$scientificName),]
+
+```
+
+Notice how the native status information in the taxonomy data is separated by
+domain in separate columns in a 'wide' format. We need the native status
+information to be in the form of a column or vector to be added to our current
+'tarssmall' data frame, so we use the gather command from the tidyr package
+to find the columns in the taxonomy data frame that contained native status
+information and transformed that row of information into a new data frame.
+
+```{r}
+
+#Selecting certain columns of the tarstax data frame to find native status information
+tarstax <- tidyr:: gather(taxonomy[grepl("Culex tarsalis", taxonomy$scientificName), grepl("NativeStatusCode", colnames(taxonomy))], "Domain ID")
+
+#Omitting rows of data where no information is available
+tarstax<-tarstax[c(5:15,17:23),]
+
+#Creation of a dataframe that includes domain identification and native status
+tarstax.df <-data.frame("domainID"= unique(domain.df$domainid), "DomainNativeStatus"= tarstax)
+
+```
+
+
+```{r}
+#Merge Cu. tarsalis taxonomy df with tars df
+tarsSiteLevel <- merge(x = tarstax.df[,c("domainID", "DomainNativeStatus.value")], y = tarsSiteLevel, by.x = "domainID", by.y = "domainid")
+
+```
+
+
+
+#################################################################################################
+
+### IDs to Connect Tables
+
+To link the Field table to the sorting table you would use XXXX? 
+The information in the pinning table are traceable to the 
+sorting data via the `sampleID`. Every `sampleID` in the pinning data matches an
+`associatedSampleID` in the sorting dataset. 
+
+## Combine the Data Tables
+
+``` {r combine-function}
+# set strings as factors as false throughout
+options(stringsAsFactors = FALSE) 
+
+# this function allows for XXXX.
+multipleCombine <- function(input, ply = llply){
+  require(plyr)
+  require(dplyr)
+  ply(input, function(x){
+    t <- read.table(x, header=TRUE, sep=",",stringsAsFactors = FALSE) # read the csv
+    t1 <- rbind(t) # rbind it to a temporary variable
+    return(t1) # return the full variable
+  }
+  )
+}
+
+```
+
+We want to set paths that direct to all the data. 
+
+**Katie, I'm thinking we could pull the USGS weather data from this lesson. Thoughts?**
+
+``` {r auto-paths}
+
+# setting paths
+pathToData <- paste(path,'rawData_portalDownloads',sep='/')
+pathToWeatherData <- paste(path,'weatherData',sep='/')
+setwd(pathToData)
+
+```
+
+Next we want to create objects that will be used as suffixes for each table: 
+
+* `field`: Data that is recorded in the field when samples are recovered from 
+pitfall traps
+* `sort`: Data recorded in the lab during an initial sort; data on vertebrate 
+and invertebrate bycatch is recorded in this table; data on carabids that were 
+not pinned is recorded here
+* `pin`:  Data on identified carabids that were pinned; many of these Carabids 
+will eventually be available for loan from archival facilities
+* `weather`: the 
+
+**Katie, what is "bet", is it short for beetle? If so, I might change to `car` as
+it is consistent w/ the Explore lesson?**.
+
+``` {r table-suffix}
+
+# csv files, by type, where the combined data will get added.
+
+field <- 'bet_fielddata.csv' 
+sort <- 'bet_sorting.csv' 
+pin <- 'bet_IDandpinning.csv'
+weather <- 'NOAA weather data for 2014.csv'
+```
+
+Then we create a list of the files in each directory. 
+
+**Katie -- what does "module" mean in the notes here? 
+
+``` {r file-function-neon}
+# This function will grab the file paths of all the data in the individual directory
+
+fileList <- list.files(pathToData, full.names=TRUE) # list all the files, full.names=TRUE is necessary for ldplay/lapply to work below
+field <- fileList[grep(field,fileList)] # subset to just the ones in your module, using prefix, if needed
+sort <- fileList[grep(sort,fileList)] # subset to just the ones in your module, using prefix, if needed
+pin <- fileList[grep(pin,fileList)] # subset to just the ones in your module, using prefix, if needed
+```
+
+Now we can do the same thing but with the weather data. Here we don't want to 
+bring in all the weather data field only column 8 (`PRCP`, precipitation), and 12 to 14 (`TMAX`, `TMIN`,`TOBS`, temperature measures). 
+
+``` {r file-fuction-weather}
+fileList <- list.files(pathToWeatherData, full.names=TRUE) # list all the files, full.names=TRUE is necessary for ldplay/lapply to work below
+# use grep to create
+weather <- fileList[grep(weather,fileList)]
+weather <- read.table(weather, header=TRUE, sep=",",stringsAsFactors = FALSE); weather[,c(8,12:14)] <- weather[,c(8,12:14)]/10;weather$DATE <- paste(substr(weather$DATE,1,4),substr(weather$DATE,5,6),substr(weather$DATE,7,8),sep = '-') ;weather$DATE <- as.Date(weather$DATE,format="%Y-%m-%d")
+```
+
+Now we need to pull it together and create three data frames 
+
+``` {r data-frames}
+# Three dataframes compiling all the NEON data are created below
+bet_field = multipleCombine(field, ply = ldply) # The field data from all sites
+bet_sort = multipleCombine(sort, ply = ldply) # The sorting data from all sites
+bet_pin = multipleCombine(pin, ply = ldply) # The data on pinned Carabidae
+```
+
+It might be nice to have a single object with all the spatial data in it. We can
+call this `gisData` 
+
+``` {r spatial-data}
+gisData <- unique.data.frame(bet_field[c("domainID","siteID","plotID","trapID","nlcdClass",
+                                         "decimalLatitude","decimalLongitude","geodeticDatum",
+                                         "coordinateUncertainty","elevation","elevationUncertainty")])
+```
+
+Katie - ? not sure what this is for or what the note means. 
+``` {r not-sure-!}
+bet_field %>% 
+	filter(missingRecordsPerBoutQF==0) %>% 
+	select(-missingRecordsPerBoutQF) ->
+	bet_field # These are misleading. If FOPS didn't set a trap, it isn't in any table
+
+# clean up the objects no longer needed. 
+rm(field,sort,pin,fileList)
+
+````
+
+
+## Fixing Plausible Errors in Data
+
+With any data it is a good idea to review it to make sure that 
+### Errors in bet_field data
+
+#### Resolving duplicates
+
+
+**Katie - this seems very specific to a sample, do we need ot teach? If so, how
+would they know to do this?**
+
+``` {r resolve-duplicates}
+# resolving duplicates
+
+for (i in 1:dim(bet_field)[1]){
+  if(bet_field$plotID[i]=="JERC_030" & bet_field$boutNumber[i]==3) {
+    bet_field$setDate[i] <- "2014-07-02"
+    bet_field$collectDate[i] <- "2014-07-16"
+  }
+}
+```
+
+``` {r standard-ID}
+
+# Standardizing sampleID
+for (i in 1:dim(bet_field)[1]){
+  bet_field$sampleID[i] <- paste(bet_field$plotID[i],bet_field$trapID[i],
+                                 paste0(unlist(strsplit(as.character(bet_field$collectDate[i]),split="-"))[1],
+                                        unlist(strsplit(as.character(bet_field$collectDate[i]),split="-"))[2],
+                                        unlist(strsplit(as.character(bet_field$collectDate[i]),split="-"))[3]),
+                                 sep = '.')
+}
+
+```
+
+
+``` {r remove-dups}
+# Removing uid and duplicate records
+# use dplyr to filter for duplicates and then select them by sampleID
+bet_field %>% 
+  filter(duplicateCollectionEventQF==2) %>% 
+  select(sampleID) -> bet_dups
+
+# create a vector we will fill with those sampleIDs to remove.
+recordsToRemove <- vector()
+
+# fill `recordsToRemove` based on 
+for (i in unique(bet_dups$sampleID)){
+  bet_field %>% 
+    filter(sampleID==i) %>% 
+    select(uid)-> dup_uids
+  recordsToRemove <- c(recordsToRemove,dup_uids[-1,])
+}
+
+# 
+for (i in recordsToRemove){
+  bet_field <- bet_field[-match(i,bet_field$uid),]
+}
+
+#
+bet_field <- bet_field[,2:26]; rm(recordsToRemove,dup_uids,bet_dups)
+
+```
+
+### Errors in bet_sort 
+
+``` {r }
+# Make sampleIDs all Caps
+bet_sort$associatedSampleID <- toupper(bet_sort$associatedSampleID)
+
+# Known uids that are complete duplicates for bycatch
+uidToRemove <- c("ED7318A8BAEB438684E8F09EAABE185F",
+								 "F6C95A226CE747B4A628C9D11EB07730",
+								 "2C716CDD2DAC4173AA853257EC522B1E", 
+								 "3867CCADDB344AA28A72E8188D1CA6A8",
+								 "6650FC14AD64406BACA54D6E57862C7F",
+								 "EDD0884075574497BCFC281B7B58E50C")
+
+# Finding additional records that are duplicated in invert bycatch
+bet_sort %>% 
+  filter(duplicateSampleIDQF==2,sampleType=="invert bycatch") -> a
+for(i in unique(a$sampleID)){
+  a %>% 
+    filter(sampleID==i)-> a1
+  uidToRemove <- append(uidToRemove,a1$uid[2])
+}
+
+# Finding records that are duplicates in the common carabid group
+bet_sort %>% 
+  filter(duplicateSampleIDQF==2,sampleType=="common carabid") -> a
+a <- a[11:42,]
+for(i in unique(a$associatedSampleID)){
+  a %>% 
+    filter(associatedSampleID==i) -> a1
+  a1 %>% filter(individualCount==a1$individualCount) -> a1
+  uidToRemove <- append(uidToRemove,a1$uid)
+}
+rm(a,a1)
+
+# Remove duplicates
+bet_sort <- bet_sort[-match(uidToRemove,bet_sort$uid),2:dim(bet_sort)[2]]
+
+# Adding individual count numbers for records missing that data; fixing dates
+for (i in 1:dim(bet_sort)[1]){
+  if(bet_sort$sampleType[i]=='vert bycatch mam' & is.na(bet_sort$individualCount[i])==TRUE){
+    bet_sort$individualCount[i] <- 1
+  }
+  if(bet_sort$sampleType[i]=='vert bycatch herp' & is.na(bet_sort$individualCount[i])==TRUE){
+    bet_sort$individualCount[i] <- 1
+  }
+  if(length(unlist(strsplit(bet_sort$collectDate[i],split = '/')))==3){
+    bet_sort$collectDate[i] <- paste(unlist(strsplit(bet_sort$collectDate[i],split = '/'))[3],
+                                     ifelse(nchar(unlist(strsplit(bet_sort$collectDate[i],split = '/'))[1])==2,
+                                            unlist(strsplit(bet_sort$collectDate[i],split = '/'))[1],
+                                            paste0(0,unlist(strsplit(bet_sort$collectDate[i],split = '/'))[1])),
+                                     ifelse(nchar(unlist(strsplit(bet_sort$collectDate[i],split = '/'))[2])==2,
+                                            unlist(strsplit(bet_sort$collectDate[i],split = '/'))[2],
+                                            paste0(0,unlist(strsplit(bet_sort$collectDate[i],split = '/'))[2])),
+                                     sep = '-')
+  }
+  if(length(unlist(strsplit(bet_sort$etOHChangeDate[i],split = '/')))==3){
+    bet_sort$etOHChangeDate[i] <- paste(unlist(strsplit(bet_sort$etOHChangeDate[i],split = '/'))[3],
+                                        ifelse(nchar(unlist(strsplit(bet_sort$etOHChangeDate[i],split = '/'))[1])==2,
+                                               unlist(strsplit(bet_sort$etOHChangeDate[i],split = '/'))[1],
+                                               paste0(0,unlist(strsplit(bet_sort$etOHChangeDate[i],split = '/'))[1])),
+                                        ifelse(nchar(unlist(strsplit(bet_sort$etOHChangeDate[i],split = '/'))[2])==2,
+                                               unlist(strsplit(bet_sort$etOHChangeDate[i],split = '/'))[2],
+                                               paste0(0,unlist(strsplit(bet_sort$etOHChangeDate[i],split = '/'))[2])),
+                                        sep = '-')
+  }
+  if(length(unlist(strsplit(bet_sort$processingDate[i],split = '/')))==3){
+    bet_sort$processingDate[i] <- paste(unlist(strsplit(bet_sort$processingDate[i],split = '/'))[3],
+                                        ifelse(nchar(unlist(strsplit(bet_sort$processingDate[i],split = '/'))[1])==2,
+                                               unlist(strsplit(bet_sort$processingDate[i],split = '/'))[1],
+                                               paste0(0,unlist(strsplit(bet_sort$processingDate[i],split = '/'))[1])),
+                                        ifelse(nchar(unlist(strsplit(bet_sort$processingDate[i],split = '/'))[2])==2,
+                                               unlist(strsplit(bet_sort$processingDate[i],split = '/'))[2],
+                                               paste0(0,unlist(strsplit(bet_sort$processingDate[i],split = '/'))[2])),
+                                        sep = '-')
+  }
+  if(length(unlist(strsplit(bet_sort$identifiedDate[i],split = '/')))==3){
+    bet_sort$identifiedDate[i] <- paste(unlist(strsplit(bet_sort$identifiedDate[i],split = '/'))[3],
+                                        ifelse(nchar(unlist(strsplit(bet_sort$identifiedDate[i],split = '/'))[1])==2,
+                                               unlist(strsplit(bet_sort$identifiedDate[i],split = '/'))[1],
+                                               paste0(0,unlist(strsplit(bet_sort$identifiedDate[i],split = '/'))[1])),
+                                        ifelse(nchar(unlist(strsplit(bet_sort$identifiedDate[i],split = '/'))[2])==2,
+                                               unlist(strsplit(bet_sort$identifiedDate[i],split = '/'))[2],
+                                               paste0(0,unlist(strsplit(bet_sort$identifiedDate[i],split = '/'))[2])),
+                                        sep = '-')
+  }
+}
+
+
+bet_sort$sampleIDPLUStaxa <- substr(bet_sort$sampleID,1,nchar(bet_sort$sampleID)-3)
+
+```
+
+
+### Errors in the bet_pin
+
+``` {r errors-bet_pin}
+# Add 
+bet_pin$individualCount <-  1 # The pinning table represents single instances of individuals
+
+# Make sampleIDs all Caps
+bet_pin$sampleID <- toupper(bet_pin$sampleID)
+
+# Fixing dates
+for (i in 1:dim(bet_pin)[1]){
+  if(length(unlist(strsplit(bet_pin$collectDate[i],split = '/')))==3){
+    bet_pin$collectDate[i] <- paste(unlist(strsplit(bet_pin$collectDate[i],split = '/'))[3],
+                                    ifelse(nchar(unlist(strsplit(bet_pin$collectDate[i],split = '/'))[1])==2,
+                                           unlist(strsplit(bet_pin$collectDate[i],split = '/'))[1],
+                                           paste0(0,unlist(strsplit(bet_pin$collectDate[i],split = '/'))[1])),
+                                    ifelse(nchar(unlist(strsplit(bet_pin$collectDate[i],split = '/'))[2])==2,
+                                           unlist(strsplit(bet_pin$collectDate[i],split = '/'))[2],
+                                           paste0(0,unlist(strsplit(bet_pin$collectDate[i],split = '/'))[2])),
+                                    sep = '-')
+  }
+  if(length(unlist(strsplit(bet_pin$processingDate[i],split = '/')))==3){
+    bet_pin$processingDate[i] <- paste(unlist(strsplit(bet_pin$processingDate[i],split = '/'))[3],
+                                       ifelse(nchar(unlist(strsplit(bet_pin$processingDate[i],split = '/'))[1])==2,
+                                              unlist(strsplit(bet_pin$processingDate[i],split = '/'))[1],
+                                              paste0(0,unlist(strsplit(bet_pin$processingDate[i],split = '/'))[1])),
+                                       ifelse(nchar(unlist(strsplit(bet_pin$processingDate[i],split = '/'))[2])==2,
+                                              unlist(strsplit(bet_pin$processingDate[i],split = '/'))[2],
+                                              paste0(0,unlist(strsplit(bet_pin$processingDate[i],split = '/'))[2])),
+                                       sep = '-')
+  }
+  if(length(unlist(strsplit(bet_pin$identifiedDate[i],split = '/')))==3){
+    bet_pin$identifiedDate[i] <- paste(unlist(strsplit(bet_pin$identifiedDate[i],split = '/'))[3],
+                                       ifelse(nchar(unlist(strsplit(bet_pin$identifiedDate[i],split = '/'))[1])==2,
+                                              unlist(strsplit(bet_pin$identifiedDate[i],split = '/'))[1],
+                                              paste0(0,unlist(strsplit(bet_pin$identifiedDate[i],split = '/'))[1])),
+                                       ifelse(nchar(unlist(strsplit(bet_pin$identifiedDate[i],split = '/'))[2])==2,
+                                              unlist(strsplit(bet_pin$identifiedDate[i],split = '/'))[2],
+                                              paste0(0,unlist(strsplit(bet_pin$identifiedDate[i],split = '/'))[2])),
+                                       sep = '-')
+  }
+}
+
+# Correcting sampleIDs
+# Set aside things that are completely accurate
+matches <- (bet_pin$sampleID %in% bet_sort$associatedSampleID); bet_pin <- cbind(bet_pin,matches)
+
+bet_pin %>% 
+	filter(matches==TRUE) -> 
+	bet_pin1; bet_pin1 <- 
+	bet_pin1[,-match('matches',colnames(bet_pin1))] # 3778 correct records
+
+bet_pin %>% 
+	filter(matches==FALSE) -> 
+	bet_pin; bet_pin <- 
+	bet_pin[,-match('matches',colnames(bet_pin))] # 2168 incorrect records
+
+# Adding a tube number '01' shows it exists
+bet_pin$sampleID2 <- paste(bet_pin$sampleID,'01',sep=".")
+matches <- (bet_pin$sampleID2 %in% bet_sort$associatedSampleID); bet_pin <- cbind(bet_pin,matches)
+bet_pin %>% filter(matches==TRUE) -> bet_pin2; bet_pin2$sampleID <- bet_pin2$sampleID2 # 998 correct records
+bet_pin2 <- bet_pin2[,-match('matches',colnames(bet_pin2))]; bet_pin2 <- bet_pin2[,-match('sampleID2',colnames(bet_pin2))]; bet_pin1 <- rbind(bet_pin1,bet_pin2); rm(bet_pin2)
+bet_pin %>% filter(matches==FALSE) -> bet_pin; bet_pin <- bet_pin[,-match('matches',colnames(bet_pin))]; bet_pin <- bet_pin[,-match('sampleID2',colnames(bet_pin))] # 1170 incorrect records left to fix
+
+
+# Of the sampleIDs that don't have a match in the sort table
+for (i in bet_pin$individualID){
+  bet_sort %>% 
+    filter(plotID==bet_pin$plotID[match(i,bet_pin$individualID)],
+           trapID==bet_pin$trapID[match(i,bet_pin$individualID)],
+           collectDate==bet_pin$collectDate[match(i,bet_pin$individualID)],
+           sampleType!='vert bycatch mam',
+           sampleType!='vert bycatch herp',
+           sampleType!='invert bycatch') -> b
+  # Nothing in the sort table matches the plot/trap/date combo
+  if(dim(b)[1]==0){
+    bet_pin$sampleID2[match(i,bet_pin$individualID)] <- ''
+  }
+  
+  # Only one option in the sort table
+  if(dim(b)[1]==1){
+    bet_pin$sampleID2[match(i,bet_pin$individualID)] <- b$associatedSampleID[1]
+  }
+  
+  # Many options in the sort table
+  if(dim(b)[1]>1){
+    # And the pinned specimen was a 'common carabid' with a taxonID in the sample ID
+    bet_sort %>% 
+      filter(sampleIDPLUStaxa==paste(bet_pin$plotID[match(i,bet_pin$individualID)],
+                                     bet_pin$trapID[match(i,bet_pin$individualID)],
+                                     substr(bet_pin$sampleID[match(i,bet_pin$individualID)],12,19),
+                                     bet_pin$taxonID[match(i,bet_pin$individualID)],
+                                     sep='.')) -> b1
+    if(dim(b1)[1]>0){
+      bet_pin$sampleID2[match(i,bet_pin$individualID)] <- b1$associatedSampleID[1]
+    } else{
+      # And the pinned specimen was a 'common carabid' given a morphospecies assignment 
+      bet_sort %>% 
+        filter(substr(sampleID,1,19)==paste(bet_pin$plotID[match(i,bet_pin$individualID)],
+                                            bet_pin$trapID[match(i,bet_pin$individualID)],
+                                            substr(bet_pin$sampleID[match(i,bet_pin$individualID)],12,19),
+                                            sep='.'),
+               morphospeciesID==bet_pin$morphospeciesID[match(i,bet_pin$individualID)],nchar(morphospeciesID)>0) -> b1
+      if(dim(b1)[1]>0){
+        bet_pin$sampleID2[match(i,bet_pin$individualID)] <- b1$associatedSampleID[1]
+      } else{
+        # An 'other carabid' exists that fits the bill
+        bet_sort %>% 
+          filter(sampleIDPLUStaxa==paste(bet_pin$plotID[match(i,bet_pin$individualID)],
+                                         bet_pin$trapID[match(i,bet_pin$individualID)],
+                                         substr(bet_pin$sampleID[match(i,bet_pin$individualID)],12,19),
+                                         'OC',
+                                         sep='.')) -> b1
+        if(dim(b1)[1]>0){
+          bet_pin$sampleID2[match(i,bet_pin$individualID)] <- b1$associatedSampleID[1]
+        }
+      }
+    }
+  }   
+  bet_pin$numRecords[match(i,bet_pin$individualID)] <- dim(b)[1]
+  b=0
+}
+bet_pin %>% filter(numRecords==0)-> bet_pin2 # 213 samples with no provenance in the sort table
+bet_pin %>% filter(numRecords>0)-> bet_pin # 957 records that might exist
+for (i in 1:dim(bet_pin)[1]){
+  if (substr(bet_pin$sampleID[i],1,19)==substr(bet_pin$sampleID2[i],1,19)){
+    bet_pin$plausible[i] <- TRUE
+  } else {
+    bet_pin$plausible[i] <- FALSE    
+  }
+}
+bet_pin %>% filter(plausible==TRUE) -> bet_pin3; bet_pin3$sampleID <- bet_pin3$sampleID2; bet_pin3 <- bet_pin3[,1:23]; bet_pin1 <- rbind(bet_pin1,bet_pin3); rm(bet_pin3) # 561 plausible fixes
+bet_pin %>% filter(plausible==FALSE) -> bet_pin # 396 with incorrect sampleIDs
+
+# Are the last incorrect IDs other carabids?
+bet_pin$sampleID2 <- paste(substr(bet_pin$sampleID,1,19),'OC.01',sep='.'); bet_pin <- bet_pin[,1:24]
+plausible <- bet_pin$sampleID2 %in% bet_sort$associatedSampleID; bet_pin <- cbind(bet_pin,plausible) 
+bet_pin %>% filter(plausible==TRUE) -> bet_pin3; bet_pin3$sampleID <- bet_pin3$sampleID2; bet_pin3 <- bet_pin3[,1:23]; bet_pin1 <- rbind(bet_pin1,bet_pin3); rm(bet_pin3) # 313 could have been other carabids
+bet_pin %>% filter(plausible==FALSE) -> bet_pin; bet_pin <- bet_pin[,1:23]; bet_pin2 <- bet_pin2[,1:23] # 83 with incorrect sampleIDs
+
+# Some records in the pin table are for 'other carabids'; but were never entered in the sort table
+bet_pin <- rbind(bet_pin,bet_pin2); rm(bet_pin2) # All records without sort info
+bet_pin$sampleID <- paste(substr(bet_pin$sampleID,1,19),'OC.01',sep=".") 
+
+# Adding missing pinning records into the sort table
+bet_sort <- bet_sort[,1:24]
+bet_sortExtraRecords <- unique.data.frame(cbind(bet_pin[,c(2:9,12:21,23)],
+                                                bet_sort[1:dim(bet_pin)[1],c('associatedSampleID','etOHChangeDate','targetTaxaPresent','sampleType','duplicateSampleIDQF')]))
+bet_sortExtraRecords$associatedSampleID <- bet_sortExtraRecords$sampleID; bet_sortExtraRecords$sampleType <- 'other carabid'; bet_sortExtraRecords$targetTaxaPresent <- 'Y'
+bet_sortExtraRecords <- bet_sortExtraRecords[,colnames(bet_sort)]; bet_sortExtraRecords[,c(6,8,10,13:24)] <- ''; bet_sortExtraRecords$remarks <- 'record not originally found in sorting data; presumed to exist based on pinning data'
+bet_sort <- rbind(bet_sort,unique.data.frame(bet_sortExtraRecords)); rm(bet_sortExtraRecords) # Now sorting table is complete
+
+# Appending fixed pinning records to majority of pinning samples
+bet_pin <- rbind(bet_pin,bet_pin1); rm(bet_pin1) # Now pinning data is complete
+
+# Adding missing records
+# Records in the pin and sort without corresponding field data
+matches <- substr(bet_sort$associatedSampleID,1,19)%in%bet_field$sampleID
+bet_sortA <- cbind(bet_sort,matches); bet_sortA %>% filter(matches==FALSE,sampleType!='invert bycatch')->bet_sortA; bet_sortA$sampleID <- substr(bet_sortA$associatedSampleID,1,19)
+missingFieldRecords <- unique.data.frame(bet_sortA[c('domainID','siteID',"plotID","trapID","collectDate","sampleID")]); rm(bet_sortA)
+
+fieldRecords <- bet_field[1:dim(missingFieldRecords)[1],]
+fieldRecords[,c('uid','setDate',"boutNumber","eventID","daysOfTrapping",
+                "cupStatus","lidStatus","fluidLevel","trapReset","remarks",'recordedBy',
+                "duplicateCollectionEventQF", "compareSetCollectDateQF")] <- ''
+missingFieldRecords <- cbind(missingFieldRecords,
+                             fieldRecords[1:dim(missingFieldRecords)[1],c("setDate","boutNumber","eventID","daysOfTrapping","cupStatus","lidStatus","fluidLevel",                
+                                                                                              "trapReset","samplingProtocol","recordedBy","remarks",
+                                                                                              "duplicateCollectionEventQF")])
+for (i in 1:dim(missingFieldRecords)[1]){
+  gisData %>% 
+    filter(plotID==missingFieldRecords$plotID[i],trapID==missingFieldRecords$trapID[i])->a
+  missingFieldRecords$nlcdClass[i] <- a$nlcdClass[1]
+  missingFieldRecords$decimalLatitude[i] <- a$decimalLatitude[1]
+  missingFieldRecords$decimalLongitude[i]<- a$decimalLongitude[1]
+  missingFieldRecords$geodeticDatum[i]<- a$geodeticDatum[1]
+  missingFieldRecords$coordinateUncertainty[i]<- a$coordinateUncertainty[1]
+  missingFieldRecords$elevation[i]<- a$elevation[1]
+  missingFieldRecords$elevationUncertainty[i]<- a$elevationUncertainty[1]
+}
+
+missingFieldRecords <- missingFieldRecords[colnames(bet_field)]
+missingFieldRecords$remarks <- 'This record is assumed to exist based on the presence of sorting or pinning data'
+bet_field <- rbind(bet_field,missingFieldRecords);rm(missingFieldRecords,plausible,uidToRemove,gisData,matches,fieldRecords)
+for (i in 1:dim(bet_field)[1]){
+  if(bet_field$boutNumber[i]!='10' &
+     bet_field$boutNumber[i]!='11' & 
+     bet_field$boutNumber[i]!=''){
+    bet_field$eventID[i] <- paste('BET',bet_field$plotID[i],'2014',paste0(0,bet_field$boutNumber[i]),sep='.')    
+  } 
+  if(bet_field$boutNumber[i]!='10'& 
+     bet_field$boutNumber[i]!='11'){
+    bet_field$eventID[i] <- paste('BET',bet_field$plotID[i],'2014',bet_field$boutNumber[i],sep='.')    
+  }
+}
+for(i in 1:dim(bet_pin)[1]){
+  if(unlist(strsplit(bet_pin$sampleID[i],split = '\\.'))[4]=='OC'){
+    bet_pin$sampleType[i] <- 'other carabid'
+  } else{
+    bet_pin$sampleType[i] <- 'common carabid'
+  }
+}
+
+# Updating 'OTHE' code for carabids
+bet_pin %>% filter(taxonID=='OTHE') %>% select(remarks)->a; a <- sort(unique(a$remarks))
+for (i in 1:dim(bet_pin)[1]){
+  if(is.na(bet_pin$taxonID[i])==FALSE){
+  if (bet_pin$taxonID[i]=='OTHE'){
+    for (j in a){
+      if (bet_pin$remarks[i]==j & match(j,a)<4){
+        bet_pin$taxonID[i] <- 'CYCINC'
+        bet_pin$scientificName[i] <- 'Cyclotrachelus incisus'
+        bet_pin$taxonRank[i] <- 'species'
+        bet_pin$scientificNameAuthorship[i] <- 'LeConte'
+      } 
+      if (bet_pin$remarks[i]==j & match(j,a)>3){
+        bet_pin$taxonID[i] <- 'HARRUB'
+        bet_pin$scientificName[i] <- 'Harpalus rubripes'
+        bet_pin$taxonRank[i] <- 'species'
+        bet_pin$scientificNameAuthorship[i] <- 'Duftschmid'
+      } 
+    }
+  }
+  }
+}
+bet_pin <- bet_pin[,2:24]
+
+```
+
+
+## Compiling Carabid Abundance & Diversity 
+
+
+``` {r dates}
+# Converting collectDate into a date format
+bet_field$collectDate <- as.Date(bet_field$collectDate,format="%Y-%m-%d")
+bet_sort$individualCount <- as.numeric(bet_sort$individualCount)
+bet_field$daysOfTrapping <- as.numeric(bet_field$daysOfTrapping)
+
+```
+
+### Abundance for different sampleTypes
+In the beetle data in 2014 and prior, beetles were seperated into two `sampleTypes`:
+common carabid and other carabid. The way abundance is calculated differs. We 
+need to calculate it in two ways. 
+
+1. If the sampleType=='common carabid', then the individualCount reflects the 
+true number of Carabids of a given species that were in the trap. This means that 
+functionally the 'individualCount' of any 'common carabid' beetle with a sample 
+ID that is not in the pinning table at all can be processed for diversity/abundance 
+as though none were pinned. Pinning records just tell you that a pinned individual 
+from that trap is available
+
+2. If the sampleType=='other carabid' in the bet_sort, then there is at least 
+one beetle present from the trap indicated in the record,and to calculate 
+abundance we need to count the number of rows associated with that sampleID
+
+``` {r sampleType-abund}
+# Getting the 'common carabid' data
+bet_sort %>% 
+  filter(sampleType=='common carabid')-> bet_cc
+
+for (i in 1:dim(bet_cc)[1]){
+  # For sorting data missing counts, check the pinning table for records.
+  if(is.na(bet_cc$individualCount[i])==TRUE){
+    bet_pin %>% 
+      filter(plotID==bet_cc$plotID[i],trapID==bet_cc$trapID[i],
+             collectDate==bet_cc$collectDate[i],taxonID==bet_cc$taxonID[i])-> a
+    if(dim(a)[1]>0){
+      bet_cc$individualCount[i] <- dim(a)[1]
+    }
+  }
+  # For sorting data missing counts in the pinning table entirely, assign a minimum count of 1
+  if(is.na(bet_cc$individualCount[i])==TRUE){ 
+    bet_cc$individualCount[i] <- 1
+  }
+}
+
+# Filling in other carabid data
+# sorting records for which pinning data doesn't exist
+bet_sort %>% 
+  filter(sampleType=='other carabid') %>% 
+  anti_join(bet_pin,by=c('associatedSampleID'= 'sampleID')) -> bet_oc1
+bet_oc1$individualCount <- 1 # Can't find the corresponding records in the pinning table, but at least one must have been pinned/exist
+
+# 'other carabid' sorting records that DO have pinning records
+bet_sort %>% 
+  filter(sampleType=='other carabid') %>% 
+  semi_join(bet_pin,by=c('associatedSampleID'='sampleID')) -> bet_oc
+
+for (i in unique(bet_oc$associatedSampleID)){
+  bet_pin %>% 
+    filter(sampleType=='other carabid',sampleID==i) -> a 
+  a <- unique.data.frame(a[c("domainID","siteID" ,"plotID","trapID","collectDate",
+                             "sampleID","taxonID","scientificName","taxonRank",
+                             "identificationQualifier","scientificNameAuthorship","morphospeciesID",'sampleType')])
+  
+  a$targetTaxaPresent <- "Y"
+  a$etOHChangeDate <- ''
+  a$processingDate <- ''
+  a$associatedSampleID <- a$sampleID
+  a$sampleID <- ''
+  a$individualCount <- -999
+  a$duplicateSampleIDQF <- -1 
+  a$identificationReferences <- ''
+  a$identifiedBy <- '' 
+  a$identifiedDate <- ''
+  a$recordedBy <- ''
+  a$remarks <- ''
+  
+  a <- a[colnames(bet_sort)]
+  bet_oc1 <- rbind(bet_oc1,a)
+}
+
+rm(bet_oc)
+
+
+for (i in 1:dim(bet_oc1)[1]){
+  if (bet_oc1$individualCount[i]==-999){
+    if(nchar(bet_oc1$taxonID[i])>4){
+      bet_pin %>% 
+        filter(sampleID==bet_oc1$associatedSampleID[i],taxonID==bet_oc1$taxonID[i],
+               identificationQualifier==bet_oc1$identificationQualifier[i]) -> a
+      bet_oc1$individualCount[i] <- dim(a)[1]
+    }
+    if(nchar(bet_oc1$morphospeciesID[i])>10){
+      bet_pin %>% 
+        filter(sampleID==bet_oc1$associatedSampleID[i],morphospeciesID==bet_oc1$morphospeciesID[i]) -> a
+      bet_oc1$individualCount[i] <- dim(a)[1]
+    }
+  }
+  bet_sort %>% 
+    filter(associatedSampleID==bet_oc1$associatedSampleID[i]) -> a
+  bet_pin %>% 
+    filter(sampleID==bet_oc1$associatedSampleID[i]) -> a1
+  if(bet_oc1$recordedBy[i]==''){
+  bet_oc1$etOHChangeDate[i] <- max(a$etOHChangeDate)
+  bet_oc1$processingDate[i] <- max(a$processingDate)
+  bet_oc1$identifiedDate[i] <- max(a1$identifiedDate)
+  bet_oc1$identifiedBy[i] <- max(a1$identifiedBy)
+  bet_oc1$recordedBy[i] <- max(a1$recordedBy)
+}
+}
+
+# If the 'bet_pin' list an identification for a beetle with a sampleType=='other carabid' 
+# We have to assume all the beetles of that type were pinned and are listed in the 'bet_pin' table
+# As per the protocol.
+
+# This is the table that will be used to build the abundance statistics
+bet_div <- as.data.frame(bind_rows(bet_cc,bet_oc1))
+```
+
+
+## Adding Beetle Info To the Field Data
+
+``` {r pin-to-field-data}
+# Adding beetle abundance and richness; bycatch info; weather
+for (i in 1:dim(bet_field)[1]){
+  # adding abundance
+  bet_div %>% 
+    filter(plotID==bet_field$plotID[i],trapID==bet_field$trapID[i],collectDate==bet_field$collectDate[i])-> x
+  bet_field$beetleAbundance[i] <- sum(x$individualCount,na.rm = TRUE)
+  # adding richness (including morphospecies)
+  unique.data.frame(x[c('taxonID','morphospeciesID')]) -> x1
+  bet_field$beetleRichness[i] <-  dim(x1)[1]
+  # richness excluding morphospecies
+  x1 %>% 
+    filter(nchar(taxonID)>1) -> x1
+  bet_field$beetleRichnessNoMorphospecies[i] <- dim(x1)[1]
+  
+  # bycatch
+  bet_sort %>% 
+    filter(sampleType!='other carabid',sampleType!='common carabid',
+           plotID==bet_field$plotID[i],trapID==bet_field$trapID[i],
+           collectDate==bet_field$collectDate[i])-> a
+  # mammal bycatch
+  a %>% 
+    filter(sampleType=='vert bycatch mam') -> a1
+  bet_field$numMammalsCaught[i] <- sum(a1$individualCount,na.rm = TRUE)
+  # amphibian/reptile bycatch
+  a %>% 
+    filter(sampleType=='vert bycatch herp') -> a1  
+  bet_field$numHerpsCaught[i] <- sum(a1$individualCount,na.rm = TRUE)
+  # invertebrate bycatch
+  a %>% 
+    filter(sampleType=='invert bycatch') -> a1
+  bet_field$invertBycatchPresent[i] <- dim(a1)[1]  
+
+  print(i)
+}
+rm(a,a1,b1,x,x1,b,bet_cc,bet_oc1)
+
+```
+
+

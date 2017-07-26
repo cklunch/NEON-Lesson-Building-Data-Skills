@@ -13,6 +13,7 @@ dirs <- c("dc-spatio-temporal-intro",
           "R/dc-tabular-time-series",
           "R/tutorial-setup")
 
+
 #################### Set up Input Variables #############################
 
 # set directory (order above) that you'd like to build
@@ -22,10 +23,10 @@ dir <- dirs[1]
 gitRepoPath <-"~/Documents/GitHub/NEON-Lesson-Building-Data-Skills"
 
 # jekyll will only render md posts that begin with a date. Add one.
-add.date <- "2016-08-23-"
+add.date <- "2017-07-23-"
 
 # set working dir - this is where the data are located
-wd <- "~/Documents/data/disturb-events-co13"
+wd <- "~/Documents/data/"
 
 
 ################### CONFIG BELOW IS REQUIRED BY JEKYLL - DON'T CHANGE ##########
