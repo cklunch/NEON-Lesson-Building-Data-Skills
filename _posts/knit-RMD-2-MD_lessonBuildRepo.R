@@ -7,7 +7,8 @@
 ##################
 
 require(knitr)
-dirs <- c("disturb-events-co13",
+
+dirs <- c("dc-spatio-temporal-intro",
           "OSIS-phenology-series",
           "R/dc-tabular-time-series",
           "R/tutorial-setup")
