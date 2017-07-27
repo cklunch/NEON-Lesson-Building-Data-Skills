@@ -104,7 +104,7 @@ tables for use with analysis.
 
 First, set up the R environment. 
 
-``` {r load-libraries}
+```{r load-libraries}
 
 # Load packages required for entire script. 
 library(plyr)      # move/manipulate data
@@ -123,6 +123,7 @@ options(stringsAsFactors = FALSE)
 
 # set working directory to ensure R can find the file we wish to import
 
+
 #setwd("working-dir-path-here")
 
 ```
@@ -132,10 +133,10 @@ options(stringsAsFactors = FALSE)
 
 Read in the field collection data table. 
 
-``` {r trapping-table}
+```{r trapping-table}
 
 #Read in the data TO BE CHANGED AS PORTAL DEVELOPS
-trap = read.csv('N:/Science/FSU/Intern Projects/2107_CharlotteRoiger/mos_trapping_in.csv')
+trap = read.csv('NEON-mosquito-data-viz/mos_trapping_in.csv')
 
 # set strings as factors as false throughout
 options(stringsAsFactors = FALSE) 
@@ -174,7 +175,7 @@ Unique collection events have a unique `sampleID` with the format =
 ``` {r sort-table}
 
 # read in sorting TO BE CHANGED AS PORTAL DEVELOPS
-sort = read.csv('N:/Science/FSU/Intern Projects/2107_CharlotteRoiger/mos_sorting_in.csv')
+sort = read.csv('NEON-mosquito-data-viz/mos_sorting_in.csv')
 
 # set strings as factors as false throughout
 options(stringsAsFactors = FALSE) 
@@ -207,7 +208,7 @@ INSERT LINK OR SOMETHING FOR SORT METADATA
 ``` {r identification-table}
 
 # read in data
-id = read.csv('N:/Science/FSU/Intern Projects/2107_CharlotteRoiger/mos_identification_in.csv')
+id = read.csv('~/NEON-mosquito-data-viz/mos_identification_in.csv')
 
 # set strings as factors as false throughout
 options(stringsAsFactors = FALSE) 
@@ -241,7 +242,7 @@ external lab for Pathogen testing.
 ```{r taxonomy-table}
 
 #read in data
-taxonomy = read.csv("~/GitHub/mosquito-intern/resources/mosquito_taxonomy.csv")
+taxonomy = read.csv("NEON-mosquito-data-viz/")
 
 # set strings as factors as false throughout
 options(stringsAsFactors = FALSE) 
@@ -276,6 +277,8 @@ from NEON's application programming interfaces.
 
 # Create a vector of unique plotIDs from the trap dataframe to speed up the data scraping process
 uniquePlotIDs <- unique(trap$plotID)
+
+source('~/GitHub/mosquito-intern/code/get_NEON_location.R')
 
 # Use the lapply() to create a list where each element is a single plotID with GPS data
 latlon <- lapply(uniquePlotIDs, get_NEON_location, output="latlon")
