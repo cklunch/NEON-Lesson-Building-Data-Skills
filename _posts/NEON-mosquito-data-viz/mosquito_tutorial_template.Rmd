@@ -3,9 +3,9 @@ layout: post
 title: "Methods of Exploring NEON Mosquito Data in R"
 date:  2017-06-16
 authors: [Charlotte Roiger]
-dateCreated: 2017-06-16
+dateCreated:  2017-05-20
 lastModified: `r format(Sys.time(), "%Y-%m-%d")`
-description: "This is a tutorial that shows users how to clean and perform an initial analysios using NEON mosquito data."
+description: "This is a tutorial that shows users how to clean and perform an initial analysis using NEON mosquito data."
 tags: [R]
 image: #update later
   feature: TeachingModules.jpg
@@ -19,7 +19,7 @@ comments: false
 
 {% include _toc.html %}
 
-##About
+## About
 SENTENCES ADD HERE
 
 
@@ -59,7 +59,7 @@ installed prior to starting the tutorial.
 
 
 
-################################################################################################
+
 
 ### Download The Data
 **NOTE: eventually turn these into teaching data subsets with others, then change to download buttons**
@@ -68,7 +68,7 @@ NOAA weather data for each site [here](//github.com/klevan/carabid-workshop/blob
 NEON map shp files [here](//github.com/klevan/carabid-workshop/blob/master/data/zip%20files/map%20data.zip) 
 and the script we will be modifying [here](//github.com/klevan/carabid-workshop/blob/master/code/data-analysis.R). 
 </div>
-#################################################################################################
+
 
 
 ## NEON Mosquito Data
@@ -122,7 +122,7 @@ library(mosaic)    # good for data exploration
 options(stringsAsFactors = FALSE) 
 
 # set working directory to ensure R can find the file we wish to import
-# set to the `carabid-2014-NEON` directory
+
 #setwd("working-dir-path-here")
 
 ```
@@ -263,16 +263,16 @@ SHOULD I ALSO ADD IN THE DOMAIN, PRECIP, AND TEMP TABLES HERE?
 HOW SHOULD I TALK ABOUT THE SOURCE FUNCTION
 
 
-#Wrangling the Data
+## Wrangling the Data
 
-###Obtaining location information
+### Obtaining location information
 
 Before we can begin analyzing our data frames, we need to create a few new 
 variables and collect all the information we need into a unified usable 
 dataframe. To start, we will be extracting latitude and longitude information 
 from NEON's application programming interfaces. 
 
-```{r}
+```{r location-scraping}
 
 # Create a vector of unique plotIDs from the trap dataframe to speed up the data scraping process
 uniquePlotIDs <- unique(trap$plotID)
@@ -287,7 +287,7 @@ through each element of uniquePlotIDs, apply the get_NEON_location function, and
 return a list of unique plot IDs paired with its corresponding location 
 information.
 
-```{r}
+```{r location-dataframe}
 
 # Convert list into a data frame with the do.call function
 latlon.df <- do.call(rbind, latlon)
@@ -308,7 +308,7 @@ The merge command allows users to match rows of separate dataframes by certain
 key variables (in this case by plot ID) to create one unified data frame. For 
 more information on the merge function, please see INSERT WEBSITE
 
-```{r}
+```{r trap-location-merge}
 
 # Merging trap data with latitude and  longitude data
 trap <- merge(x = latlon.df, y = trap, by.x = "uniquePlotIDs", by.y = "plotID") 
@@ -322,7 +322,7 @@ pdaDecimalLatitude and pdaDecimalLongitude have location information that was
 not present in our latlon data frame. So we use an if-else statement to collect
 all of our latitude and longitude information into two more complete variables.
 
-```{r}
+```{r obtaining-more-lat}
 
 # Filling in more latitude and longitude data
 trap$lat2<-ifelse(is.na(trap$lat)==TRUE, trap$pdaDecimalLatitude,trap$lat)
@@ -339,7 +339,7 @@ sorting data frame also contains the weight of the subsample, the weight of the
 bycatch, and the total weight of the sample. So we want to only select the 
 columns in the sorting data frame that aren't in the id data frame.
 
-```{r}
+```{r finding-unique-columns}
 
 # Create a vector of column names that are in sort but not in id
 cols = colnames(sort)[!colnames(sort)%in%colnames(id)]
@@ -355,7 +355,7 @@ first have to simplify the trap data to lower processing times. We do that by
 selecting only the rows of our trap data frame that are unique, and omitting any
 rows that have repeated Plot IDs. 
 
-```{r}
+```{r create-unique-trap}
 
 #Creating a dataframe with only the unique plotIDs and lat2 lon2 data for merging
 uniquetrap<-trap[!duplicated(trap[,1]),c("uniquePlotIDs","lat2","lon2", "elevation","NLCDclass")]
@@ -375,7 +375,7 @@ want to then merge these rows with those in our id data frame we add in columns
 that are present in the id dataframe but not in the trap data frame and row-bind
 these two data frames together.
 
-```{r}
+```{r including-trap-zero}
 # Get zero traps from trapping
 new_trap<- trap[!trap$sampleID %in% id$sampleID & trap$targetTaxaPresent=="N",]
 
@@ -404,7 +404,7 @@ the sample multiplier is infinity with NAs. We then create a new variable called
 'newindividualCount'where we multiply the individual count by the sample
 multiplier.
 
-```{r}
+```{r fixing-individualCount}
 
 #Creation of sample Multiplier
 id$sampleMultiplier <- ifelse(is.na(id$bycatchWeight), id$totalWeight/id$subsampleWeight, id$totalWeight/(id$subsampleWeight-id$bycatchWeight))
@@ -431,7 +431,7 @@ was set until midnight by subtracting the set time from 24, then added the
 number of hours the trap was deployed on the collect day to yield the hours of 
 deployment. 
 
-```{r}
+```{r trapping-hours}
 
 #Creation of a variable to test whether samples were collected on the same day or different days
 id$sameDay <- ifelse(substr(id$collectDate, 9, 10) != substr(id$setDate,9,10), FALSE, TRUE)
@@ -460,7 +460,7 @@ collection information is missing, the date of when the sample was recieved so
 we can extract year information in a similar fashion from the 'recievedDate' 
 variable. 
 
-```{r}
+```{r date-and-year}
 
 #Extracting year information for id
 id$Year<-substr(id$collectDate,1,4)
@@ -487,7 +487,7 @@ units of our maximum temperature variable by dividing each number in the column
 called 'value' by ten. Then for clarity we rename the variable 'value' as 
 'Max.TempC'. We then repeat this process for our precipitation data. 
 
-```{r}
+```{r temp-data}
 
 #Change temp date type
 temp.df$date <- as.Date(temp.df$date)
@@ -521,7 +521,7 @@ are almost ready to start analyzing our NEON data. However we need to add domain
 and taxon rank information to our data frames so we can track changes in
 mosquito ranges and filter out missing data.
 
-```{r}
+```{r domain-taxonomy}
 
 #Merge with domain info.
 id <- merge(x = domain.df, y = id, by.y = "siteID", by.x = "siteid", all.y = TRUE)
@@ -543,7 +543,7 @@ out any observations in our data that are not identified down to the species or
 subspecies level so we can get a better idea of species richness and find 
 samples where *Culex tarsalis* was present.
 
-```{r}
+```{r filtering-id}
 
 #Filter by species and subspecies classification
 id <- dplyr::filter(id, id$taxonRank %in% c("subspecies","species"))
@@ -571,7 +571,7 @@ number of unique scientific names for each plot and date. We also choose to
 include certain variables in the id data frame that could be relevant to our 
 exploration of species richness
 
-```{r}
+```{r create-specrich}
 
 specrich <- ddply(idsmall, ~ siteid + domainid + date, summarize, num_species = length(unique(scientificName)))
 ```
@@ -588,7 +588,7 @@ scatterplot of species richness over latitude by coloring the dots in our plot
 with their corresponding year. 
 
 
-```{r}
+```{r plot-richness}
 
 #Omit all instances where date is unknown
 specrich <- specrich[complete.cases(specrich$date),]
@@ -647,7 +647,7 @@ take an average of the maximum temperature for the 14 days prior to collection
 at each site and also count the number of days where the maximum temperature was
 greater than 16 degrees Celsius.  
 
-```{r}
+```{r templag-function}
 
 Templag <- function(siteID, date){ 
   date <- as.Date(date) #Converting all date inputs into date format
@@ -670,7 +670,7 @@ maximum temperature.
 
 
 
-```{r}
+```{r apply-templag}
 
 #Applying temp lag fucntion to species richness data frame
 SPTWAMT.mat<-mapply(Templag, specrich$siteid, specrich$date)
@@ -714,7 +714,7 @@ To begin our investigation of spatial patterns and phenology of the species
 relating to *Culx tarsalis* is present. But first we take a look at the number
 times *Culex tarsalis* was present in our data.
 
-```{r}
+```{r first-look-at-CuT}
 
 #Instances of Cu. tarsalis by Year
 table(id$Year, id$scientificName=="Culex tarsalis")
@@ -728,7 +728,7 @@ to only include rows of data where *Culex tarsalis* is in the 'scientificName'
 variable column. We next create an even smaller subset of our data by selecting
 rows whose year was either 2014 or 2016.
 
-```{r}
+```{r create-CuT-Dfs}
 
 #Creation of a subset with only Culex tarsalis
 tars<- id[grepl("Culex tarsalis", id$scientificName),]
@@ -754,7 +754,7 @@ applying the temperature lag fucntion to the new *Culex tarsalis* data frame
 ('tarssmall'). 
 
 
-```{r}
+```{r apply-templag-again}
 #Applying temperature lag function to tarssmall
 CTTWAMT.mat<- mapply(Templag, tarsSiteLevel$siteid, tarsSiteLevel$date)
 
@@ -771,7 +771,7 @@ considered to be native. One problem with obtaining the native status of
 *Culex tarsalis* is that the native status information is contained in the 
 taxonomy data frame as a single row of data, as demonstrated below.
 
-```{r}
+```{r obtain-taxonomy}
 
 #A look at the row of data in the taxonomy data frame 
 taxonomy[grepl("Culex tarsalis", taxonomy$scientificName),]
@@ -785,7 +785,7 @@ information to be in the form of a column or vector to be added to our current
 to find the columns in the taxonomy data frame that contained native status
 information and transformed that row of information into a new data frame.
 
-```{r}
+```{r taxonomy-dataframe}
 
 #Selecting certain columns of the tarstax data frame to find native status information
 tarstax <- tidyr:: gather(taxonomy[grepl("Culex tarsalis", taxonomy$scientificName), grepl("NativeStatusCode", colnames(taxonomy))], "Domain ID")
@@ -799,7 +799,7 @@ tarstax.df <-data.frame("domainID"= unique(domain.df$domainid), "DomainNativeSta
 ```
 
 
-```{r}
+```{r merge-taxonomy-sitelevel}
 #Merge Cu. tarsalis taxonomy df with tars df
 tarsSiteLevel <- merge(x = tarstax.df[,c("domainID", "DomainNativeStatus.value")], y = tarsSiteLevel, by.x = "domainID", by.y = "domainid")
 
@@ -809,674 +809,674 @@ tarsSiteLevel <- merge(x = tarstax.df[,c("domainID", "DomainNativeStatus.value")
 
 #################################################################################################
 
-### IDs to Connect Tables
+<!-- ### IDs to Connect Tables -->
 
-To link the Field table to the sorting table you would use XXXX? 
-The information in the pinning table are traceable to the 
-sorting data via the `sampleID`. Every `sampleID` in the pinning data matches an
-`associatedSampleID` in the sorting dataset. 
+<!-- To link the Field table to the sorting table you would use XXXX?  -->
+<!-- The information in the pinning table are traceable to the  -->
+<!-- sorting data via the `sampleID`. Every `sampleID` in the pinning data matches an -->
+<!-- `associatedSampleID` in the sorting dataset.  -->
 
-## Combine the Data Tables
+<!-- ## Combine the Data Tables -->
 
-``` {r combine-function}
-# set strings as factors as false throughout
-options(stringsAsFactors = FALSE) 
+<!-- ``` {r combine-function} -->
+<!-- # set strings as factors as false throughout -->
+<!-- options(stringsAsFactors = FALSE)  -->
 
-# this function allows for XXXX.
-multipleCombine <- function(input, ply = llply){
-  require(plyr)
-  require(dplyr)
-  ply(input, function(x){
-    t <- read.table(x, header=TRUE, sep=",",stringsAsFactors = FALSE) # read the csv
-    t1 <- rbind(t) # rbind it to a temporary variable
-    return(t1) # return the full variable
-  }
-  )
-}
+<!-- # this function allows for XXXX. -->
+<!-- multipleCombine <- function(input, ply = llply){ -->
+<!--   require(plyr) -->
+<!--   require(dplyr) -->
+<!--   ply(input, function(x){ -->
+<!--     t <- read.table(x, header=TRUE, sep=",",stringsAsFactors = FALSE) # read the csv -->
+<!--     t1 <- rbind(t) # rbind it to a temporary variable -->
+<!--     return(t1) # return the full variable -->
+<!--   } -->
+<!--   ) -->
+<!-- } -->
 
-```
+<!-- ``` -->
 
-We want to set paths that direct to all the data. 
+<!-- We want to set paths that direct to all the data.  -->
 
-**Katie, I'm thinking we could pull the USGS weather data from this lesson. Thoughts?**
+<!-- **Katie, I'm thinking we could pull the USGS weather data from this lesson. Thoughts?** -->
 
-``` {r auto-paths}
+<!-- ``` {r auto-paths} -->
 
-# setting paths
-pathToData <- paste(path,'rawData_portalDownloads',sep='/')
-pathToWeatherData <- paste(path,'weatherData',sep='/')
-setwd(pathToData)
+<!-- # setting paths -->
+<!-- pathToData <- paste(path,'rawData_portalDownloads',sep='/') -->
+<!-- pathToWeatherData <- paste(path,'weatherData',sep='/') -->
+<!-- setwd(pathToData) -->
 
-```
+<!-- ``` -->
 
-Next we want to create objects that will be used as suffixes for each table: 
+<!-- Next we want to create objects that will be used as suffixes for each table:  -->
 
-* `field`: Data that is recorded in the field when samples are recovered from 
-pitfall traps
-* `sort`: Data recorded in the lab during an initial sort; data on vertebrate 
-and invertebrate bycatch is recorded in this table; data on carabids that were 
-not pinned is recorded here
-* `pin`:  Data on identified carabids that were pinned; many of these Carabids 
-will eventually be available for loan from archival facilities
-* `weather`: the 
+<!-- * `field`: Data that is recorded in the field when samples are recovered from  -->
+<!-- pitfall traps -->
+<!-- * `sort`: Data recorded in the lab during an initial sort; data on vertebrate  -->
+<!-- and invertebrate bycatch is recorded in this table; data on carabids that were  -->
+<!-- not pinned is recorded here -->
+<!-- * `pin`:  Data on identified carabids that were pinned; many of these Carabids  -->
+<!-- will eventually be available for loan from archival facilities -->
+<!-- * `weather`: the  -->
 
-**Katie, what is "bet", is it short for beetle? If so, I might change to `car` as
-it is consistent w/ the Explore lesson?**.
+<!-- **Katie, what is "bet", is it short for beetle? If so, I might change to `car` as -->
+<!-- it is consistent w/ the Explore lesson?**. -->
 
-``` {r table-suffix}
+<!-- ``` {r table-suffix} -->
 
-# csv files, by type, where the combined data will get added.
+<!-- # csv files, by type, where the combined data will get added. -->
 
-field <- 'bet_fielddata.csv' 
-sort <- 'bet_sorting.csv' 
-pin <- 'bet_IDandpinning.csv'
-weather <- 'NOAA weather data for 2014.csv'
-```
+<!-- field <- 'bet_fielddata.csv'  -->
+<!-- sort <- 'bet_sorting.csv'  -->
+<!-- pin <- 'bet_IDandpinning.csv' -->
+<!-- weather <- 'NOAA weather data for 2014.csv' -->
+<!-- ``` -->
 
-Then we create a list of the files in each directory. 
+<!-- Then we create a list of the files in each directory.  -->
 
-**Katie -- what does "module" mean in the notes here? 
+<!-- **Katie -- what does "module" mean in the notes here?  -->
 
-``` {r file-function-neon}
-# This function will grab the file paths of all the data in the individual directory
+<!-- ``` {r file-function-neon} -->
+<!-- # This function will grab the file paths of all the data in the individual directory -->
 
-fileList <- list.files(pathToData, full.names=TRUE) # list all the files, full.names=TRUE is necessary for ldplay/lapply to work below
-field <- fileList[grep(field,fileList)] # subset to just the ones in your module, using prefix, if needed
-sort <- fileList[grep(sort,fileList)] # subset to just the ones in your module, using prefix, if needed
-pin <- fileList[grep(pin,fileList)] # subset to just the ones in your module, using prefix, if needed
-```
+<!-- fileList <- list.files(pathToData, full.names=TRUE) # list all the files, full.names=TRUE is necessary for ldplay/lapply to work below -->
+<!-- field <- fileList[grep(field,fileList)] # subset to just the ones in your module, using prefix, if needed -->
+<!-- sort <- fileList[grep(sort,fileList)] # subset to just the ones in your module, using prefix, if needed -->
+<!-- pin <- fileList[grep(pin,fileList)] # subset to just the ones in your module, using prefix, if needed -->
+<!-- ``` -->
 
-Now we can do the same thing but with the weather data. Here we don't want to 
-bring in all the weather data field only column 8 (`PRCP`, precipitation), and 12 to 14 (`TMAX`, `TMIN`,`TOBS`, temperature measures). 
+<!-- Now we can do the same thing but with the weather data. Here we don't want to  -->
+<!-- bring in all the weather data field only column 8 (`PRCP`, precipitation), and 12 to 14 (`TMAX`, `TMIN`,`TOBS`, temperature measures).  -->
 
-``` {r file-fuction-weather}
-fileList <- list.files(pathToWeatherData, full.names=TRUE) # list all the files, full.names=TRUE is necessary for ldplay/lapply to work below
-# use grep to create
-weather <- fileList[grep(weather,fileList)]
-weather <- read.table(weather, header=TRUE, sep=",",stringsAsFactors = FALSE); weather[,c(8,12:14)] <- weather[,c(8,12:14)]/10;weather$DATE <- paste(substr(weather$DATE,1,4),substr(weather$DATE,5,6),substr(weather$DATE,7,8),sep = '-') ;weather$DATE <- as.Date(weather$DATE,format="%Y-%m-%d")
-```
+<!-- ``` {r file-fuction-weather} -->
+<!-- fileList <- list.files(pathToWeatherData, full.names=TRUE) # list all the files, full.names=TRUE is necessary for ldplay/lapply to work below -->
+<!-- # use grep to create -->
+<!-- weather <- fileList[grep(weather,fileList)] -->
+<!-- weather <- read.table(weather, header=TRUE, sep=",",stringsAsFactors = FALSE); weather[,c(8,12:14)] <- weather[,c(8,12:14)]/10;weather$DATE <- paste(substr(weather$DATE,1,4),substr(weather$DATE,5,6),substr(weather$DATE,7,8),sep = '-') ;weather$DATE <- as.Date(weather$DATE,format="%Y-%m-%d") -->
+<!-- ``` -->
 
-Now we need to pull it together and create three data frames 
+<!-- Now we need to pull it together and create three data frames  -->
 
-``` {r data-frames}
-# Three dataframes compiling all the NEON data are created below
-bet_field = multipleCombine(field, ply = ldply) # The field data from all sites
-bet_sort = multipleCombine(sort, ply = ldply) # The sorting data from all sites
-bet_pin = multipleCombine(pin, ply = ldply) # The data on pinned Carabidae
-```
+<!-- ``` {r data-frames} -->
+<!-- # Three dataframes compiling all the NEON data are created below -->
+<!-- bet_field = multipleCombine(field, ply = ldply) # The field data from all sites -->
+<!-- bet_sort = multipleCombine(sort, ply = ldply) # The sorting data from all sites -->
+<!-- bet_pin = multipleCombine(pin, ply = ldply) # The data on pinned Carabidae -->
+<!-- ``` -->
 
-It might be nice to have a single object with all the spatial data in it. We can
-call this `gisData` 
+<!-- It might be nice to have a single object with all the spatial data in it. We can -->
+<!-- call this `gisData`  -->
 
-``` {r spatial-data}
-gisData <- unique.data.frame(bet_field[c("domainID","siteID","plotID","trapID","nlcdClass",
-                                         "decimalLatitude","decimalLongitude","geodeticDatum",
-                                         "coordinateUncertainty","elevation","elevationUncertainty")])
-```
-
-Katie - ? not sure what this is for or what the note means. 
-``` {r not-sure-!}
-bet_field %>% 
-	filter(missingRecordsPerBoutQF==0) %>% 
-	select(-missingRecordsPerBoutQF) ->
-	bet_field # These are misleading. If FOPS didn't set a trap, it isn't in any table
-
-# clean up the objects no longer needed. 
-rm(field,sort,pin,fileList)
-
-````
-
-
-## Fixing Plausible Errors in Data
-
-With any data it is a good idea to review it to make sure that 
-### Errors in bet_field data
-
-#### Resolving duplicates
-
-
-**Katie - this seems very specific to a sample, do we need ot teach? If so, how
-would they know to do this?**
-
-``` {r resolve-duplicates}
-# resolving duplicates
-
-for (i in 1:dim(bet_field)[1]){
-  if(bet_field$plotID[i]=="JERC_030" & bet_field$boutNumber[i]==3) {
-    bet_field$setDate[i] <- "2014-07-02"
-    bet_field$collectDate[i] <- "2014-07-16"
-  }
-}
-```
-
-``` {r standard-ID}
-
-# Standardizing sampleID
-for (i in 1:dim(bet_field)[1]){
-  bet_field$sampleID[i] <- paste(bet_field$plotID[i],bet_field$trapID[i],
-                                 paste0(unlist(strsplit(as.character(bet_field$collectDate[i]),split="-"))[1],
-                                        unlist(strsplit(as.character(bet_field$collectDate[i]),split="-"))[2],
-                                        unlist(strsplit(as.character(bet_field$collectDate[i]),split="-"))[3]),
-                                 sep = '.')
-}
-
-```
-
-
-``` {r remove-dups}
-# Removing uid and duplicate records
-# use dplyr to filter for duplicates and then select them by sampleID
-bet_field %>% 
-  filter(duplicateCollectionEventQF==2) %>% 
-  select(sampleID) -> bet_dups
-
-# create a vector we will fill with those sampleIDs to remove.
-recordsToRemove <- vector()
-
-# fill `recordsToRemove` based on 
-for (i in unique(bet_dups$sampleID)){
-  bet_field %>% 
-    filter(sampleID==i) %>% 
-    select(uid)-> dup_uids
-  recordsToRemove <- c(recordsToRemove,dup_uids[-1,])
-}
-
-# 
-for (i in recordsToRemove){
-  bet_field <- bet_field[-match(i,bet_field$uid),]
-}
-
-#
-bet_field <- bet_field[,2:26]; rm(recordsToRemove,dup_uids,bet_dups)
-
-```
-
-### Errors in bet_sort 
-
-``` {r }
-# Make sampleIDs all Caps
-bet_sort$associatedSampleID <- toupper(bet_sort$associatedSampleID)
-
-# Known uids that are complete duplicates for bycatch
-uidToRemove <- c("ED7318A8BAEB438684E8F09EAABE185F",
-								 "F6C95A226CE747B4A628C9D11EB07730",
-								 "2C716CDD2DAC4173AA853257EC522B1E", 
-								 "3867CCADDB344AA28A72E8188D1CA6A8",
-								 "6650FC14AD64406BACA54D6E57862C7F",
-								 "EDD0884075574497BCFC281B7B58E50C")
-
-# Finding additional records that are duplicated in invert bycatch
-bet_sort %>% 
-  filter(duplicateSampleIDQF==2,sampleType=="invert bycatch") -> a
-for(i in unique(a$sampleID)){
-  a %>% 
-    filter(sampleID==i)-> a1
-  uidToRemove <- append(uidToRemove,a1$uid[2])
-}
-
-# Finding records that are duplicates in the common carabid group
-bet_sort %>% 
-  filter(duplicateSampleIDQF==2,sampleType=="common carabid") -> a
-a <- a[11:42,]
-for(i in unique(a$associatedSampleID)){
-  a %>% 
-    filter(associatedSampleID==i) -> a1
-  a1 %>% filter(individualCount==a1$individualCount) -> a1
-  uidToRemove <- append(uidToRemove,a1$uid)
-}
-rm(a,a1)
-
-# Remove duplicates
-bet_sort <- bet_sort[-match(uidToRemove,bet_sort$uid),2:dim(bet_sort)[2]]
-
-# Adding individual count numbers for records missing that data; fixing dates
-for (i in 1:dim(bet_sort)[1]){
-  if(bet_sort$sampleType[i]=='vert bycatch mam' & is.na(bet_sort$individualCount[i])==TRUE){
-    bet_sort$individualCount[i] <- 1
-  }
-  if(bet_sort$sampleType[i]=='vert bycatch herp' & is.na(bet_sort$individualCount[i])==TRUE){
-    bet_sort$individualCount[i] <- 1
-  }
-  if(length(unlist(strsplit(bet_sort$collectDate[i],split = '/')))==3){
-    bet_sort$collectDate[i] <- paste(unlist(strsplit(bet_sort$collectDate[i],split = '/'))[3],
-                                     ifelse(nchar(unlist(strsplit(bet_sort$collectDate[i],split = '/'))[1])==2,
-                                            unlist(strsplit(bet_sort$collectDate[i],split = '/'))[1],
-                                            paste0(0,unlist(strsplit(bet_sort$collectDate[i],split = '/'))[1])),
-                                     ifelse(nchar(unlist(strsplit(bet_sort$collectDate[i],split = '/'))[2])==2,
-                                            unlist(strsplit(bet_sort$collectDate[i],split = '/'))[2],
-                                            paste0(0,unlist(strsplit(bet_sort$collectDate[i],split = '/'))[2])),
-                                     sep = '-')
-  }
-  if(length(unlist(strsplit(bet_sort$etOHChangeDate[i],split = '/')))==3){
-    bet_sort$etOHChangeDate[i] <- paste(unlist(strsplit(bet_sort$etOHChangeDate[i],split = '/'))[3],
-                                        ifelse(nchar(unlist(strsplit(bet_sort$etOHChangeDate[i],split = '/'))[1])==2,
-                                               unlist(strsplit(bet_sort$etOHChangeDate[i],split = '/'))[1],
-                                               paste0(0,unlist(strsplit(bet_sort$etOHChangeDate[i],split = '/'))[1])),
-                                        ifelse(nchar(unlist(strsplit(bet_sort$etOHChangeDate[i],split = '/'))[2])==2,
-                                               unlist(strsplit(bet_sort$etOHChangeDate[i],split = '/'))[2],
-                                               paste0(0,unlist(strsplit(bet_sort$etOHChangeDate[i],split = '/'))[2])),
-                                        sep = '-')
-  }
-  if(length(unlist(strsplit(bet_sort$processingDate[i],split = '/')))==3){
-    bet_sort$processingDate[i] <- paste(unlist(strsplit(bet_sort$processingDate[i],split = '/'))[3],
-                                        ifelse(nchar(unlist(strsplit(bet_sort$processingDate[i],split = '/'))[1])==2,
-                                               unlist(strsplit(bet_sort$processingDate[i],split = '/'))[1],
-                                               paste0(0,unlist(strsplit(bet_sort$processingDate[i],split = '/'))[1])),
-                                        ifelse(nchar(unlist(strsplit(bet_sort$processingDate[i],split = '/'))[2])==2,
-                                               unlist(strsplit(bet_sort$processingDate[i],split = '/'))[2],
-                                               paste0(0,unlist(strsplit(bet_sort$processingDate[i],split = '/'))[2])),
-                                        sep = '-')
-  }
-  if(length(unlist(strsplit(bet_sort$identifiedDate[i],split = '/')))==3){
-    bet_sort$identifiedDate[i] <- paste(unlist(strsplit(bet_sort$identifiedDate[i],split = '/'))[3],
-                                        ifelse(nchar(unlist(strsplit(bet_sort$identifiedDate[i],split = '/'))[1])==2,
-                                               unlist(strsplit(bet_sort$identifiedDate[i],split = '/'))[1],
-                                               paste0(0,unlist(strsplit(bet_sort$identifiedDate[i],split = '/'))[1])),
-                                        ifelse(nchar(unlist(strsplit(bet_sort$identifiedDate[i],split = '/'))[2])==2,
-                                               unlist(strsplit(bet_sort$identifiedDate[i],split = '/'))[2],
-                                               paste0(0,unlist(strsplit(bet_sort$identifiedDate[i],split = '/'))[2])),
-                                        sep = '-')
-  }
-}
-
-
-bet_sort$sampleIDPLUStaxa <- substr(bet_sort$sampleID,1,nchar(bet_sort$sampleID)-3)
-
-```
-
-
-### Errors in the bet_pin
-
-``` {r errors-bet_pin}
-# Add 
-bet_pin$individualCount <-  1 # The pinning table represents single instances of individuals
-
-# Make sampleIDs all Caps
-bet_pin$sampleID <- toupper(bet_pin$sampleID)
-
-# Fixing dates
-for (i in 1:dim(bet_pin)[1]){
-  if(length(unlist(strsplit(bet_pin$collectDate[i],split = '/')))==3){
-    bet_pin$collectDate[i] <- paste(unlist(strsplit(bet_pin$collectDate[i],split = '/'))[3],
-                                    ifelse(nchar(unlist(strsplit(bet_pin$collectDate[i],split = '/'))[1])==2,
-                                           unlist(strsplit(bet_pin$collectDate[i],split = '/'))[1],
-                                           paste0(0,unlist(strsplit(bet_pin$collectDate[i],split = '/'))[1])),
-                                    ifelse(nchar(unlist(strsplit(bet_pin$collectDate[i],split = '/'))[2])==2,
-                                           unlist(strsplit(bet_pin$collectDate[i],split = '/'))[2],
-                                           paste0(0,unlist(strsplit(bet_pin$collectDate[i],split = '/'))[2])),
-                                    sep = '-')
-  }
-  if(length(unlist(strsplit(bet_pin$processingDate[i],split = '/')))==3){
-    bet_pin$processingDate[i] <- paste(unlist(strsplit(bet_pin$processingDate[i],split = '/'))[3],
-                                       ifelse(nchar(unlist(strsplit(bet_pin$processingDate[i],split = '/'))[1])==2,
-                                              unlist(strsplit(bet_pin$processingDate[i],split = '/'))[1],
-                                              paste0(0,unlist(strsplit(bet_pin$processingDate[i],split = '/'))[1])),
-                                       ifelse(nchar(unlist(strsplit(bet_pin$processingDate[i],split = '/'))[2])==2,
-                                              unlist(strsplit(bet_pin$processingDate[i],split = '/'))[2],
-                                              paste0(0,unlist(strsplit(bet_pin$processingDate[i],split = '/'))[2])),
-                                       sep = '-')
-  }
-  if(length(unlist(strsplit(bet_pin$identifiedDate[i],split = '/')))==3){
-    bet_pin$identifiedDate[i] <- paste(unlist(strsplit(bet_pin$identifiedDate[i],split = '/'))[3],
-                                       ifelse(nchar(unlist(strsplit(bet_pin$identifiedDate[i],split = '/'))[1])==2,
-                                              unlist(strsplit(bet_pin$identifiedDate[i],split = '/'))[1],
-                                              paste0(0,unlist(strsplit(bet_pin$identifiedDate[i],split = '/'))[1])),
-                                       ifelse(nchar(unlist(strsplit(bet_pin$identifiedDate[i],split = '/'))[2])==2,
-                                              unlist(strsplit(bet_pin$identifiedDate[i],split = '/'))[2],
-                                              paste0(0,unlist(strsplit(bet_pin$identifiedDate[i],split = '/'))[2])),
-                                       sep = '-')
-  }
-}
-
-# Correcting sampleIDs
-# Set aside things that are completely accurate
-matches <- (bet_pin$sampleID %in% bet_sort$associatedSampleID); bet_pin <- cbind(bet_pin,matches)
-
-bet_pin %>% 
-	filter(matches==TRUE) -> 
-	bet_pin1; bet_pin1 <- 
-	bet_pin1[,-match('matches',colnames(bet_pin1))] # 3778 correct records
-
-bet_pin %>% 
-	filter(matches==FALSE) -> 
-	bet_pin; bet_pin <- 
-	bet_pin[,-match('matches',colnames(bet_pin))] # 2168 incorrect records
-
-# Adding a tube number '01' shows it exists
-bet_pin$sampleID2 <- paste(bet_pin$sampleID,'01',sep=".")
-matches <- (bet_pin$sampleID2 %in% bet_sort$associatedSampleID); bet_pin <- cbind(bet_pin,matches)
-bet_pin %>% filter(matches==TRUE) -> bet_pin2; bet_pin2$sampleID <- bet_pin2$sampleID2 # 998 correct records
-bet_pin2 <- bet_pin2[,-match('matches',colnames(bet_pin2))]; bet_pin2 <- bet_pin2[,-match('sampleID2',colnames(bet_pin2))]; bet_pin1 <- rbind(bet_pin1,bet_pin2); rm(bet_pin2)
-bet_pin %>% filter(matches==FALSE) -> bet_pin; bet_pin <- bet_pin[,-match('matches',colnames(bet_pin))]; bet_pin <- bet_pin[,-match('sampleID2',colnames(bet_pin))] # 1170 incorrect records left to fix
-
-
-# Of the sampleIDs that don't have a match in the sort table
-for (i in bet_pin$individualID){
-  bet_sort %>% 
-    filter(plotID==bet_pin$plotID[match(i,bet_pin$individualID)],
-           trapID==bet_pin$trapID[match(i,bet_pin$individualID)],
-           collectDate==bet_pin$collectDate[match(i,bet_pin$individualID)],
-           sampleType!='vert bycatch mam',
-           sampleType!='vert bycatch herp',
-           sampleType!='invert bycatch') -> b
-  # Nothing in the sort table matches the plot/trap/date combo
-  if(dim(b)[1]==0){
-    bet_pin$sampleID2[match(i,bet_pin$individualID)] <- ''
-  }
-  
-  # Only one option in the sort table
-  if(dim(b)[1]==1){
-    bet_pin$sampleID2[match(i,bet_pin$individualID)] <- b$associatedSampleID[1]
-  }
-  
-  # Many options in the sort table
-  if(dim(b)[1]>1){
-    # And the pinned specimen was a 'common carabid' with a taxonID in the sample ID
-    bet_sort %>% 
-      filter(sampleIDPLUStaxa==paste(bet_pin$plotID[match(i,bet_pin$individualID)],
-                                     bet_pin$trapID[match(i,bet_pin$individualID)],
-                                     substr(bet_pin$sampleID[match(i,bet_pin$individualID)],12,19),
-                                     bet_pin$taxonID[match(i,bet_pin$individualID)],
-                                     sep='.')) -> b1
-    if(dim(b1)[1]>0){
-      bet_pin$sampleID2[match(i,bet_pin$individualID)] <- b1$associatedSampleID[1]
-    } else{
-      # And the pinned specimen was a 'common carabid' given a morphospecies assignment 
-      bet_sort %>% 
-        filter(substr(sampleID,1,19)==paste(bet_pin$plotID[match(i,bet_pin$individualID)],
-                                            bet_pin$trapID[match(i,bet_pin$individualID)],
-                                            substr(bet_pin$sampleID[match(i,bet_pin$individualID)],12,19),
-                                            sep='.'),
-               morphospeciesID==bet_pin$morphospeciesID[match(i,bet_pin$individualID)],nchar(morphospeciesID)>0) -> b1
-      if(dim(b1)[1]>0){
-        bet_pin$sampleID2[match(i,bet_pin$individualID)] <- b1$associatedSampleID[1]
-      } else{
-        # An 'other carabid' exists that fits the bill
-        bet_sort %>% 
-          filter(sampleIDPLUStaxa==paste(bet_pin$plotID[match(i,bet_pin$individualID)],
-                                         bet_pin$trapID[match(i,bet_pin$individualID)],
-                                         substr(bet_pin$sampleID[match(i,bet_pin$individualID)],12,19),
-                                         'OC',
-                                         sep='.')) -> b1
-        if(dim(b1)[1]>0){
-          bet_pin$sampleID2[match(i,bet_pin$individualID)] <- b1$associatedSampleID[1]
-        }
-      }
-    }
-  }   
-  bet_pin$numRecords[match(i,bet_pin$individualID)] <- dim(b)[1]
-  b=0
-}
-bet_pin %>% filter(numRecords==0)-> bet_pin2 # 213 samples with no provenance in the sort table
-bet_pin %>% filter(numRecords>0)-> bet_pin # 957 records that might exist
-for (i in 1:dim(bet_pin)[1]){
-  if (substr(bet_pin$sampleID[i],1,19)==substr(bet_pin$sampleID2[i],1,19)){
-    bet_pin$plausible[i] <- TRUE
-  } else {
-    bet_pin$plausible[i] <- FALSE    
-  }
-}
-bet_pin %>% filter(plausible==TRUE) -> bet_pin3; bet_pin3$sampleID <- bet_pin3$sampleID2; bet_pin3 <- bet_pin3[,1:23]; bet_pin1 <- rbind(bet_pin1,bet_pin3); rm(bet_pin3) # 561 plausible fixes
-bet_pin %>% filter(plausible==FALSE) -> bet_pin # 396 with incorrect sampleIDs
-
-# Are the last incorrect IDs other carabids?
-bet_pin$sampleID2 <- paste(substr(bet_pin$sampleID,1,19),'OC.01',sep='.'); bet_pin <- bet_pin[,1:24]
-plausible <- bet_pin$sampleID2 %in% bet_sort$associatedSampleID; bet_pin <- cbind(bet_pin,plausible) 
-bet_pin %>% filter(plausible==TRUE) -> bet_pin3; bet_pin3$sampleID <- bet_pin3$sampleID2; bet_pin3 <- bet_pin3[,1:23]; bet_pin1 <- rbind(bet_pin1,bet_pin3); rm(bet_pin3) # 313 could have been other carabids
-bet_pin %>% filter(plausible==FALSE) -> bet_pin; bet_pin <- bet_pin[,1:23]; bet_pin2 <- bet_pin2[,1:23] # 83 with incorrect sampleIDs
-
-# Some records in the pin table are for 'other carabids'; but were never entered in the sort table
-bet_pin <- rbind(bet_pin,bet_pin2); rm(bet_pin2) # All records without sort info
-bet_pin$sampleID <- paste(substr(bet_pin$sampleID,1,19),'OC.01',sep=".") 
-
-# Adding missing pinning records into the sort table
-bet_sort <- bet_sort[,1:24]
-bet_sortExtraRecords <- unique.data.frame(cbind(bet_pin[,c(2:9,12:21,23)],
-                                                bet_sort[1:dim(bet_pin)[1],c('associatedSampleID','etOHChangeDate','targetTaxaPresent','sampleType','duplicateSampleIDQF')]))
-bet_sortExtraRecords$associatedSampleID <- bet_sortExtraRecords$sampleID; bet_sortExtraRecords$sampleType <- 'other carabid'; bet_sortExtraRecords$targetTaxaPresent <- 'Y'
-bet_sortExtraRecords <- bet_sortExtraRecords[,colnames(bet_sort)]; bet_sortExtraRecords[,c(6,8,10,13:24)] <- ''; bet_sortExtraRecords$remarks <- 'record not originally found in sorting data; presumed to exist based on pinning data'
-bet_sort <- rbind(bet_sort,unique.data.frame(bet_sortExtraRecords)); rm(bet_sortExtraRecords) # Now sorting table is complete
-
-# Appending fixed pinning records to majority of pinning samples
-bet_pin <- rbind(bet_pin,bet_pin1); rm(bet_pin1) # Now pinning data is complete
-
-# Adding missing records
-# Records in the pin and sort without corresponding field data
-matches <- substr(bet_sort$associatedSampleID,1,19)%in%bet_field$sampleID
-bet_sortA <- cbind(bet_sort,matches); bet_sortA %>% filter(matches==FALSE,sampleType!='invert bycatch')->bet_sortA; bet_sortA$sampleID <- substr(bet_sortA$associatedSampleID,1,19)
-missingFieldRecords <- unique.data.frame(bet_sortA[c('domainID','siteID',"plotID","trapID","collectDate","sampleID")]); rm(bet_sortA)
-
-fieldRecords <- bet_field[1:dim(missingFieldRecords)[1],]
-fieldRecords[,c('uid','setDate',"boutNumber","eventID","daysOfTrapping",
-                "cupStatus","lidStatus","fluidLevel","trapReset","remarks",'recordedBy',
-                "duplicateCollectionEventQF", "compareSetCollectDateQF")] <- ''
-missingFieldRecords <- cbind(missingFieldRecords,
-                             fieldRecords[1:dim(missingFieldRecords)[1],c("setDate","boutNumber","eventID","daysOfTrapping","cupStatus","lidStatus","fluidLevel",                
-                                                                                              "trapReset","samplingProtocol","recordedBy","remarks",
-                                                                                              "duplicateCollectionEventQF")])
-for (i in 1:dim(missingFieldRecords)[1]){
-  gisData %>% 
-    filter(plotID==missingFieldRecords$plotID[i],trapID==missingFieldRecords$trapID[i])->a
-  missingFieldRecords$nlcdClass[i] <- a$nlcdClass[1]
-  missingFieldRecords$decimalLatitude[i] <- a$decimalLatitude[1]
-  missingFieldRecords$decimalLongitude[i]<- a$decimalLongitude[1]
-  missingFieldRecords$geodeticDatum[i]<- a$geodeticDatum[1]
-  missingFieldRecords$coordinateUncertainty[i]<- a$coordinateUncertainty[1]
-  missingFieldRecords$elevation[i]<- a$elevation[1]
-  missingFieldRecords$elevationUncertainty[i]<- a$elevationUncertainty[1]
-}
-
-missingFieldRecords <- missingFieldRecords[colnames(bet_field)]
-missingFieldRecords$remarks <- 'This record is assumed to exist based on the presence of sorting or pinning data'
-bet_field <- rbind(bet_field,missingFieldRecords);rm(missingFieldRecords,plausible,uidToRemove,gisData,matches,fieldRecords)
-for (i in 1:dim(bet_field)[1]){
-  if(bet_field$boutNumber[i]!='10' &
-     bet_field$boutNumber[i]!='11' & 
-     bet_field$boutNumber[i]!=''){
-    bet_field$eventID[i] <- paste('BET',bet_field$plotID[i],'2014',paste0(0,bet_field$boutNumber[i]),sep='.')    
-  } 
-  if(bet_field$boutNumber[i]!='10'& 
-     bet_field$boutNumber[i]!='11'){
-    bet_field$eventID[i] <- paste('BET',bet_field$plotID[i],'2014',bet_field$boutNumber[i],sep='.')    
-  }
-}
-for(i in 1:dim(bet_pin)[1]){
-  if(unlist(strsplit(bet_pin$sampleID[i],split = '\\.'))[4]=='OC'){
-    bet_pin$sampleType[i] <- 'other carabid'
-  } else{
-    bet_pin$sampleType[i] <- 'common carabid'
-  }
-}
-
-# Updating 'OTHE' code for carabids
-bet_pin %>% filter(taxonID=='OTHE') %>% select(remarks)->a; a <- sort(unique(a$remarks))
-for (i in 1:dim(bet_pin)[1]){
-  if(is.na(bet_pin$taxonID[i])==FALSE){
-  if (bet_pin$taxonID[i]=='OTHE'){
-    for (j in a){
-      if (bet_pin$remarks[i]==j & match(j,a)<4){
-        bet_pin$taxonID[i] <- 'CYCINC'
-        bet_pin$scientificName[i] <- 'Cyclotrachelus incisus'
-        bet_pin$taxonRank[i] <- 'species'
-        bet_pin$scientificNameAuthorship[i] <- 'LeConte'
-      } 
-      if (bet_pin$remarks[i]==j & match(j,a)>3){
-        bet_pin$taxonID[i] <- 'HARRUB'
-        bet_pin$scientificName[i] <- 'Harpalus rubripes'
-        bet_pin$taxonRank[i] <- 'species'
-        bet_pin$scientificNameAuthorship[i] <- 'Duftschmid'
-      } 
-    }
-  }
-  }
-}
-bet_pin <- bet_pin[,2:24]
-
-```
-
-
-## Compiling Carabid Abundance & Diversity 
-
-
-``` {r dates}
-# Converting collectDate into a date format
-bet_field$collectDate <- as.Date(bet_field$collectDate,format="%Y-%m-%d")
-bet_sort$individualCount <- as.numeric(bet_sort$individualCount)
-bet_field$daysOfTrapping <- as.numeric(bet_field$daysOfTrapping)
-
-```
-
-### Abundance for different sampleTypes
-In the beetle data in 2014 and prior, beetles were seperated into two `sampleTypes`:
-common carabid and other carabid. The way abundance is calculated differs. We 
-need to calculate it in two ways. 
-
-1. If the sampleType=='common carabid', then the individualCount reflects the 
-true number of Carabids of a given species that were in the trap. This means that 
-functionally the 'individualCount' of any 'common carabid' beetle with a sample 
-ID that is not in the pinning table at all can be processed for diversity/abundance 
-as though none were pinned. Pinning records just tell you that a pinned individual 
-from that trap is available
-
-2. If the sampleType=='other carabid' in the bet_sort, then there is at least 
-one beetle present from the trap indicated in the record,and to calculate 
-abundance we need to count the number of rows associated with that sampleID
-
-``` {r sampleType-abund}
-# Getting the 'common carabid' data
-bet_sort %>% 
-  filter(sampleType=='common carabid')-> bet_cc
-
-for (i in 1:dim(bet_cc)[1]){
-  # For sorting data missing counts, check the pinning table for records.
-  if(is.na(bet_cc$individualCount[i])==TRUE){
-    bet_pin %>% 
-      filter(plotID==bet_cc$plotID[i],trapID==bet_cc$trapID[i],
-             collectDate==bet_cc$collectDate[i],taxonID==bet_cc$taxonID[i])-> a
-    if(dim(a)[1]>0){
-      bet_cc$individualCount[i] <- dim(a)[1]
-    }
-  }
-  # For sorting data missing counts in the pinning table entirely, assign a minimum count of 1
-  if(is.na(bet_cc$individualCount[i])==TRUE){ 
-    bet_cc$individualCount[i] <- 1
-  }
-}
-
-# Filling in other carabid data
-# sorting records for which pinning data doesn't exist
-bet_sort %>% 
-  filter(sampleType=='other carabid') %>% 
-  anti_join(bet_pin,by=c('associatedSampleID'= 'sampleID')) -> bet_oc1
-bet_oc1$individualCount <- 1 # Can't find the corresponding records in the pinning table, but at least one must have been pinned/exist
-
-# 'other carabid' sorting records that DO have pinning records
-bet_sort %>% 
-  filter(sampleType=='other carabid') %>% 
-  semi_join(bet_pin,by=c('associatedSampleID'='sampleID')) -> bet_oc
-
-for (i in unique(bet_oc$associatedSampleID)){
-  bet_pin %>% 
-    filter(sampleType=='other carabid',sampleID==i) -> a 
-  a <- unique.data.frame(a[c("domainID","siteID" ,"plotID","trapID","collectDate",
-                             "sampleID","taxonID","scientificName","taxonRank",
-                             "identificationQualifier","scientificNameAuthorship","morphospeciesID",'sampleType')])
-  
-  a$targetTaxaPresent <- "Y"
-  a$etOHChangeDate <- ''
-  a$processingDate <- ''
-  a$associatedSampleID <- a$sampleID
-  a$sampleID <- ''
-  a$individualCount <- -999
-  a$duplicateSampleIDQF <- -1 
-  a$identificationReferences <- ''
-  a$identifiedBy <- '' 
-  a$identifiedDate <- ''
-  a$recordedBy <- ''
-  a$remarks <- ''
-  
-  a <- a[colnames(bet_sort)]
-  bet_oc1 <- rbind(bet_oc1,a)
-}
-
-rm(bet_oc)
-
-
-for (i in 1:dim(bet_oc1)[1]){
-  if (bet_oc1$individualCount[i]==-999){
-    if(nchar(bet_oc1$taxonID[i])>4){
-      bet_pin %>% 
-        filter(sampleID==bet_oc1$associatedSampleID[i],taxonID==bet_oc1$taxonID[i],
-               identificationQualifier==bet_oc1$identificationQualifier[i]) -> a
-      bet_oc1$individualCount[i] <- dim(a)[1]
-    }
-    if(nchar(bet_oc1$morphospeciesID[i])>10){
-      bet_pin %>% 
-        filter(sampleID==bet_oc1$associatedSampleID[i],morphospeciesID==bet_oc1$morphospeciesID[i]) -> a
-      bet_oc1$individualCount[i] <- dim(a)[1]
-    }
-  }
-  bet_sort %>% 
-    filter(associatedSampleID==bet_oc1$associatedSampleID[i]) -> a
-  bet_pin %>% 
-    filter(sampleID==bet_oc1$associatedSampleID[i]) -> a1
-  if(bet_oc1$recordedBy[i]==''){
-  bet_oc1$etOHChangeDate[i] <- max(a$etOHChangeDate)
-  bet_oc1$processingDate[i] <- max(a$processingDate)
-  bet_oc1$identifiedDate[i] <- max(a1$identifiedDate)
-  bet_oc1$identifiedBy[i] <- max(a1$identifiedBy)
-  bet_oc1$recordedBy[i] <- max(a1$recordedBy)
-}
-}
-
-# If the 'bet_pin' list an identification for a beetle with a sampleType=='other carabid' 
-# We have to assume all the beetles of that type were pinned and are listed in the 'bet_pin' table
-# As per the protocol.
-
-# This is the table that will be used to build the abundance statistics
-bet_div <- as.data.frame(bind_rows(bet_cc,bet_oc1))
-```
-
-
-## Adding Beetle Info To the Field Data
-
-``` {r pin-to-field-data}
-# Adding beetle abundance and richness; bycatch info; weather
-for (i in 1:dim(bet_field)[1]){
-  # adding abundance
-  bet_div %>% 
-    filter(plotID==bet_field$plotID[i],trapID==bet_field$trapID[i],collectDate==bet_field$collectDate[i])-> x
-  bet_field$beetleAbundance[i] <- sum(x$individualCount,na.rm = TRUE)
-  # adding richness (including morphospecies)
-  unique.data.frame(x[c('taxonID','morphospeciesID')]) -> x1
-  bet_field$beetleRichness[i] <-  dim(x1)[1]
-  # richness excluding morphospecies
-  x1 %>% 
-    filter(nchar(taxonID)>1) -> x1
-  bet_field$beetleRichnessNoMorphospecies[i] <- dim(x1)[1]
-  
-  # bycatch
-  bet_sort %>% 
-    filter(sampleType!='other carabid',sampleType!='common carabid',
-           plotID==bet_field$plotID[i],trapID==bet_field$trapID[i],
-           collectDate==bet_field$collectDate[i])-> a
-  # mammal bycatch
-  a %>% 
-    filter(sampleType=='vert bycatch mam') -> a1
-  bet_field$numMammalsCaught[i] <- sum(a1$individualCount,na.rm = TRUE)
-  # amphibian/reptile bycatch
-  a %>% 
-    filter(sampleType=='vert bycatch herp') -> a1  
-  bet_field$numHerpsCaught[i] <- sum(a1$individualCount,na.rm = TRUE)
-  # invertebrate bycatch
-  a %>% 
-    filter(sampleType=='invert bycatch') -> a1
-  bet_field$invertBycatchPresent[i] <- dim(a1)[1]  
-
-  print(i)
-}
-rm(a,a1,b1,x,x1,b,bet_cc,bet_oc1)
-
-```
+<!-- ``` {r spatial-data} -->
+<!-- gisData <- unique.data.frame(bet_field[c("domainID","siteID","plotID","trapID","nlcdClass", -->
+<!--                                          "decimalLatitude","decimalLongitude","geodeticDatum", -->
+<!--                                          "coordinateUncertainty","elevation","elevationUncertainty")]) -->
+<!-- ``` -->
+
+<!-- Katie - ? not sure what this is for or what the note means.  -->
+<!-- ``` {r not-sure-!} -->
+<!-- bet_field %>%  -->
+<!-- 	filter(missingRecordsPerBoutQF==0) %>%  -->
+<!-- 	select(-missingRecordsPerBoutQF) -> -->
+<!-- 	bet_field # These are misleading. If FOPS didn't set a trap, it isn't in any table -->
+
+<!-- # clean up the objects no longer needed.  -->
+<!-- rm(field,sort,pin,fileList) -->
+
+<!-- ```` -->
+
+
+<!-- ## Fixing Plausible Errors in Data -->
+
+<!-- With any data it is a good idea to review it to make sure that  -->
+<!-- ### Errors in bet_field data -->
+
+<!-- #### Resolving duplicates -->
+
+
+<!-- **Katie - this seems very specific to a sample, do we need ot teach? If so, how -->
+<!-- would they know to do this?** -->
+
+<!-- ``` {r resolve-duplicates} -->
+<!-- # resolving duplicates -->
+
+<!-- for (i in 1:dim(bet_field)[1]){ -->
+<!--   if(bet_field$plotID[i]=="JERC_030" & bet_field$boutNumber[i]==3) { -->
+<!--     bet_field$setDate[i] <- "2014-07-02" -->
+<!--     bet_field$collectDate[i] <- "2014-07-16" -->
+<!--   } -->
+<!-- } -->
+<!-- ``` -->
+
+<!-- ``` {r standard-ID} -->
+
+<!-- # Standardizing sampleID -->
+<!-- for (i in 1:dim(bet_field)[1]){ -->
+<!--   bet_field$sampleID[i] <- paste(bet_field$plotID[i],bet_field$trapID[i], -->
+<!--                                  paste0(unlist(strsplit(as.character(bet_field$collectDate[i]),split="-"))[1], -->
+<!--                                         unlist(strsplit(as.character(bet_field$collectDate[i]),split="-"))[2], -->
+<!--                                         unlist(strsplit(as.character(bet_field$collectDate[i]),split="-"))[3]), -->
+<!--                                  sep = '.') -->
+<!-- } -->
+
+<!-- ``` -->
+
+
+<!-- ``` {r remove-dups} -->
+<!-- # Removing uid and duplicate records -->
+<!-- # use dplyr to filter for duplicates and then select them by sampleID -->
+<!-- bet_field %>%  -->
+<!--   filter(duplicateCollectionEventQF==2) %>%  -->
+<!--   select(sampleID) -> bet_dups -->
+
+<!-- # create a vector we will fill with those sampleIDs to remove. -->
+<!-- recordsToRemove <- vector() -->
+
+<!-- # fill `recordsToRemove` based on  -->
+<!-- for (i in unique(bet_dups$sampleID)){ -->
+<!--   bet_field %>%  -->
+<!--     filter(sampleID==i) %>%  -->
+<!--     select(uid)-> dup_uids -->
+<!--   recordsToRemove <- c(recordsToRemove,dup_uids[-1,]) -->
+<!-- } -->
+
+<!-- #  -->
+<!-- for (i in recordsToRemove){ -->
+<!--   bet_field <- bet_field[-match(i,bet_field$uid),] -->
+<!-- } -->
+
+<!-- # -->
+<!-- bet_field <- bet_field[,2:26]; rm(recordsToRemove,dup_uids,bet_dups) -->
+
+<!-- ``` -->
+
+<!-- ### Errors in bet_sort  -->
+
+<!-- ``` {r } -->
+<!-- # Make sampleIDs all Caps -->
+<!-- bet_sort$associatedSampleID <- toupper(bet_sort$associatedSampleID) -->
+
+<!-- # Known uids that are complete duplicates for bycatch -->
+<!-- uidToRemove <- c("ED7318A8BAEB438684E8F09EAABE185F", -->
+<!-- 								 "F6C95A226CE747B4A628C9D11EB07730", -->
+<!-- 								 "2C716CDD2DAC4173AA853257EC522B1E",  -->
+<!-- 								 "3867CCADDB344AA28A72E8188D1CA6A8", -->
+<!-- 								 "6650FC14AD64406BACA54D6E57862C7F", -->
+<!-- 								 "EDD0884075574497BCFC281B7B58E50C") -->
+
+<!-- # Finding additional records that are duplicated in invert bycatch -->
+<!-- bet_sort %>%  -->
+<!--   filter(duplicateSampleIDQF==2,sampleType=="invert bycatch") -> a -->
+<!-- for(i in unique(a$sampleID)){ -->
+<!--   a %>%  -->
+<!--     filter(sampleID==i)-> a1 -->
+<!--   uidToRemove <- append(uidToRemove,a1$uid[2]) -->
+<!-- } -->
+
+<!-- # Finding records that are duplicates in the common carabid group -->
+<!-- bet_sort %>%  -->
+<!--   filter(duplicateSampleIDQF==2,sampleType=="common carabid") -> a -->
+<!-- a <- a[11:42,] -->
+<!-- for(i in unique(a$associatedSampleID)){ -->
+<!--   a %>%  -->
+<!--     filter(associatedSampleID==i) -> a1 -->
+<!--   a1 %>% filter(individualCount==a1$individualCount) -> a1 -->
+<!--   uidToRemove <- append(uidToRemove,a1$uid) -->
+<!-- } -->
+<!-- rm(a,a1) -->
+
+<!-- # Remove duplicates -->
+<!-- bet_sort <- bet_sort[-match(uidToRemove,bet_sort$uid),2:dim(bet_sort)[2]] -->
+
+<!-- # Adding individual count numbers for records missing that data; fixing dates -->
+<!-- for (i in 1:dim(bet_sort)[1]){ -->
+<!--   if(bet_sort$sampleType[i]=='vert bycatch mam' & is.na(bet_sort$individualCount[i])==TRUE){ -->
+<!--     bet_sort$individualCount[i] <- 1 -->
+<!--   } -->
+<!--   if(bet_sort$sampleType[i]=='vert bycatch herp' & is.na(bet_sort$individualCount[i])==TRUE){ -->
+<!--     bet_sort$individualCount[i] <- 1 -->
+<!--   } -->
+<!--   if(length(unlist(strsplit(bet_sort$collectDate[i],split = '/')))==3){ -->
+<!--     bet_sort$collectDate[i] <- paste(unlist(strsplit(bet_sort$collectDate[i],split = '/'))[3], -->
+<!--                                      ifelse(nchar(unlist(strsplit(bet_sort$collectDate[i],split = '/'))[1])==2, -->
+<!--                                             unlist(strsplit(bet_sort$collectDate[i],split = '/'))[1], -->
+<!--                                             paste0(0,unlist(strsplit(bet_sort$collectDate[i],split = '/'))[1])), -->
+<!--                                      ifelse(nchar(unlist(strsplit(bet_sort$collectDate[i],split = '/'))[2])==2, -->
+<!--                                             unlist(strsplit(bet_sort$collectDate[i],split = '/'))[2], -->
+<!--                                             paste0(0,unlist(strsplit(bet_sort$collectDate[i],split = '/'))[2])), -->
+<!--                                      sep = '-') -->
+<!--   } -->
+<!--   if(length(unlist(strsplit(bet_sort$etOHChangeDate[i],split = '/')))==3){ -->
+<!--     bet_sort$etOHChangeDate[i] <- paste(unlist(strsplit(bet_sort$etOHChangeDate[i],split = '/'))[3], -->
+<!--                                         ifelse(nchar(unlist(strsplit(bet_sort$etOHChangeDate[i],split = '/'))[1])==2, -->
+<!--                                                unlist(strsplit(bet_sort$etOHChangeDate[i],split = '/'))[1], -->
+<!--                                                paste0(0,unlist(strsplit(bet_sort$etOHChangeDate[i],split = '/'))[1])), -->
+<!--                                         ifelse(nchar(unlist(strsplit(bet_sort$etOHChangeDate[i],split = '/'))[2])==2, -->
+<!--                                                unlist(strsplit(bet_sort$etOHChangeDate[i],split = '/'))[2], -->
+<!--                                                paste0(0,unlist(strsplit(bet_sort$etOHChangeDate[i],split = '/'))[2])), -->
+<!--                                         sep = '-') -->
+<!--   } -->
+<!--   if(length(unlist(strsplit(bet_sort$processingDate[i],split = '/')))==3){ -->
+<!--     bet_sort$processingDate[i] <- paste(unlist(strsplit(bet_sort$processingDate[i],split = '/'))[3], -->
+<!--                                         ifelse(nchar(unlist(strsplit(bet_sort$processingDate[i],split = '/'))[1])==2, -->
+<!--                                                unlist(strsplit(bet_sort$processingDate[i],split = '/'))[1], -->
+<!--                                                paste0(0,unlist(strsplit(bet_sort$processingDate[i],split = '/'))[1])), -->
+<!--                                         ifelse(nchar(unlist(strsplit(bet_sort$processingDate[i],split = '/'))[2])==2, -->
+<!--                                                unlist(strsplit(bet_sort$processingDate[i],split = '/'))[2], -->
+<!--                                                paste0(0,unlist(strsplit(bet_sort$processingDate[i],split = '/'))[2])), -->
+<!--                                         sep = '-') -->
+<!--   } -->
+<!--   if(length(unlist(strsplit(bet_sort$identifiedDate[i],split = '/')))==3){ -->
+<!--     bet_sort$identifiedDate[i] <- paste(unlist(strsplit(bet_sort$identifiedDate[i],split = '/'))[3], -->
+<!--                                         ifelse(nchar(unlist(strsplit(bet_sort$identifiedDate[i],split = '/'))[1])==2, -->
+<!--                                                unlist(strsplit(bet_sort$identifiedDate[i],split = '/'))[1], -->
+<!--                                                paste0(0,unlist(strsplit(bet_sort$identifiedDate[i],split = '/'))[1])), -->
+<!--                                         ifelse(nchar(unlist(strsplit(bet_sort$identifiedDate[i],split = '/'))[2])==2, -->
+<!--                                                unlist(strsplit(bet_sort$identifiedDate[i],split = '/'))[2], -->
+<!--                                                paste0(0,unlist(strsplit(bet_sort$identifiedDate[i],split = '/'))[2])), -->
+<!--                                         sep = '-') -->
+<!--   } -->
+<!-- } -->
+
+
+<!-- bet_sort$sampleIDPLUStaxa <- substr(bet_sort$sampleID,1,nchar(bet_sort$sampleID)-3) -->
+
+<!-- ``` -->
+
+
+<!-- ### Errors in the bet_pin -->
+
+<!-- ``` {r errors-bet_pin} -->
+<!-- # Add  -->
+<!-- bet_pin$individualCount <-  1 # The pinning table represents single instances of individuals -->
+
+<!-- # Make sampleIDs all Caps -->
+<!-- bet_pin$sampleID <- toupper(bet_pin$sampleID) -->
+
+<!-- # Fixing dates -->
+<!-- for (i in 1:dim(bet_pin)[1]){ -->
+<!--   if(length(unlist(strsplit(bet_pin$collectDate[i],split = '/')))==3){ -->
+<!--     bet_pin$collectDate[i] <- paste(unlist(strsplit(bet_pin$collectDate[i],split = '/'))[3], -->
+<!--                                     ifelse(nchar(unlist(strsplit(bet_pin$collectDate[i],split = '/'))[1])==2, -->
+<!--                                            unlist(strsplit(bet_pin$collectDate[i],split = '/'))[1], -->
+<!--                                            paste0(0,unlist(strsplit(bet_pin$collectDate[i],split = '/'))[1])), -->
+<!--                                     ifelse(nchar(unlist(strsplit(bet_pin$collectDate[i],split = '/'))[2])==2, -->
+<!--                                            unlist(strsplit(bet_pin$collectDate[i],split = '/'))[2], -->
+<!--                                            paste0(0,unlist(strsplit(bet_pin$collectDate[i],split = '/'))[2])), -->
+<!--                                     sep = '-') -->
+<!--   } -->
+<!--   if(length(unlist(strsplit(bet_pin$processingDate[i],split = '/')))==3){ -->
+<!--     bet_pin$processingDate[i] <- paste(unlist(strsplit(bet_pin$processingDate[i],split = '/'))[3], -->
+<!--                                        ifelse(nchar(unlist(strsplit(bet_pin$processingDate[i],split = '/'))[1])==2, -->
+<!--                                               unlist(strsplit(bet_pin$processingDate[i],split = '/'))[1], -->
+<!--                                               paste0(0,unlist(strsplit(bet_pin$processingDate[i],split = '/'))[1])), -->
+<!--                                        ifelse(nchar(unlist(strsplit(bet_pin$processingDate[i],split = '/'))[2])==2, -->
+<!--                                               unlist(strsplit(bet_pin$processingDate[i],split = '/'))[2], -->
+<!--                                               paste0(0,unlist(strsplit(bet_pin$processingDate[i],split = '/'))[2])), -->
+<!--                                        sep = '-') -->
+<!--   } -->
+<!--   if(length(unlist(strsplit(bet_pin$identifiedDate[i],split = '/')))==3){ -->
+<!--     bet_pin$identifiedDate[i] <- paste(unlist(strsplit(bet_pin$identifiedDate[i],split = '/'))[3], -->
+<!--                                        ifelse(nchar(unlist(strsplit(bet_pin$identifiedDate[i],split = '/'))[1])==2, -->
+<!--                                               unlist(strsplit(bet_pin$identifiedDate[i],split = '/'))[1], -->
+<!--                                               paste0(0,unlist(strsplit(bet_pin$identifiedDate[i],split = '/'))[1])), -->
+<!--                                        ifelse(nchar(unlist(strsplit(bet_pin$identifiedDate[i],split = '/'))[2])==2, -->
+<!--                                               unlist(strsplit(bet_pin$identifiedDate[i],split = '/'))[2], -->
+<!--                                               paste0(0,unlist(strsplit(bet_pin$identifiedDate[i],split = '/'))[2])), -->
+<!--                                        sep = '-') -->
+<!--   } -->
+<!-- } -->
+
+<!-- # Correcting sampleIDs -->
+<!-- # Set aside things that are completely accurate -->
+<!-- matches <- (bet_pin$sampleID %in% bet_sort$associatedSampleID); bet_pin <- cbind(bet_pin,matches) -->
+
+<!-- bet_pin %>%  -->
+<!-- 	filter(matches==TRUE) ->  -->
+<!-- 	bet_pin1; bet_pin1 <-  -->
+<!-- 	bet_pin1[,-match('matches',colnames(bet_pin1))] # 3778 correct records -->
+
+<!-- bet_pin %>%  -->
+<!-- 	filter(matches==FALSE) ->  -->
+<!-- 	bet_pin; bet_pin <-  -->
+<!-- 	bet_pin[,-match('matches',colnames(bet_pin))] # 2168 incorrect records -->
+
+<!-- # Adding a tube number '01' shows it exists -->
+<!-- bet_pin$sampleID2 <- paste(bet_pin$sampleID,'01',sep=".") -->
+<!-- matches <- (bet_pin$sampleID2 %in% bet_sort$associatedSampleID); bet_pin <- cbind(bet_pin,matches) -->
+<!-- bet_pin %>% filter(matches==TRUE) -> bet_pin2; bet_pin2$sampleID <- bet_pin2$sampleID2 # 998 correct records -->
+<!-- bet_pin2 <- bet_pin2[,-match('matches',colnames(bet_pin2))]; bet_pin2 <- bet_pin2[,-match('sampleID2',colnames(bet_pin2))]; bet_pin1 <- rbind(bet_pin1,bet_pin2); rm(bet_pin2) -->
+<!-- bet_pin %>% filter(matches==FALSE) -> bet_pin; bet_pin <- bet_pin[,-match('matches',colnames(bet_pin))]; bet_pin <- bet_pin[,-match('sampleID2',colnames(bet_pin))] # 1170 incorrect records left to fix -->
+
+
+<!-- # Of the sampleIDs that don't have a match in the sort table -->
+<!-- for (i in bet_pin$individualID){ -->
+<!--   bet_sort %>%  -->
+<!--     filter(plotID==bet_pin$plotID[match(i,bet_pin$individualID)], -->
+<!--            trapID==bet_pin$trapID[match(i,bet_pin$individualID)], -->
+<!--            collectDate==bet_pin$collectDate[match(i,bet_pin$individualID)], -->
+<!--            sampleType!='vert bycatch mam', -->
+<!--            sampleType!='vert bycatch herp', -->
+<!--            sampleType!='invert bycatch') -> b -->
+<!--   # Nothing in the sort table matches the plot/trap/date combo -->
+<!--   if(dim(b)[1]==0){ -->
+<!--     bet_pin$sampleID2[match(i,bet_pin$individualID)] <- '' -->
+<!--   } -->
+
+<!--   # Only one option in the sort table -->
+<!--   if(dim(b)[1]==1){ -->
+<!--     bet_pin$sampleID2[match(i,bet_pin$individualID)] <- b$associatedSampleID[1] -->
+<!--   } -->
+
+<!--   # Many options in the sort table -->
+<!--   if(dim(b)[1]>1){ -->
+<!--     # And the pinned specimen was a 'common carabid' with a taxonID in the sample ID -->
+<!--     bet_sort %>%  -->
+<!--       filter(sampleIDPLUStaxa==paste(bet_pin$plotID[match(i,bet_pin$individualID)], -->
+<!--                                      bet_pin$trapID[match(i,bet_pin$individualID)], -->
+<!--                                      substr(bet_pin$sampleID[match(i,bet_pin$individualID)],12,19), -->
+<!--                                      bet_pin$taxonID[match(i,bet_pin$individualID)], -->
+<!--                                      sep='.')) -> b1 -->
+<!--     if(dim(b1)[1]>0){ -->
+<!--       bet_pin$sampleID2[match(i,bet_pin$individualID)] <- b1$associatedSampleID[1] -->
+<!--     } else{ -->
+<!--       # And the pinned specimen was a 'common carabid' given a morphospecies assignment  -->
+<!--       bet_sort %>%  -->
+<!--         filter(substr(sampleID,1,19)==paste(bet_pin$plotID[match(i,bet_pin$individualID)], -->
+<!--                                             bet_pin$trapID[match(i,bet_pin$individualID)], -->
+<!--                                             substr(bet_pin$sampleID[match(i,bet_pin$individualID)],12,19), -->
+<!--                                             sep='.'), -->
+<!--                morphospeciesID==bet_pin$morphospeciesID[match(i,bet_pin$individualID)],nchar(morphospeciesID)>0) -> b1 -->
+<!--       if(dim(b1)[1]>0){ -->
+<!--         bet_pin$sampleID2[match(i,bet_pin$individualID)] <- b1$associatedSampleID[1] -->
+<!--       } else{ -->
+<!--         # An 'other carabid' exists that fits the bill -->
+<!--         bet_sort %>%  -->
+<!--           filter(sampleIDPLUStaxa==paste(bet_pin$plotID[match(i,bet_pin$individualID)], -->
+<!--                                          bet_pin$trapID[match(i,bet_pin$individualID)], -->
+<!--                                          substr(bet_pin$sampleID[match(i,bet_pin$individualID)],12,19), -->
+<!--                                          'OC', -->
+<!--                                          sep='.')) -> b1 -->
+<!--         if(dim(b1)[1]>0){ -->
+<!--           bet_pin$sampleID2[match(i,bet_pin$individualID)] <- b1$associatedSampleID[1] -->
+<!--         } -->
+<!--       } -->
+<!--     } -->
+<!--   }    -->
+<!--   bet_pin$numRecords[match(i,bet_pin$individualID)] <- dim(b)[1] -->
+<!--   b=0 -->
+<!-- } -->
+<!-- bet_pin %>% filter(numRecords==0)-> bet_pin2 # 213 samples with no provenance in the sort table -->
+<!-- bet_pin %>% filter(numRecords>0)-> bet_pin # 957 records that might exist -->
+<!-- for (i in 1:dim(bet_pin)[1]){ -->
+<!--   if (substr(bet_pin$sampleID[i],1,19)==substr(bet_pin$sampleID2[i],1,19)){ -->
+<!--     bet_pin$plausible[i] <- TRUE -->
+<!--   } else { -->
+<!--     bet_pin$plausible[i] <- FALSE     -->
+<!--   } -->
+<!-- } -->
+<!-- bet_pin %>% filter(plausible==TRUE) -> bet_pin3; bet_pin3$sampleID <- bet_pin3$sampleID2; bet_pin3 <- bet_pin3[,1:23]; bet_pin1 <- rbind(bet_pin1,bet_pin3); rm(bet_pin3) # 561 plausible fixes -->
+<!-- bet_pin %>% filter(plausible==FALSE) -> bet_pin # 396 with incorrect sampleIDs -->
+
+<!-- # Are the last incorrect IDs other carabids? -->
+<!-- bet_pin$sampleID2 <- paste(substr(bet_pin$sampleID,1,19),'OC.01',sep='.'); bet_pin <- bet_pin[,1:24] -->
+<!-- plausible <- bet_pin$sampleID2 %in% bet_sort$associatedSampleID; bet_pin <- cbind(bet_pin,plausible)  -->
+<!-- bet_pin %>% filter(plausible==TRUE) -> bet_pin3; bet_pin3$sampleID <- bet_pin3$sampleID2; bet_pin3 <- bet_pin3[,1:23]; bet_pin1 <- rbind(bet_pin1,bet_pin3); rm(bet_pin3) # 313 could have been other carabids -->
+<!-- bet_pin %>% filter(plausible==FALSE) -> bet_pin; bet_pin <- bet_pin[,1:23]; bet_pin2 <- bet_pin2[,1:23] # 83 with incorrect sampleIDs -->
+
+<!-- # Some records in the pin table are for 'other carabids'; but were never entered in the sort table -->
+<!-- bet_pin <- rbind(bet_pin,bet_pin2); rm(bet_pin2) # All records without sort info -->
+<!-- bet_pin$sampleID <- paste(substr(bet_pin$sampleID,1,19),'OC.01',sep=".")  -->
+
+<!-- # Adding missing pinning records into the sort table -->
+<!-- bet_sort <- bet_sort[,1:24] -->
+<!-- bet_sortExtraRecords <- unique.data.frame(cbind(bet_pin[,c(2:9,12:21,23)], -->
+<!--                                                 bet_sort[1:dim(bet_pin)[1],c('associatedSampleID','etOHChangeDate','targetTaxaPresent','sampleType','duplicateSampleIDQF')])) -->
+<!-- bet_sortExtraRecords$associatedSampleID <- bet_sortExtraRecords$sampleID; bet_sortExtraRecords$sampleType <- 'other carabid'; bet_sortExtraRecords$targetTaxaPresent <- 'Y' -->
+<!-- bet_sortExtraRecords <- bet_sortExtraRecords[,colnames(bet_sort)]; bet_sortExtraRecords[,c(6,8,10,13:24)] <- ''; bet_sortExtraRecords$remarks <- 'record not originally found in sorting data; presumed to exist based on pinning data' -->
+<!-- bet_sort <- rbind(bet_sort,unique.data.frame(bet_sortExtraRecords)); rm(bet_sortExtraRecords) # Now sorting table is complete -->
+
+<!-- # Appending fixed pinning records to majority of pinning samples -->
+<!-- bet_pin <- rbind(bet_pin,bet_pin1); rm(bet_pin1) # Now pinning data is complete -->
+
+<!-- # Adding missing records -->
+<!-- # Records in the pin and sort without corresponding field data -->
+<!-- matches <- substr(bet_sort$associatedSampleID,1,19)%in%bet_field$sampleID -->
+<!-- bet_sortA <- cbind(bet_sort,matches); bet_sortA %>% filter(matches==FALSE,sampleType!='invert bycatch')->bet_sortA; bet_sortA$sampleID <- substr(bet_sortA$associatedSampleID,1,19) -->
+<!-- missingFieldRecords <- unique.data.frame(bet_sortA[c('domainID','siteID',"plotID","trapID","collectDate","sampleID")]); rm(bet_sortA) -->
+
+<!-- fieldRecords <- bet_field[1:dim(missingFieldRecords)[1],] -->
+<!-- fieldRecords[,c('uid','setDate',"boutNumber","eventID","daysOfTrapping", -->
+<!--                 "cupStatus","lidStatus","fluidLevel","trapReset","remarks",'recordedBy', -->
+<!--                 "duplicateCollectionEventQF", "compareSetCollectDateQF")] <- '' -->
+<!-- missingFieldRecords <- cbind(missingFieldRecords, -->
+<!--                              fieldRecords[1:dim(missingFieldRecords)[1],c("setDate","boutNumber","eventID","daysOfTrapping","cupStatus","lidStatus","fluidLevel",                 -->
+<!--                                                                                               "trapReset","samplingProtocol","recordedBy","remarks", -->
+<!--                                                                                               "duplicateCollectionEventQF")]) -->
+<!-- for (i in 1:dim(missingFieldRecords)[1]){ -->
+<!--   gisData %>%  -->
+<!--     filter(plotID==missingFieldRecords$plotID[i],trapID==missingFieldRecords$trapID[i])->a -->
+<!--   missingFieldRecords$nlcdClass[i] <- a$nlcdClass[1] -->
+<!--   missingFieldRecords$decimalLatitude[i] <- a$decimalLatitude[1] -->
+<!--   missingFieldRecords$decimalLongitude[i]<- a$decimalLongitude[1] -->
+<!--   missingFieldRecords$geodeticDatum[i]<- a$geodeticDatum[1] -->
+<!--   missingFieldRecords$coordinateUncertainty[i]<- a$coordinateUncertainty[1] -->
+<!--   missingFieldRecords$elevation[i]<- a$elevation[1] -->
+<!--   missingFieldRecords$elevationUncertainty[i]<- a$elevationUncertainty[1] -->
+<!-- } -->
+
+<!-- missingFieldRecords <- missingFieldRecords[colnames(bet_field)] -->
+<!-- missingFieldRecords$remarks <- 'This record is assumed to exist based on the presence of sorting or pinning data' -->
+<!-- bet_field <- rbind(bet_field,missingFieldRecords);rm(missingFieldRecords,plausible,uidToRemove,gisData,matches,fieldRecords) -->
+<!-- for (i in 1:dim(bet_field)[1]){ -->
+<!--   if(bet_field$boutNumber[i]!='10' & -->
+<!--      bet_field$boutNumber[i]!='11' &  -->
+<!--      bet_field$boutNumber[i]!=''){ -->
+<!--     bet_field$eventID[i] <- paste('BET',bet_field$plotID[i],'2014',paste0(0,bet_field$boutNumber[i]),sep='.')     -->
+<!--   }  -->
+<!--   if(bet_field$boutNumber[i]!='10'&  -->
+<!--      bet_field$boutNumber[i]!='11'){ -->
+<!--     bet_field$eventID[i] <- paste('BET',bet_field$plotID[i],'2014',bet_field$boutNumber[i],sep='.')     -->
+<!--   } -->
+<!-- } -->
+<!-- for(i in 1:dim(bet_pin)[1]){ -->
+<!--   if(unlist(strsplit(bet_pin$sampleID[i],split = '\\.'))[4]=='OC'){ -->
+<!--     bet_pin$sampleType[i] <- 'other carabid' -->
+<!--   } else{ -->
+<!--     bet_pin$sampleType[i] <- 'common carabid' -->
+<!--   } -->
+<!-- } -->
+
+<!-- # Updating 'OTHE' code for carabids -->
+<!-- bet_pin %>% filter(taxonID=='OTHE') %>% select(remarks)->a; a <- sort(unique(a$remarks)) -->
+<!-- for (i in 1:dim(bet_pin)[1]){ -->
+<!--   if(is.na(bet_pin$taxonID[i])==FALSE){ -->
+<!--   if (bet_pin$taxonID[i]=='OTHE'){ -->
+<!--     for (j in a){ -->
+<!--       if (bet_pin$remarks[i]==j & match(j,a)<4){ -->
+<!--         bet_pin$taxonID[i] <- 'CYCINC' -->
+<!--         bet_pin$scientificName[i] <- 'Cyclotrachelus incisus' -->
+<!--         bet_pin$taxonRank[i] <- 'species' -->
+<!--         bet_pin$scientificNameAuthorship[i] <- 'LeConte' -->
+<!--       }  -->
+<!--       if (bet_pin$remarks[i]==j & match(j,a)>3){ -->
+<!--         bet_pin$taxonID[i] <- 'HARRUB' -->
+<!--         bet_pin$scientificName[i] <- 'Harpalus rubripes' -->
+<!--         bet_pin$taxonRank[i] <- 'species' -->
+<!--         bet_pin$scientificNameAuthorship[i] <- 'Duftschmid' -->
+<!--       }  -->
+<!--     } -->
+<!--   } -->
+<!--   } -->
+<!-- } -->
+<!-- bet_pin <- bet_pin[,2:24] -->
+
+<!-- ``` -->
+
+
+<!-- ## Compiling Carabid Abundance & Diversity  -->
+
+
+<!-- ``` {r dates} -->
+<!-- # Converting collectDate into a date format -->
+<!-- bet_field$collectDate <- as.Date(bet_field$collectDate,format="%Y-%m-%d") -->
+<!-- bet_sort$individualCount <- as.numeric(bet_sort$individualCount) -->
+<!-- bet_field$daysOfTrapping <- as.numeric(bet_field$daysOfTrapping) -->
+
+<!-- ``` -->
+
+<!-- ### Abundance for different sampleTypes -->
+<!-- In the beetle data in 2014 and prior, beetles were seperated into two `sampleTypes`: -->
+<!-- common carabid and other carabid. The way abundance is calculated differs. We  -->
+<!-- need to calculate it in two ways.  -->
+
+<!-- 1. If the sampleType=='common carabid', then the individualCount reflects the  -->
+<!-- true number of Carabids of a given species that were in the trap. This means that  -->
+<!-- functionally the 'individualCount' of any 'common carabid' beetle with a sample  -->
+<!-- ID that is not in the pinning table at all can be processed for diversity/abundance  -->
+<!-- as though none were pinned. Pinning records just tell you that a pinned individual  -->
+<!-- from that trap is available -->
+
+<!-- 2. If the sampleType=='other carabid' in the bet_sort, then there is at least  -->
+<!-- one beetle present from the trap indicated in the record,and to calculate  -->
+<!-- abundance we need to count the number of rows associated with that sampleID -->
+
+<!-- ``` {r sampleType-abund} -->
+<!-- # Getting the 'common carabid' data -->
+<!-- bet_sort %>%  -->
+<!--   filter(sampleType=='common carabid')-> bet_cc -->
+
+<!-- for (i in 1:dim(bet_cc)[1]){ -->
+<!--   # For sorting data missing counts, check the pinning table for records. -->
+<!--   if(is.na(bet_cc$individualCount[i])==TRUE){ -->
+<!--     bet_pin %>%  -->
+<!--       filter(plotID==bet_cc$plotID[i],trapID==bet_cc$trapID[i], -->
+<!--              collectDate==bet_cc$collectDate[i],taxonID==bet_cc$taxonID[i])-> a -->
+<!--     if(dim(a)[1]>0){ -->
+<!--       bet_cc$individualCount[i] <- dim(a)[1] -->
+<!--     } -->
+<!--   } -->
+<!--   # For sorting data missing counts in the pinning table entirely, assign a minimum count of 1 -->
+<!--   if(is.na(bet_cc$individualCount[i])==TRUE){  -->
+<!--     bet_cc$individualCount[i] <- 1 -->
+<!--   } -->
+<!-- } -->
+
+<!-- # Filling in other carabid data -->
+<!-- # sorting records for which pinning data doesn't exist -->
+<!-- bet_sort %>%  -->
+<!--   filter(sampleType=='other carabid') %>%  -->
+<!--   anti_join(bet_pin,by=c('associatedSampleID'= 'sampleID')) -> bet_oc1 -->
+<!-- bet_oc1$individualCount <- 1 # Can't find the corresponding records in the pinning table, but at least one must have been pinned/exist -->
+
+<!-- # 'other carabid' sorting records that DO have pinning records -->
+<!-- bet_sort %>%  -->
+<!--   filter(sampleType=='other carabid') %>%  -->
+<!--   semi_join(bet_pin,by=c('associatedSampleID'='sampleID')) -> bet_oc -->
+
+<!-- for (i in unique(bet_oc$associatedSampleID)){ -->
+<!--   bet_pin %>%  -->
+<!--     filter(sampleType=='other carabid',sampleID==i) -> a  -->
+<!--   a <- unique.data.frame(a[c("domainID","siteID" ,"plotID","trapID","collectDate", -->
+<!--                              "sampleID","taxonID","scientificName","taxonRank", -->
+<!--                              "identificationQualifier","scientificNameAuthorship","morphospeciesID",'sampleType')]) -->
+
+<!--   a$targetTaxaPresent <- "Y" -->
+<!--   a$etOHChangeDate <- '' -->
+<!--   a$processingDate <- '' -->
+<!--   a$associatedSampleID <- a$sampleID -->
+<!--   a$sampleID <- '' -->
+<!--   a$individualCount <- -999 -->
+<!--   a$duplicateSampleIDQF <- -1  -->
+<!--   a$identificationReferences <- '' -->
+<!--   a$identifiedBy <- ''  -->
+<!--   a$identifiedDate <- '' -->
+<!--   a$recordedBy <- '' -->
+<!--   a$remarks <- '' -->
+
+<!--   a <- a[colnames(bet_sort)] -->
+<!--   bet_oc1 <- rbind(bet_oc1,a) -->
+<!-- } -->
+
+<!-- rm(bet_oc) -->
+
+
+<!-- for (i in 1:dim(bet_oc1)[1]){ -->
+<!--   if (bet_oc1$individualCount[i]==-999){ -->
+<!--     if(nchar(bet_oc1$taxonID[i])>4){ -->
+<!--       bet_pin %>%  -->
+<!--         filter(sampleID==bet_oc1$associatedSampleID[i],taxonID==bet_oc1$taxonID[i], -->
+<!--                identificationQualifier==bet_oc1$identificationQualifier[i]) -> a -->
+<!--       bet_oc1$individualCount[i] <- dim(a)[1] -->
+<!--     } -->
+<!--     if(nchar(bet_oc1$morphospeciesID[i])>10){ -->
+<!--       bet_pin %>%  -->
+<!--         filter(sampleID==bet_oc1$associatedSampleID[i],morphospeciesID==bet_oc1$morphospeciesID[i]) -> a -->
+<!--       bet_oc1$individualCount[i] <- dim(a)[1] -->
+<!--     } -->
+<!--   } -->
+<!--   bet_sort %>%  -->
+<!--     filter(associatedSampleID==bet_oc1$associatedSampleID[i]) -> a -->
+<!--   bet_pin %>%  -->
+<!--     filter(sampleID==bet_oc1$associatedSampleID[i]) -> a1 -->
+<!--   if(bet_oc1$recordedBy[i]==''){ -->
+<!--   bet_oc1$etOHChangeDate[i] <- max(a$etOHChangeDate) -->
+<!--   bet_oc1$processingDate[i] <- max(a$processingDate) -->
+<!--   bet_oc1$identifiedDate[i] <- max(a1$identifiedDate) -->
+<!--   bet_oc1$identifiedBy[i] <- max(a1$identifiedBy) -->
+<!--   bet_oc1$recordedBy[i] <- max(a1$recordedBy) -->
+<!-- } -->
+<!-- } -->
+
+<!-- # If the 'bet_pin' list an identification for a beetle with a sampleType=='other carabid'  -->
+<!-- # We have to assume all the beetles of that type were pinned and are listed in the 'bet_pin' table -->
+<!-- # As per the protocol. -->
+
+<!-- # This is the table that will be used to build the abundance statistics -->
+<!-- bet_div <- as.data.frame(bind_rows(bet_cc,bet_oc1)) -->
+<!-- ``` -->
+
+
+<!-- ## Adding Beetle Info To the Field Data -->
+
+<!-- ``` {r pin-to-field-data} -->
+<!-- # Adding beetle abundance and richness; bycatch info; weather -->
+<!-- for (i in 1:dim(bet_field)[1]){ -->
+<!--   # adding abundance -->
+<!--   bet_div %>%  -->
+<!--     filter(plotID==bet_field$plotID[i],trapID==bet_field$trapID[i],collectDate==bet_field$collectDate[i])-> x -->
+<!--   bet_field$beetleAbundance[i] <- sum(x$individualCount,na.rm = TRUE) -->
+<!--   # adding richness (including morphospecies) -->
+<!--   unique.data.frame(x[c('taxonID','morphospeciesID')]) -> x1 -->
+<!--   bet_field$beetleRichness[i] <-  dim(x1)[1] -->
+<!--   # richness excluding morphospecies -->
+<!--   x1 %>%  -->
+<!--     filter(nchar(taxonID)>1) -> x1 -->
+<!--   bet_field$beetleRichnessNoMorphospecies[i] <- dim(x1)[1] -->
+
+<!--   # bycatch -->
+<!--   bet_sort %>%  -->
+<!--     filter(sampleType!='other carabid',sampleType!='common carabid', -->
+<!--            plotID==bet_field$plotID[i],trapID==bet_field$trapID[i], -->
+<!--            collectDate==bet_field$collectDate[i])-> a -->
+<!--   # mammal bycatch -->
+<!--   a %>%  -->
+<!--     filter(sampleType=='vert bycatch mam') -> a1 -->
+<!--   bet_field$numMammalsCaught[i] <- sum(a1$individualCount,na.rm = TRUE) -->
+<!--   # amphibian/reptile bycatch -->
+<!--   a %>%  -->
+<!--     filter(sampleType=='vert bycatch herp') -> a1   -->
+<!--   bet_field$numHerpsCaught[i] <- sum(a1$individualCount,na.rm = TRUE) -->
+<!--   # invertebrate bycatch -->
+<!--   a %>%  -->
+<!--     filter(sampleType=='invert bycatch') -> a1 -->
+<!--   bet_field$invertBycatchPresent[i] <- dim(a1)[1]   -->
+
+<!--   print(i) -->
+<!-- } -->
+<!-- rm(a,a1,b1,x,x1,b,bet_cc,bet_oc1) -->
+
+<!-- ``` -->
 
 
