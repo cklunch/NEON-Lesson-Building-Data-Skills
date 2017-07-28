@@ -147,15 +147,98 @@ bird.urls
 
 ```
 
-To download all available bird data, we would run through the list of URLs and 
-query the API for each of them. For simplicity, we'll only query one now.
+These are the URLs showing us what files are available for each month where 
+there are data. For simplicity, we'll only query one month now.
 
-``` {r os-query-bird-data}
+``` {r os-query-bird-data-urls}
 
 brd <- GET(bird.urls[6])
 brd.files <- fromJSON(content(brd, as="text"))
 brd.files$data$files
 
 ```
+
+And now we have the URLs where we can get the data files themselves. We'll use 
+the file names to pick which ones we want. To translate, available files for 
+July 2015 at Woodworth are all of the following: 
+
+1. zip of all data files in the expanded package
+1. readme for the data product (not specific to dates or location)
+1. count data table, expanded package version
+1. point data table, expanded package version
+1. validation file for the data product: lists input data and data entry rules
+1. variables file for the data product: lists data fields in downloaded tables
+1. personnel data table
+1. Ecological Metadata Language (EML) file
+1. zip of all data files in the basic package
+1. point data table, basic package version
+1. Ecological Metadata Language (EML) file (?)
+1. validation file for the data product: lists input data and data entry rules (?)
+1. variables file for the data product: lists data fields in downloaded tables (?)
+1. readme for the data product (not specific to dates or location) (?)
+1. count data table, basic package version
+
+We'll get the data tables for the point data and count data in the basic 
+package.
+
+``` {r os-get-bird-data}
+
+brd.count <- read.delim(brd.files$data$files$url
+                        [intersect(grep("countdata", brd.files$data$files$name),
+                                    grep("basic", brd.files$data$files$name))], sep=",")
+
+brd.point <- read.delim(brd.files$data$files$url
+                        [intersect(grep("perpoint", brd.files$data$files$name),
+                                    grep("basic", brd.files$data$files$name))], sep=",")
+
+```
+
+Just to prove the files we pulled have actual data in them, a quick graphic:
+
+``` {r os-plot-bird-data}
+
+```
+
+
+## Instrumentation data
+The process is essentially the same for sensor data. We'll do the same series of 
+queries for Soil temperature, DP1.00041.001
+
+``` {r soil-data}
+
+req <- GET("http://data.neonscience.org/api/v0/products/DP1.00041.001")
+avail <- fromJSON(content(req, as="text"), simplifyDataFrame=T, flatten=T)
+temp.urls <- unlist(avail$data$siteCodes$availableDataUrls)
+tmp <- GET(temp.urls[20])
+tmp.files <- fromJSON(content(tmp, as="text"))
+tmp.files$data$files$name
+
+```
+
+These are a little more cryptic. The part after the 00000 is: 
+soil plot number.depth.time interval.data table name
+
+So NEON.D13.NIWO.DP1.00041.001.00000.003.505.030.ST_30_minute.csv is 
+the 30-minute mean of soil temperature at Niwot Ridge in soil plot 3, 
+depth 5.
+
+Go get it:
+
+``` {r os-get-soil-data}
+
+soil.temp <- read.delim(tmp.files$data$files$url
+                        [grep("003.505.030", tmp.files$data$files$name)], sep=",")
+
+```
+
+And again, a plot to show we've downloaded something with data in it:
+
+``` {r os-plot-soil-data}
+
+```
+
+
+
+
 
 
