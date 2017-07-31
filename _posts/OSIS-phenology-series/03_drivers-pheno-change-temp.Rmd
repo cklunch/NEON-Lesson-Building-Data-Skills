@@ -205,3 +205,15 @@ dplyr groupby max
 
 ## plot daily max over year
 
+To successfully plot, the last piece that is needed is the `geom`etry type. In 
+this case, we want to create a scatterplot so we can add `+ geom_point()`.
+
+Let's create an air temperature scatterplot. 
+
+``` {r basic-ggplot2}
+# plot Air Temperature Data across 2009-2011 using daily data
+name <- ggplot(harMetDaily.09.11, aes(date, airt)) +
+           geom_point(na.rm=TRUE)
+
+```
+
