@@ -147,6 +147,17 @@ max(status$date)
 
 ```
 
+The `uid` is no important to understanding the data so we are going to remove uid. 
+However, if you are every reporting an error in the data you should include this
+with your report. 
+
+```{r remove-uid}
+
+ind <- select(ind,-uid)
+status <- select (status, -uid)
+
+``` 
+
 ## Clean up 
 
 * remove duplicates (full rows)
@@ -163,7 +174,34 @@ nrow(ind_noD)
 
 status_noD<-distinct(status)
 nrow(status_noD)
+
 ```
+
+## Figure out which names overlap 
+
+```{r same-fieldnames}
+
+sameName <- intersect(names(status_noD), names(ind_last))
+sameName
+
+```
+
+Which are different: 
+* editedDate
+* measuredBy
+* recordedBy
+* samplingProtocolVersion
+* remarks
+* dataQF
+
+```{r rename-column}
+
+# rename status editedDate
+status_noD <- rename(status_noD, editedDateStat=editedDate, measuredByStat=measuredBy, recordedByStat=recordedBy, samplingProtocolVersionStat=samplingProtocolVersion, remarksStat=remarks, dataQFStat=dataQF)
+
+
+```
+
 
 ## Convert to Date
 
@@ -173,12 +211,15 @@ date-time class.
 ```{r as-date-only }
 
 # convert column to date class
-ind_noD$date <- as.Date(ind_noD$editedDate)
+ind_noD$editedDate <- as.Date(ind_noD$editedDate)
+str(ind_noD$editedDate)
+
 status_noD$date <- as.Date(status_noD$date)
+str(status_noD$date)
 
 ```
 
-When we use `as.Date`, we lose the time stamp. 
+
 
 ## Retain only the latest indivdual record
 
@@ -186,22 +227,164 @@ Only the latest `editedDate` on ind
 
 
 ```{r filter-edit-date}
-
+# retain only the max of the date for each individualID
 ind_last <- ind_noD %>%
 	group_by(individualID) %>%
-	filter(!duplicated(date==(max(editedDate))))
+	filter(editedDate==max(editedDate))
+
+# oh wait, duplicate dates, retain only one
+ind_lastnoD <- ind_last %>%
+	group_by(editedDate, individualID) %>%
+	filter(row_number()==1)
 
 ```
-
 
 ## Join dataframes
 
-```{r join-dfs}
+```{r join-dfs-error}
 
-# Create a new dataframe "phe_ind" with all the data
-phe_ind <- left_join(status_noD, ind_last, by='individualID')
+# Create a new dataframe "phe_ind" with all the data from status and some from ind_lastnoD
+phe_ind <- left_join(status_noD, ind_lastnoD)
+
 
 ```
+
+Ack!  Two different data types.  Why?  NA in taxonID is a logicial, but all the 
+names are character.  
+
+Try it again.  
+
+`taxonID` and `scientificName` are provided for convenience in Status table, but
+most up to date data is always in the `phe_perindividual.csv` files. Therefore, 
+we'll remove from ...
+
+
+```{r join-dfs}
+# drop taxonID, scientificName
+status_noD <- select (status_noD, -taxonID, -scientificName)
+
+# Create a new dataframe "phe_ind" with all the data from status and some from ind_lastnoD
+phe_ind <- left_join(status_noD, ind_lastnoD)
+
+```
+
+
+### What do we do with the data?  
+
+
+Build a DF of interest with sinlgle site, species, and phenophase called `phe_1sp`.
+
+
+## Select Site(s) of Interest
+
+```{r filter-site}
+
+# set site of interest
+#subset to just the SCBI & SERC
+siteOfInterest <- "SCBI"
+
+# as you know these are the only phenophases you want to work with for now
+phe_1sp <- filter(phe_ind, siteID %in% siteOfInterest)
+
+```
+
+## Select Species of Interest
+
+
+```{r filter-species}
+
+# see which species are present
+unique(phe_AOI$taxonID)
+
+speciesOfInterest <- "LITU"
+
+#subset to just "LITU"
+phe_1sp <- filter(phe_AOI, taxonID==speciesOfInterest)
+
+# check that it worked
+unique(phe_1sp$taxonID)
+
+```
+
+
+## Select Species of Interest
+
+```{r filter-phonophase}
+
+# see which species are present
+unique(phe_1sp$phenophaseName)
+
+phenophaseOfInterest <- "Leaves"
+
+#subset to just "LITU"
+phe_1sp <- filter(phe_AOI, phenophaseName==phenophaseOfInterest)
+
+# check that it worked
+unique(phe_1sp$phenophaseName)
+
+```
+
+## 
+
+Calculate the phenophase total Yes of total Individuals
+
+```{r calc-percent-yes}
+
+```
+
+Plot - bar graph of % of individuals in different phenophase over course of year. Interval = Daily. 
+
+
+```{r}
+
+```
+
+
+Write csv (this will be read in new in subsuquent lessons)
+
+
+### Set/Remove No Data Values
+
+## Managing Missing Data: NoData values
+
+### Find NoData Values
+
+If we are lucky when working with external data, the `NoData` value is clearly
+specified
+in the metadata. No data values can be stored differently:
+
+* **NA / nan:** Sometimes this value is `NA` or `nan` (not a number). 
+* **A Designated Numeric Value (e.g. -9999):** Character strings such as `NA` can 
+not always be stored along side of numeric values in some file formats. Sometimes 
+you'll encounter numeric placeholders for `noData` values such as
+`-9999` (a value often used in the GIS / Remote Sensing and Micrometerology 
+domains.
+* **Blank Values:** sometimes `noData` values are left blank. Blanks are 
+particularly problematic because we can't be certain if a data value is 
+purposefully missing (not measured that day or a bad measurement) or if someone 
+unintentionally deleted it.
+
+Because the actual value used to designate missing data can vary depending upon 
+what data we are working with, it is important to always check the metadata for
+the files associated `NoData` value. If the value is `NA`, we are in luck, `R`
+will recognize and flag this value as `NoData`. If the value is numeric (e.g.,
+`-9999`), then we might need to assign this value to `NA`.
+
+<i class="fa fa-star"></i> **Data Tip:** `NA` values will be ignored when
+performing calculations in `R`. However a `NoData` value of `-9999` will be
+recognized as an integer and processed accordingly. If you encounter a numeric
+`NoData` value be sure to assign it to `NA` in `R`:
+`objectName[objectName==-9999] <- NA`
+{: .notice}
+
+In the
+[Why Metadata Are Important: How to Work with Metadata in Text & EML Format]({{ site.baseurl }}/R/why-metadata-are-important/)
+we viewed the metadata for these data and discovered that missing values are
+designated using `NA` - a common `NoData` value placeholder. 
+
+>**Excerpt from the metadata:** `airt: average air temperature. Average of daily 
+>averages. (unit: celsius, missing value: NA)`
+
 
 ### Check For NoData Values  
 
@@ -215,8 +398,6 @@ values we have.
 sum(is.na(phe_ind$date))
 sum(is.na(phe_ind$individualID))
 
-# view rows where the air temperature is NA 
-harMet15.09.11[is.na(harMet15.09.11$airt),]
 ```
 
 The results above tell us there are `NoData` values in the `datetime` column.
@@ -297,103 +478,3 @@ mean(harMet15.09.11$airt,
      na.rm=TRUE)
 
 ```
-
-## Select Site(s) of Interest
-
-```{r filter-site}
-
-
-#subset to just the SCBI & SERC
-# overwrite object "phe" as you know these are the only phenophases you want to work with for now
-phe <- filter(phe, phenophaseName=="Leaves" | phenophaseName=="Colored leaves")
-
-# check that it worked
-unique(phe$phenophaseName)
-
-
-```
-
-## Select Phenotype of Interest
-
-
-1. Filter by phenophase of interest
-
-```{r filter-phonophase}
-
-# see which phenophases are present
-unique(phe_ind$phenophaseName)
-
-#subset to just the "leaves" and "Colored leaves" phenophases
-# overwrite object "phe" as you know these are the only phenophases you want to work with for now
-phe <- filter(phe, phenophaseName=="Leaves" | phenophaseName=="Colored leaves")
-
-# check that it worked
-unique(phe$phenophaseName)
-
-
-```
-
-```{r}
-
-```
-
-
-4. Calculate the phenophase
-total Yes of total Individuals
-
-```{r}
-
-```
-
-Plot - bar graph of % of individuals in different phenophase over course of year. Interval = Daily. 
-
-
-```{r}
-
-```
-
-
-Write csv (this will be read in new in subsuquent lessons)
-
-
-### Set/Remove No Data Values
-
-## Managing Missing Data: NoData values
-
-### Find NoData Values
-
-If we are lucky when working with external data, the `NoData` value is clearly
-specified
-in the metadata. No data values can be stored differently:
-
-* **NA / nan:** Sometimes this value is `NA` or `nan` (not a number). 
-* **A Designated Numeric Value (e.g. -9999):** Character strings such as `NA` can 
-not always be stored along side of numeric values in some file formats. Sometimes 
-you'll encounter numeric placeholders for `noData` values such as
-`-9999` (a value often used in the GIS / Remote Sensing and Micrometerology 
-domains.
-* **Blank Values:** sometimes `noData` values are left blank. Blanks are 
-particularly problematic because we can't be certain if a data value is 
-purposefully missing (not measured that day or a bad measurement) or if someone 
-unintentionally deleted it.
-
-Because the actual value used to designate missing data can vary depending upon 
-what data we are working with, it is important to always check the metadata for
-the files associated `NoData` value. If the value is `NA`, we are in luck, `R`
-will recognize and flag this value as `NoData`. If the value is numeric (e.g.,
-`-9999`), then we might need to assign this value to `NA`.
-
-<i class="fa fa-star"></i> **Data Tip:** `NA` values will be ignored when
-performing calculations in `R`. However a `NoData` value of `-9999` will be
-recognized as an integer and processed accordingly. If you encounter a numeric
-`NoData` value be sure to assign it to `NA` in `R`:
-`objectName[objectName==-9999] <- NA`
-{: .notice}
-
-In the
-[Why Metadata Are Important: How to Work with Metadata in Text & EML Format]({{ site.baseurl }}/R/why-metadata-are-important/)
-we viewed the metadata for these data and discovered that missing values are
-designated using `NA` - a common `NoData` value placeholder. 
-
->**Excerpt from the metadata:** `airt: average air temperature. Average of daily 
->averages. (unit: celsius, missing value: NA)`
