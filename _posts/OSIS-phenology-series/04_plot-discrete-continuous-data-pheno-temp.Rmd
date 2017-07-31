@@ -1,6 +1,6 @@
 ---
 layout: post
-title: "Title Here"
+title: "Plot Continuous & Discrete Data Together"
 date:   2016-01-01
 authors: [ ]
 contributors: [ ] 
@@ -60,5 +60,17 @@ data.  Feel free to just add text until the data set is finalized and uploaded).
 </div>
 
 
-START LESSON HERE
+Final Plot - combo of two plots stacked (e.g. not 2 y-axes on 1 plot)
+Plot 1
+x-axis: time, day of year
+y-axis: proportion of individuals in phenophase of interest or mean % leaves
+Time 
+	Maybe: choose breaking leaf buds, leaves, colored leaves
+Plot 2
+y-axis: daily max temperature
+(Maybe repeat this with multiple sites)
+
+Science Concepts: 
+Correlations between them, 
+Transition periods - these are the ones to zoom in on.  
 

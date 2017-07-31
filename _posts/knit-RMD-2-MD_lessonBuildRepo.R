@@ -8,7 +8,7 @@
 
 require(knitr)
 
-dirs <- c("dc-spatio-temporal-intro",
+dirs <- c("NEON-mosquito-data-viz",
           "OSIS-phenology-series",
           "R/dc-tabular-time-series",
           "R/tutorial-setup")

@@ -1,0 +1,722 @@
+---
+layout: post
+title: "Time & Date in Phenology Data"
+date:   2016-01-01
+authors: [ ]
+contributors: [ ] 
+dateCreated: 2016-01-01
+lastModified: `r format(Sys.time(), "%Y-%m-%d")`
+packagesLibraries: [ ]
+category: [self-paced-tutorial]
+tags: [ ]
+mainTag: 
+tutorialSeries: [ ]
+description: "Brief description in plain text."
+code1: use-if-associated-code.R
+image:
+  feature: lidar_GrandMesa.png
+  credit: LiDAR data collected over Grand Mesa, Colorado - National Ecological Observatory Network (NEON)
+  creditlink: 
+permalink: 
+comments: true
+---
+
+{% include _toc.html %}
+
+**R Skill Level:** Intermediate - you've got the basics of `R` down.
+
+<div id="objectives" markdown="1">
+
+###Goals / Objectives
+After completing this activity, you will:
+
+ * 
+
+##Things You’ll Need To Complete This Tutorial
+You will need the most current version of `R` and, preferably, `RStudio` loaded
+on your computer to complete this tutorial.
+
+###Install R Packages
+* **NAME:** `install.packages("NAME")`
+
+
+[More on Packages in R - Adapted from Software Carpentry.]({{site.baseurl}}R/Packages-In-R/)
+
+###Download Data 
+(include file that inserts a button to download data from Figshare & text about
+data.  Feel free to just add text until the data set is finalized and uploaded).
+
+{% include/dataSubsets/_data_NAME.html %}  
+
+****
+{% include/_greyBox-wd-rscript.html %}
+
+****
+
+##Additional Resources
+
+* (links if you want to provide)
+* http://cflagg.github.io/codingSupportGroup/OSIS_lessons/phe_plots 
+
+</div>
+
+# Date & Time
+## The Data Approach
+In the [Intro to Time Series Data in R tutorial ]({{ site.baseurl }}/R/brief-tabular-time-series-qplot/)
+we imported a time series dataset in `.csv` format into `R`. We learned how to 
+quickly plot these data by converting the date column to an `R` `Date` class.
+In this tutorial we will explore how to work with a column that contains both a
+date AND a time stamp.
+
+We will use functions from both base `R` and the `lubridate` package to work 
+with date-time data classes.
+
+```{r load-libraries}
+
+# Load packages required for entire script
+library(lubridate)  #work with dates
+
+# set working directory to ensure R can find the file we wish to import
+# setwd("working-dir-path-here")
+
+```
+
+## Import CSV File
+First, let's import our time series data. We are interested in temperature, 
+precipitation and photosynthetically active radiation (PAR) - metrics that are 
+strongly associated with vegetation green-up and brown down (phenology or 
+phenophase timing). We will use the `hf001-10-15min-m.csv` file 
+that contains atmospheric data for the NEON Harvard Forest field site,
+aggregated at 15-minute intervals. 
+
+```{r read-data-csv }
+# Load csv file of 15 min meteorological data from Harvard Forest
+# Factors=FALSE so strings, series of letters/words/numerals, remain characters
+harMet_15Min <- read.csv(
+  file="NEON-DS-Met-Time-Series/HARV/FisherTower-Met/hf001-10-15min-m.csv",
+  stringsAsFactors = FALSE)
+```
+
+## Date and Time Data
+Let's revisit the data structure of our `harMet_15Min` object. What is the class
+of the `date-time` column?
+
+```{r view-date-structure }
+# view column data class
+class(harMet_15Min$datetime)
+
+# view sample data
+head(harMet_15Min$datetime)
+
+```
+
+Our `datetime` column is stored as a `character` class. We need to convert it to 
+date-time class. What happens when we use the `as.Date` method that we learned
+about in the 
+[Intro to Time Series Data in R ]({{ site.baseurl }}/R/brief-tabular-time-series-qplot/ "for as.Date") 
+tutorial?
+
+```{r as-date-only }
+
+# convert column to date class
+dateOnly_HARV <- as.Date(harMet_15Min$datetime)
+
+# view data
+head(dateOnly_HARV)
+
+```
+
+When we use `as.Date`, we lose the time stamp. 
+
+### Explore Date and Time Classes
+
+#### R - Date Class - as.Date
+As we just saw, the `as.Date` format doesn't store any time information. When we
+use the`as.Date` method to convert a date stored as a character class to an `R`
+`date` class, it will ignore all values after the date string.
+
+```{r explore-as_date }
+# Convert character data to date (no time) 
+myDate <- as.Date("2015-10-19 10:15")   
+str(myDate)
+
+# what happens if the date has text at the end?
+myDate2 <- as.Date("2015-10-19Hello")   
+str(myDate2)
+
+```
+
+As we can see above the `as.Date()` function will convert the characters that it
+recognizes to be part of a date into a date class and ignore all other 
+characters in the string. 
+
+#### R - Date-Time - The POSIX classes
+If we have a column containing both date and time we need to use a class that
+stores both date AND time. Base `R` offers two closely related classes for date
+and time: `POSIXct` and `POSIXlt`. 
+
+#### POSIXct
+
+The `as.POSIXct` method converts a date-time string into a `POSIXct` class. 
+
+```{r explore-POSIXct }
+# Convert character data to date and time.
+timeDate <- as.POSIXct("2015-10-19 10:15")   
+str(timeDate)
+timeDate
+
+```
+
+`as.POSIXct` stores both a date and time with an associated time zone. The
+default time zone selected, is the time zone that your computer is set to which
+is most often your local time zone. 
+
+`POSIXct` stores date and time in seconds with the number of seconds beginning
+at 1 January 1970. Negative numbers are used to store dates prior to 1970. 
+Thus, the `POSIXct` format stores each date and time a single value in units of
+seconds. Storing the data this way, optimizes use in `data.frames` and speeds up
+computation, processing and conversion to other formats. 
+
+```{r explore-POSIXct2 }
+# to see the data in this 'raw' format, i.e., not formatted according to the 
+# class type to show us a date we recognize, use the `unclass()` function.
+unclass(timeDate)
+
+```
+
+Here we see the number of seconds from 1 January 1970 to 9 October 2015
+(`1445271300`). Also, we see that a time zone (`tzone`) is associated with the value in seconds. 
+
+<i class="fa fa-star"></i> **Data Tip:** The `unclass` method in `R` allows you
+to view how a particular `R` object is stored.
+{: .notice}
+
+#### POSIXlt
+The `POSIXct` format is optimized for storage and computation. However, humans 
+aren't quite as computationally efficient as computers! Also, we often want to 
+quickly extract some portion of the data (e.g., months). The `POSIXlt` class 
+stores date and time information in a format that we are used to seeing (e.g., 
+second, min, hour, day of month, month, year, numeric day of year, etc). 
+
+
+```{r explore-POSIXlt }
+# Convert character data to POSIXlt date and time
+timeDatelt<- as.POSIXlt("2015-10-19 10:15")  
+str(timeDatelt)
+timeDatelt
+
+unclass(timeDatelt)
+```
+
+When we convert a string to `POSIXlt`, and view it in `R`, it still looks
+similar to the `POSIXct` format. However, `unclass()` shows us that the data are
+stored differently. The `POSIXlt` class stores the hour, minute, second, day,
+month, and year separately.
+
+#### Months in POSIXlt 
+`POSIXlt` has a few quirks. First, the month values stored in the `POSIXlt`
+object use `zero-based indexing`. This means that month #1 (January) is stored
+as 0, and month #2 (February) is stored as 1. Notice in the output above,
+October is stored as the 9th month (`$mon = 9`).
+
+#### Years in POSIXlt 
+Years are also stored differently in the `POSIXlt` class. Year values are stored
+using a base index value of 1900. Thus, 2015 is stored as 115 (`$year = 115` 
+- 115 years since 1900).
+
+<i class="fa fa-star"></i> **Data Tip:** To learn more about how `R` stores
+information within date-time and other objects check out the `R` documentation
+by using `?` (e.g., `?POSIXlt`). NOTE: you can use this same syntax to learn
+about particular functions (e.g., `?ggplot`).  
+{: .notice}
+
+Having dates classified as separate components makes `POSIXlt` computationally
+more resource intensive to use in `data.frames`. This slows things down! We will
+thus use `POSIXct` for this tutorial.  
+
+<i class="fa fa-star"></i> **Data Tip:** There are other `R` packages that
+support date-time data classes, including `readr`, `zoo` and `chron`.  
+{: .notice}
+
+## Convert to Date-time Class
+
+When we convert from a character to a date-time class we need to tell `R` how 
+the date and time information are stored in each string. To do this, we can use
+`format=`. Let's have a look at one of our date-time strings to determine it's 
+format.
+
+```{r view-date }
+# view one date-time field
+harMet_15Min$datetime[1]
+```
+
+Looking at the results above, we see that our data are stored in the format:
+Year-Month-Day "T" Hour:Minute (`2005-01-01T00:15`). We can use this information 
+to populate our `format` string using the following designations for the
+components of the date-time data:
+
+* %Y - year 
+* %m - month
+* %d - day
+* %H:%M - hours:minutes
+
+<i class="fa fa-star"></i> **Data Tip:** A list of options for date-time format
+is available in the `strptime` function help: `help(strptime)`. Check it out!   
+{: .notice }
+
+The "T" inserted into the middle of `datetime` isn't a standard character for 
+date and time, however we can tell `R` where the character is so it can ignore 
+it and interpret the correct date and time as follows:
+`format="%Y-%m-%dT%H:%M"`.  
+
+```{r format-date}
+# convert single instance of date/time in format year-month-day hour:min:sec
+as.POSIXct(harMet_15Min$datetime[1],format="%Y-%m-%dT%H:%M")
+
+## The format of date-time MUST match the specified format or the data will not
+# convert; see what happens when you try it a different way or without the "T"
+# specified
+as.POSIXct(harMet_15Min$datetime[1],format="%d-%m-%Y%H:%M")
+as.POSIXct(harMet_15Min$datetime[1],format="%Y-%m-%d%H:%M")
+
+```
+
+Using the syntax we've learned, we can convert the entire `datetime` column into 
+`POSIXct` class.
+
+```{r convert-column }
+new.date.time <- as.POSIXct(harMet_15Min$datetime,
+                            format="%Y-%m-%dT%H:%M" #format time
+                            )
+
+# view output
+head(new.date.time)
+
+# what class is the output
+class(new.date.time)
+
+```
+
+
+### About Time Zones
+Above, we successfully converted our data into a date-time class. However, what 
+`timezone` is the output `new.date.time` object that we created using? 
+
+`2005-04-15 03:30:00 MDT`
+
+It appears as if our data were assigned MDT (which is the timezone of the
+computer where these tutorials were processed originally - in Colorado - Mountain
+Time). However, we know from the metadata, explored in the
+[Why Metadata Are Important: How to Work with Metadata in Text & EML Format tutorial ]({{ site.baseurl }}/R/why-metadata-are-important/),
+that these data were stored in Eastern Standard Time.
+
+### Assign Time Zone
+
+When we convert a date-time formatted column to `POSIXct` format, we need to
+assign an associated **time zone**. If we don't assign a time zone,`R` will 
+default to the local time zone that is defined on your computer. 
+There are individual designations for different time zones and time zone 
+variants (e.g., does the time occur during daylight savings time). 
+
+<i class="fa fa-star"></i> **Data Tip:** Codes for time zones can be found in this 
+<a href="https://en.wikipedia.org/wiki/List_of_tz_database_time_zones"
+target="_blank">time zone table</a>. 
+{: .notice}
+
+The code for the Eastern time zone that is the closest match to the NEON Harvard
+Forest field site is `America/New_York`. Let's convert our `datetime` field 
+one more time, and define the associated timezone (`tz=`).
+
+```{r assign-time-zone }
+# assign time zone to just the first entry
+as.POSIXct(harMet_15Min$datetime[1],
+            format = "%Y-%m-%dT%H:%M",
+            tz = "America/New_York")
+```
+
+The output above, shows us that the time zone is now correctly set as EST.  
+
+### Convert to Date-time Data Class
+
+Now, using the syntax that we learned above, we can convert the entire
+`datetime` column to a `POSIXct` class.
+
+```{r POSIX-convert-best-practice-code}
+# convert to POSIXct date-time class
+harMet_15Min$datetime <- as.POSIXct(harMet_15Min$datetime,
+                                format = "%Y-%m-%dT%H:%M",
+                                tz = "America/New_York")
+
+# view structure and time zone of the newly defined datetime column
+str(harMet_15Min$datetime)
+tz(harMet_15Min$datetime)
+```
+
+Now that our `datetime` data is properly identified as a `POSIXct` date-time
+data class we can continue on and look at the patterns of precipitation,
+temperature, and PAR through time. 
+
+## No Data Values
+
+
+## Managing Missing Data: NoData values
+
+### Find NoData Values
+
+If we are lucky when working with external data, the `NoData` value is clearly
+specified
+in the metadata. No data values can be stored differently:
+
+* **NA / nan:** Sometimes this value is `NA` or `nan` (not a number). 
+* **A Designated Numeric Value (e.g. -9999):** Character strings such as `NA` can 
+not always be stored along side of numeric values in some file formats. Sometimes 
+you'll encounter numeric placeholders for `noData` values such as
+`-9999` (a value often used in the GIS / Remote Sensing and Micrometerology 
+domains.
+* **Blank Values:** sometimes `noData` values are left blank. Blanks are 
+particularly problematic because we can't be certain if a data value is 
+purposefully missing (not measured that day or a bad measurement) or if someone 
+unintentionally deleted it.
+
+Because the actual value used to designate missing data can vary depending upon 
+what data we are working with, it is important to always check the metadata for
+the files associated `NoData` value. If the value is `NA`, we are in luck, `R`
+will recognize and flag this value as `NoData`. If the value is numeric (e.g.,
+`-9999`), then we might need to assign this value to `NA`.
+
+<i class="fa fa-star"></i> **Data Tip:** `NA` values will be ignored when
+performing calculations in `R`. However a `NoData` value of `-9999` will be
+recognized as an integer and processed accordingly. If you encounter a numeric
+`NoData` value be sure to assign it to `NA` in `R`:
+`objectName[objectName==-9999] <- NA`
+{: .notice}
+
+In the
+[Why Metadata Are Important: How to Work with Metadata in Text & EML Format]({{ site.baseurl }}/R/why-metadata-are-important/)
+we viewed the metadata for these data and discovered that missing values are
+designated using `NA` - a common `NoData` value placeholder. 
+
+>**Excerpt from the metadata:** `airt: average air temperature. Average of daily 
+>averages. (unit: celsius / missing value: NA)`
+
+### Check For NoData Values  
+
+We can quickly check for `NoData` values in our data using the`is.na()` 
+function. By asking for the `sum()` of `is.na()` we can see how many NA/ missing
+values we have. 
+
+```{r missing values}
+
+# Check for NA values
+sum(is.na(harMet15.09.11$datetime))
+sum(is.na(harMet15.09.11$airt))
+
+# view rows where the air temperature is NA 
+harMet15.09.11[is.na(harMet15.09.11$airt),]
+```
+
+The results above tell us there are `NoData` values in the `datetime` column.
+However, there are `NoData` values in other variables.  
+
+<div id="challenge" markdown="1">
+## Challenge: NoData Values
+
+How many `NoData` values are in the precipitation (`prec`) and PAR (`parr`)
+columns of our data?
+
+</div>
+
+```{r no-data-value-challenge, echo=FALSE, results="hide"}
+# check for no data values
+sum(is.na(harMet15.09.11$prec))
+sum(is.na(harMet15.09.11$parr))
+
+```
+
+### Deal with NoData Values
+When we encounter `NoData` values (blank, NaN, -9999, etc.) in our data we
+need to decide how to deal with them. By default `R` treats `NoData` values
+designated with a `NA` as a missing value rather than a zero. This is good, as a
+value of zero (no rain today) is not the same as missing data (e.g. we didn't
+measure the amount of rainfall today). 
+
+How we deal with `NoData` values will depend on:
+
+* the data type we are working with
+* the analysis we are conducting 
+* the significance of the gap or missing value
+
+Many functions in `R` contains a `na.rm=` option which will allow you to tell R
+to ignore `NA` values in your data when performing calculations.
+
+### To Gap Fill? Or Not?
+
+Sometimes we might need to "gap fill" our data. This means we will interpolate 
+or estimate missing values often using statistical methods. Gap filling can be 
+complex and is beyond the scope of this tutorial. The take away from this
+is simply that it is important to acknowledge missing values in your data and to 
+carefully consider how you wish to account for them during analysis. 
+
+Other resources:
+
+1. R code for dealing with missing data: 
+<a href="http://www.statmethods.net/input/missingdata.html" target="_blank"> Quick-R: Missing Data</a> 
+ 
+2. The Institute for Digital Research and Education has an 
+<a href="http://www.ats.ucla.edu/stat/r/faq/missing.htm" target="_blank"> R FAQ on Missing Values</a>.
+
+### Managing NoData Values in Our Data
+For this tutorial, we are exploring the patterns of precipitation,
+and temperature as they relate to green-up and brown-down of vegetation at 
+Harvard Forest. To view overall trends during these early exploration stages, it 
+is okay for us to leave out the `NoData` values in our plots. 
+
+<i class="fa fa-star"></i> **Data Tip:** If we wanted to perform more advanced 
+statistical analysis, we might consider gap-filling as our next step. Many data 
+products, from towers such as FluxNet include a higher level, gap-filled
+product that we can download. 
+<a href="http://www.archive.arm.gov/Carbon/gapfilling/gapfilling.html"
+target="_blank">More on Gap Filling</a>
+{: .notice}
+
+### NoData Values Can Impact Calculations
+It is important to consider `NoData` values when performing calculations on our
+data. For example, `R` will not properly calculate certain functions if there
+are `NA` values in the data, unless we explicitly tell it to ignore them. 
+
+``` {r na-in-calculations}
+
+# calculate mean of air temperature
+mean(harMet15.09.11$airt)
+
+# are there NA values in our data?
+sum(is.na(harMet15.09.11$airt))
+
+```
+
+`R` will not return a value for the mean as there `NA` values in the air 
+temperature column. Because there are only 2 missing values (out of 105,108) for 
+air temperature, we aren't that worried about a skewed 3 year mean. We can tell 
+`R` to ignore noData values in the mean calculations using `na.rm=`
+(NA.remove).
+
+``` {r na-rm}
+# calculate mean of air temperature, ignore NA values
+mean(harMet15.09.11$airt, 
+     na.rm=TRUE)
+
+```
+
+We now see that the 3-year average air temperature is 8.5°C.  
+
+<div id="challenge" markdown="1">
+## Challenge: Import, Understand Metadata, and Clean a Data Set
+We have been using the 15-minute data from the Harvard Forest. However, overall
+we are interested in larger scale patterns of greening-up and browning-down.  
+Thus a daily summary is sufficient for us to see overall trends.
+
+1. Import the Daily Meteorological data from the Harvard Forest (if you haven't
+already done so in the
+[Intro to Time Series Data in R - Managing Date / Time Format and Simple Plots using ggplot2]({{ site.baseurl }}/R/brief-tabular-time-series-qplot/ "for HarMet_Daily")
+tutorial.)
+2. Check the metadata to see what the column names are for the variable of
+interest (precipitation, air temperature, PAR, day and time ).
+3. If needed, convert the data class of different columns.
+4. Check for missing data and decide what to do with any that exist.
+5. Subset out the data for the duration of our study: 2009-2011. Name the object 
+"harMetDaily.09.11".
+6. Export the subset to a `.csv` file. 
+7. Create a plot of Daily Air Temperature for 2009-2011. Be sure to label, x-
+and y-axes. Also give the plot a title! 
+
+</div>
+
+
+## Filter by phenophase of interest
+Phenophase Status: Yes
+
+
+## Duplicate Records
+Flags: Duplicate records
+Duplicate by full rows only
+
+## Calculate the phenophase
+total Yes of total Individuals
+
+## Subset by Date
+Our `.csv` file contains nearly a decade's worth of data which makes for a large
+file. The time period we are interested in for our study is:
+
+* Start Time: 1 January 2009
+* End Time: 31 Dec 2011
+
+Let's subset the data to only contain these three years. We can use the 
+`subset()` function, with the syntax:
+`NewObject <- subset ( ObjectToBeSubset, CriteriaForSubsetting ) `.  
+
+We will set our criteria to be any `datetime` that:
+
+1. Is greater than or equal to 1 Jan 2009 at 0:00 
+**AND** 
+2. Is less than or equal to 31 Dec 2011 at 23:59.
+
+We also need to specify the `timezone` so `R` can handle daylight savings and
+leap year.
+
+``` {r subset-by-time }
+# subset data - 2009-2011
+harMet15.09.11 <- subset(harMet_15Min,
+                         datetime >= as.POSIXct('2009-01-01 00:00',
+                                                tz = "America/New_York") &
+                         datetime <= as.POSIXct('2011-12-31 23:59',
+                                               tz = "America/New_York"))
+
+# View first and last records in the object 
+head(harMet15.09.11[1])
+tail(harMet15.09.11[1])
+
+```
+
+It worked! The first entry is 1 January 2009 at 00:00 and the last entry is 31
+December 2011 at 23:45.
+
+
+
+
+## Basic Plot of Phenophase 
+Plot - bar graph of % of individuals in different phenophase over course of year. Interval = Daily. 
+## Plot with ggplot
+The `ggplot()` function within the `ggplot2` package gives us more control
+over plot appearance. However, to use `ggplot` we need to learn a slightly 
+different syntax. Three basic elements are needed for `ggplot()` to work:
+
+ 1. The **data_frame:** containing the variables that we wish to plot,
+ 2. **`aes` (aesthetics):** which denotes which variables will map to the x-, y-
+ (and other) axes,  
+ 3. **`geom_XXXX` (geometry):** which defines the data's graphical representation
+ (e.g. points (`geom_point`), bars (`geom_bar`), lines (`geom_line`), etc).
+ 
+The syntax begins with the base statement that includes the `data_frame`
+(`harMetDaily.09.11`) and associated x (`date`) and y (`airt`) variables to be
+plotted:
+
+`ggplot(harMetDaily.09.11, aes(date, airt))`
+
+To successfully plot, the last piece that is needed is the `geom`etry type. In 
+this case, we want to create a scatterplot so we can add `+ geom_point()`.
+
+## Bar Plots with ggplot
+We can use ggplot to create bar plots too. Let's create a bar plot of total 
+daily precipitation next. A bar plot might be a better way to represent a total
+daily value. To create a bar plot, we change the `geom` element from
+`geom_point()` to `geom_bar()`.  
+
+The default setting for a ggplot bar plot -  `geom_bar()` - is a histogram
+designated by `stat="bin"`. However, in this case, we want to plot actual
+precipitation values. We can use `geom_bar(stat="identity")` to force ggplot to
+plot actual values.
+
+``` {r ggplot-geom_bar }
+# plot precip
+PrecipDailyBarA <- ggplot(harMetDaily.09.11, aes(date, prec)) +
+    geom_bar(stat="identity", na.rm = TRUE) +
+    ggtitle("Daily Precipitation\n Harvard Forest") +
+    xlab("Date") + ylab("Precipitation (mm)") +
+    scale_x_date(labels=date_format ("%b %y"), breaks=date_breaks("1 year")) +
+    theme(plot.title = element_text(lineheight=.8, face="bold", size = 20)) +
+    theme(text = element_text(size=18))
+
+PrecipDailyBarA
+```
+
+Note that some of the bars in the resulting plot appear grey rather than black.
+This is because `R` will do it's best to adjust colors of bars that are closely
+spaced to improve readability. If we zoom into the plot, all of the bars are
+black.
+
+<div id="challenge" markdown="1">
+## Challenge: Plot with scale_x_data()
+Without creating a subsetted dataframe, plot the precipitation data for 
+*2010 only*.  Customize the plot with:
+
+* a descriptive title and axis labels,
+* breaks every 4 months, and
+* x-axis labels as only the full month (spelled out).
+
+HINT: you will need to rebuild the precipitation plot as you will have to 
+specify a new `scale_x_data()` element. 
+
+Bonus: Style your plot with a `ggtheme` of choice. 
+
+</div>
+
+``` {r ggplot-geom_bar-subset, results="hide", include=TRUE, echo=FALSE}
+# Define Start and end times for the subset as R objects that are the date class
+startTime2 <- as.Date("2010-01-01")
+endTime2 <- as.Date("2011-01-01")
+
+# create a start and end times R object
+start.end2 <- c(startTime2,endTime2)
+start.end2
+
+# plot of precipitation
+# subset just the 2011 data by using scale_x_date(limits)
+ggplot(harMetDaily.09.11, aes(date, prec)) +
+    geom_bar(stat="identity", na.rm = TRUE) +
+    ggtitle("Daily Precipitation\n 2010\n Harvard Forest") +
+    xlab("") + ylab("Precipitation (mm)") +
+    scale_x_date(labels=date_format ("%B"),
+    								 breaks=date_breaks("4 months"), limits=start.end2) +
+    theme(plot.title = element_text(lineheight=.8, face="bold", size = 20)) +
+    theme(text = element_text(size=18))
+
+```
+
+### Format Dates in Axis Labels
+We can adjust the date display format (e.g. 2009-07 vs. Jul 09) and the number 
+of major and minor ticks for axis date values using `scale_x_date`. Let's
+format the axis ticks so they read "month year" (`%b %y`). To do this, we will 
+use the syntax:
+
+`scale_x_date(labels=date_format("%b %y")`
+
+Rather than re-coding the entire plot, we can add the `scale_x_date` element
+to the plot object `AirTempDaily` that we just created. 
+
+<i class="fa fa-star"></i> **Data Tip:** You can type `?strptime` into the `R` 
+console to find a list of date format conversion specifications (e.g. %b = month).
+Type `scale_x_date` for a list of parameters that allow you to format dates 
+on the x-axis.
+{: .notice }
+
+```{r format-x-axis-labels }
+# format x-axis: dates
+AirTempDailyb <- AirTempDaily + 
+  (scale_x_date(labels=date_format("%b %y")))
+
+AirTempDailyb
+```
+
+<i class="fa fa-star"></i> **Data Tip:** If you are working with a date & time
+class (e.g. POSIXct), you can use `scale_x_datetime` instead of `scale_x_date`.
+{: .notice }
+
+
+
+### Export data.frame to .CSV
+
+We can export this subset in `.csv` format to use in other analyses or to 
+share with colleagues using `write.csv`. 
+
+<i class="fa fa-star"></i> **Data Tip:** Remember, to give your output files
+concise, yet descriptive names so you can identify what it contains in the
+future. By default, the `.csv` file will be written to your working directory. 
+{: .notice}
+
+``` {r write-csv}
+# write harMet15 subset data to .csv
+write.csv(harMet15.09.11, 
+          file="Met_HARV_15min_2009_2011.csv")
+
+```
+
