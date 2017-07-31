@@ -55,7 +55,7 @@ data.  Feel free to just add text until the data set is finalized and uploaded).
 
 ## Additional Resources
 
-* (links if you want to provide)
+* Data wrangling cheatsheet
 
 </div>
 
@@ -97,30 +97,43 @@ Final choice: leaves  (main teaching), colored leaves  (challenges)
 
 
 Status codes
-Status intensity
+Status intensity - every time they go out. 
+PerIndividualPerYear - once a year, "metadata" about the plants 
 
 ```{r loadStuff}
 
 library(dplyr)
 library(ggplot2)
 
-ind <- read.csv('N:/Common/TOS/OSIS_dataLessons/phe_data HARVperindividual_Clean.csv', stringsAsFactors = FALSE )
-status <- read.csv('N:/Common/TOS/OSIS_dataLessons/phe_data HARV2014statusintensity_Clean.csv', stringsAsFactors = FALSE)
+ind <- read.csv('pheno-data/phe_perindividual.csv', stringsAsFactors = FALSE )
+status <- read.csv('pheno-data/phe_statusintensity.csv', stringsAsFactors = FALSE)
 
 ```
 
-
 Explore the data, let's get to know what the dataframe looks like.
 
-```{r}
+```{r look-ind}
 #What are the fieldnames in this dataset?
 names(ind)
+
 #how many rows are in the data?
 nrow(ind)
+
 #look at the first six rows of data.
 head(ind)
-#look at the structure of the dataframe.
+
+# look at the structure of the dataframe.
 str(ind)
+
+```
+
+Add protocal transect map 
+
+Link GitHub repo - https://github.com/NEONScience/NEON-geolocation
+
+Dates - opened first in excel (06/14/2014) vs not (2014-06-14)
+
+```{r look-status}
 
 # What variables are included in this dataset?
 names(status)
@@ -128,28 +141,187 @@ nrow(status)
 head(status)
 str(status)
 
+# min date
+min(status$date)
+max(status$date)
+
+```
+
+## Clean up 
+
+* remove duplicates (full rows)
+* convert date
+* retain only the latest `editedDate` in the perIndividual table.
+
+### Remove duplicates
+
+
+```{r remove-duplicates}
+
+ind_noD <- distinct(ind)
+nrow(ind_noD)
+
+status_noD<-distinct(status)
+nrow(status_noD)
+```
+
+## Convert to Date
+
+Our `addDate` and `date` columns are stored as a `character` class. We need to convert it to 
+date-time class. 
+
+```{r as-date-only }
+
+# convert column to date class
+ind_noD$date <- as.Date(ind_noD$editedDate)
+status_noD$date <- as.Date(status_noD$date)
+
+```
+
+When we use `as.Date`, we lose the time stamp. 
+
+## Retain only the latest indivdual record
+
+Only the latest `editedDate` on ind
+
+
+```{r filter-edit-date}
+
+ind_last <- ind_noD %>%
+	group_by(individualID) %>%
+	filter(!duplicated(date==(max(editedDate))))
+
 ```
 
 
-join dataframes
-```{r}
+## Join dataframes
 
-#select status fields of interest
-# create a new object "ind2" to preserve the original object "ind"
-ind2 <- select(ind, c(individualID, decimalLatitude, decimalLongitude, geodeticDatum, coordinateUncertainty,
-                      elevation, elevationUncertainty, addDate, dropDate))
+```{r join-dfs}
 
-
-#Create a new dataframe "phe" that has all of the fields of interest from both original data frames
-phe <- left_join(status, ind2, by='individualID')
+# Create a new dataframe "phe_ind" with all the data
+phe_ind <- left_join(status_noD, ind_last, by='individualID')
 
 ```
+
+### Check For NoData Values  
+
+We can quickly check for `NoData` values in our data using the`is.na()` 
+function. By asking for the `sum()` of `is.na()` we can see how many NA/ missing
+values we have. 
+
+```{r missing values}
+
+# Check for NA values
+sum(is.na(phe_ind$date))
+sum(is.na(phe_ind$individualID))
+
+# view rows where the air temperature is NA 
+harMet15.09.11[is.na(harMet15.09.11$airt),]
+```
+
+The results above tell us there are `NoData` values in the `datetime` column.
+However, there are `NoData` values in other variables.  
+
+<div id="challenge" markdown="1">
+
+### Deal with NoData Values
+When we encounter `NoData` values (blank, NaN, -9999, etc.) in our data we
+need to decide how to deal with them. By default `R` treats `NoData` values
+designated with a `NA` as a missing value rather than a zero. This is good, as a
+value of zero (no rain today) is not the same as missing data (e.g. we didn't
+measure the amount of rainfall today). 
+
+How we deal with `NoData` values will depend on:
+
+* the data type we are working with
+* the analysis we are conducting 
+* the significance of the gap or missing value
+
+Many functions in `R` contains a `na.rm=` option which will allow you to tell R
+to ignore `NA` values in your data when performing calculations.
+
+### To Gap Fill? Or Not?
+
+Sometimes we might need to "gap fill" our data. This means we will interpolate 
+or estimate missing values often using statistical methods. Gap filling can be 
+complex and is beyond the scope of this tutorial. The take away from this
+is simply that it is important to acknowledge missing values in your data and to 
+carefully consider how you wish to account for them during analysis. 
+
+Other resources:
+
+1. R code for dealing with missing data: 
+<a href="http://www.statmethods.net/input/missingdata.html" target="_blank"> Quick-R: Missing Data</a> 
+ 
+2. The Institute for Digital Research and Education has an 
+<a href="http://www.ats.ucla.edu/stat/r/faq/missing.htm" target="_blank"> R FAQ on Missing Values</a>.
+
+### Managing NoData Values in Our Data
+For this tutorial, we are exploring the patterns of precipitation,
+and temperature as they relate to green-up and brown-down of vegetation at 
+Harvard Forest. To view overall trends during these early exploration stages, it 
+is okay for us to leave out the `NoData` values in our plots. 
+
+<i class="fa fa-star"></i> **Data Tip:** If we wanted to perform more advanced 
+statistical analysis, we might consider gap-filling as our next step. Many data 
+products, from towers such as FluxNet include a higher level, gap-filled
+product that we can download. 
+<a href="http://www.archive.arm.gov/Carbon/gapfilling/gapfilling.html"
+target="_blank">More on Gap Filling</a>
+{: .notice}
+
+### NoData Values Can Impact Calculations
+It is important to consider `NoData` values when performing calculations on our
+data. For example, `R` will not properly calculate certain functions if there
+are `NA` values in the data, unless we explicitly tell it to ignore them. 
+
+``` {r na-in-calculations}
+
+# calculate mean of air temperature
+mean(harMet15.09.11$airt)
+
+# are there NA values in our data?
+sum(is.na(harMet15.09.11$airt))
+
+```
+
+`R` will not return a value for the mean as there `NA` values in the air 
+temperature column. Because there are only 2 missing values (out of 105,108) for 
+air temperature, we aren't that worried about a skewed 3 year mean. We can tell 
+`R` to ignore noData values in the mean calculations using `na.rm=`
+(NA.remove).
+
+``` {r na-rm}
+# calculate mean of air temperature, ignore NA values
+mean(harMet15.09.11$airt, 
+     na.rm=TRUE)
+
+```
+
+## Select Site(s) of Interest
+
+```{r filter-site}
+
+
+#subset to just the SCBI & SERC
+# overwrite object "phe" as you know these are the only phenophases you want to work with for now
+phe <- filter(phe, phenophaseName=="Leaves" | phenophaseName=="Colored leaves")
+
+# check that it worked
+unique(phe$phenophaseName)
+
+
+```
+
+## Select Phenotype of Interest
+
 
 1. Filter by phenophase of interest
 
-```{r setup, include=FALSE}
-#see which phenophases are present
-unique(phe$phenophaseName)
+```{r filter-phonophase}
+
+# see which phenophases are present
+unique(phe_ind$phenophaseName)
 
 #subset to just the "leaves" and "Colored leaves" phenophases
 # overwrite object "phe" as you know these are the only phenophases you want to work with for now
@@ -184,3 +356,44 @@ Plot - bar graph of % of individuals in different phenophase over course of year
 Write csv (this will be read in new in subsuquent lessons)
 
 
+### Set/Remove No Data Values
+
+## Managing Missing Data: NoData values
+
+### Find NoData Values
+
+If we are lucky when working with external data, the `NoData` value is clearly
+specified
+in the metadata. No data values can be stored differently:
+
+* **NA / nan:** Sometimes this value is `NA` or `nan` (not a number). 
+* **A Designated Numeric Value (e.g. -9999):** Character strings such as `NA` can 
+not always be stored along side of numeric values in some file formats. Sometimes 
+you'll encounter numeric placeholders for `noData` values such as
+`-9999` (a value often used in the GIS / Remote Sensing and Micrometerology 
+domains.
+* **Blank Values:** sometimes `noData` values are left blank. Blanks are 
+particularly problematic because we can't be certain if a data value is 
+purposefully missing (not measured that day or a bad measurement) or if someone 
+unintentionally deleted it.
+
+Because the actual value used to designate missing data can vary depending upon 
+what data we are working with, it is important to always check the metadata for
+the files associated `NoData` value. If the value is `NA`, we are in luck, `R`
+will recognize and flag this value as `NoData`. If the value is numeric (e.g.,
+`-9999`), then we might need to assign this value to `NA`.
+
+<i class="fa fa-star"></i> **Data Tip:** `NA` values will be ignored when
+performing calculations in `R`. However a `NoData` value of `-9999` will be
+recognized as an integer and processed accordingly. If you encounter a numeric
+`NoData` value be sure to assign it to `NA` in `R`:
+`objectName[objectName==-9999] <- NA`
+{: .notice}
+
+In the
+[Why Metadata Are Important: How to Work with Metadata in Text & EML Format]({{ site.baseurl }}/R/why-metadata-are-important/)
+we viewed the metadata for these data and discovered that missing values are
+designated using `NA` - a common `NoData` value placeholder. 
+
+>**Excerpt from the metadata:** `airt: average air temperature. Average of daily 
+>averages. (unit: celsius, missing value: NA)`
