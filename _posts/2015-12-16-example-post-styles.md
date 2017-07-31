@@ -7,18 +7,18 @@ date: 2016-01-18
 dateCreated: 2014-11-18
 lastModified: 2016-01-13
 estimatedTime: 1.0 - 1.5 Hours
-packagesLibraries: [R,HDF5]
+packagesLibraries: [R]
 authors: [Author One, Author Two]
 contributors: [Contributor One]
-categories: [coding-and-informatics]
-tags: [HDF5, R]
-mainTag: HDF5
+categories: [self-paced-tutorial]
+tags: []
+mainTag: 
 code1: R-code-File-Name-Here.R
 image:
-  feature: TeachingModules.jpg
+  feature: TeachingModule.jpg
   credit:
   creditlink:
-permalink: /example-post/
+permalink: /example-post
 comments: false
 ---
 
@@ -212,7 +212,11 @@ in the table of contents side bar (default, can be changed in the _config file).
 
 ***
 
-## Data Tips
+## Data Tips/Data Notes
+
+When there is "bonus" information it can be added as a Data Tip (coding related)
+or Data Note (not coding related). Same look for both just the first words are
+different. 
 
 <i class="fa fa-star"></i> **Data Tip:** Here is a block with a data tip. 
 Sometimes it might have some `code` in it. A data tip can include a list or
@@ -223,6 +227,8 @@ links, however, it cannot contain figures, etc.
 	Sometimes it might have some `code` in it. A data tip can include a list or
 	links, however, it cannot contain figures, etc.
 	{: .notice}
+
+
 
 ***
 
@@ -278,8 +284,8 @@ for more information on the location.
 ## Image with Caption & Source
 
 <figure>
-	<a href="{{ site.baseurl }}/images/pnt_line_poly.png">
-	<img src="{{ site.baseurl }}/images/pnt_line_poly.png"></a>
+	<a href="{{ site.baseurl }}/images/example-post-images/pnt_line_poly.png">
+	<img src="{{ site.baseurl }}/images/example-post-images/pnt_line_poly.png"></a>
 	<figcaption> Caption here. Source: National Ecological Observatory Network
 	(NEON)  
 	</figcaption>
@@ -289,15 +295,15 @@ for more information on the location.
 this example.**  
 
 	 <figure>
-		<a href="{ { site.baseurl }}/images/pnt_line_poly.png">
-		<img src="{ { site.baseurl }}/images/pnt_line_poly.png"></a>
+		<a href="{ { site.baseurl }}/images/example-post-images/pnt_line_poly.png">
+		<img src="{ { site.baseurl }}/images/example-post-images/pnt_line_poly.png"></a>
 		<figcaption> Caption here. 
 		Source: National Ecological Observatory Network (NEON)  
 		</figcaption>
 	</figure>
 
-replace `{ { site.baseurl } }/images/pnt_line_poly.png` with the full URL if 
-image is not in the images folder or a local image.
+replace `{ { site.baseurl } }/images/example-post-images/pnt_line_poly.png` with 
+the full URL if image is not in the images folder or a local image.
 
 
 ***
@@ -305,33 +311,34 @@ image is not in the images folder or a local image.
 ## Two Images Side-by-side with Caption & Source
 
 <figure class="half">
-	<a href="{{ site.baseurl }}/images/600x300.jpg">
-	<img src="{{ site.baseur l}}/images/600x300.jpg">
+	<a href="{{ site.baseurl }}/images/example-post-images/600x300.jpg">
+	<img src="{{ site.baseurl }}/images/example-post-images/600x300.jpg">
 	</a>
-	<a href="{{ site.baseurl }}/images/600x300.jpg">
-	<img src="{{ site.baseur l}}/images/600x300.jpg"></a>
+	<a href="{{ site.baseurl }}/images/example-post-images/600x300.jpg">
+	<img src="{{ site.baseurl }}/images/example-post-images/600x300.jpg"></a>
 	<figcaption>Caption describing these two images. Include Source: 
 	</figcaption>
 </figure>
 
- **NOTE: space between initial 
-{ { only added to prevent code from rendering in this example.**
+ **NOTE: space between initial { { only added to prevent code from rendering in 
+this example (below).**
 
 	 <figure class="half">
-		<a href="{{ site.baseurl }}/images/600x300.jpg">
-		<img src="{{ site.baseurl }}/images/600x300.jpg">
+		<a href="{ { site.baseurl }}/images/example-post-images/600x300.jpg">
+		<img src="{ { site.baseurl }}/images/example-post-images/600x300.jpg">
 		</a>
-		<a href="{{ site.baseurl }}/images/600x300.jpg">
-		<img src="{{ site.baseurl }}/images/600x300.jpg">
+		<a href="{ { site.baseurl }}/images/example-post-images/600x300.jpg">
+		<img src="{ { site.baseurl }}/images/example-post-images/600x300.jpg">
 		</a>
 		<figcaption>Caption describing these two images. Source: here
 		</figcaption>
 	</figure>    
 
 
-replace `{ { site.baseurl }}/images/pnt_line_poly.png` with the full URL if 
-image is not in the images folder or a local image. **NOTE: space between initial 
-{ { only added to prevent code from rendering in this example.**  
+replace `{ { site.baseurl }}/images/example-post-images/pnt_line_poly.png` with 
+the full URL if image is not in the images folder or a local image.   
+**NOTE: space between initial { { only added to prevent code from rendering in 
+this example.**  
 
 ***
 

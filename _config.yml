@@ -1,32 +1,37 @@
-title: 		NEON Work With Data Lesson Development
-description: 	A test development site where new data and classroom lessons will be hosted.
-#Comment out url when working locally to resolve base urls correctly ok
-#use this when pushing to git for live version
+# Site Settings 
 
-url:      http://neoninc.github.io/NEON-Lesson-Building-Data-Skills
-baseurl:	http://neoninc.github.io/NEON-Lesson-Building-Data-Skills
+title:        NEON Data Skills - Lesson Development
+description:  A test development site where new data and classroom lessons will be hosted.
 
-#use this when working locally
-#just uncomment the first localhost.
+# URLs
+# Comment out url when working locally to resolve base urls correctly
+
+# use this when pushing to git for live version
+
+url:      http://neonscience.github.io/NEON-Lesson-Building-Data-Skills
+baseurl:	http://neonscience.github.io/NEON-Lesson-Building-Data-Skills
+
+
+# use this when working locally
+# just uncomment the first localhost.
 #url: http://localhost:4000
-#baseurl: http://localhost:4000
 
-disqus_shortname: 
+
+breadcrumbs : true # true, false (default)
 
 # Social networking links are used in author-bio sidebar. Update and remove as you like.
-
 # Owner/author information
 owner: 		
-  name: NEON EDUCATION
+  name: NEON Data Skills
   avatar: profilePic.png
   bio: "Devoted to open data and open source in science and education."
-  email: "lwasser@neoninc.org"
-  twitter: "leahawasser"
-  github: "lwasser"
+  email: "neondataskills@BattelleEcology.org"
+  twitter: "NEON_Sci"
+  github: "NEON-WorkWithData"
   youtube: "neonbetaedu"
-# instagram:      "mmistakes"
+# instagram:      
 # For Google Authorship https://plus.google.com/authorship
-# google_plus:    "MichaelRoseDesign"
+# google_plus:    
 
 # Analytics and webmaster tools stuff goes here
 google_analytics:   
@@ -34,55 +39,59 @@ google_analytics:
 # https://ssl.bing.com/webmaster/configure/verify/ownership Option 2 content= goes here
 #bing_verify:        D81F4C18A6CB3018F64D7C827D953DFD
 
-#category: [using lidar data, working with field data, zcarbon links]
-#categories: [using lidar data, working with field data, zcarbon links]
+
 # Links to include in top navigation
 # For external links add external: true
 links:  
-  - title: Self-Paced Data Tutorials
-    url: /self-paced-tutorial/   
-
-  - title: Data Workshops
-    url: /data-workshop/
+links:  
+  - title: Data Tutorial Series
+    url: /tutorial-series/
+    
+  - title: Events
+    url: /workshop-event/
 
   - title: Science Videos
     url: /science-video/ 
+    
+  - title: Teaching Data Subsets  
+    url: /teaching-data-subsets/
         
-  - title: About
-    url: /about/ 
+  - title: Teaching Modules
+    url: /teaching-module/ 
     
   - title: NEON Website
-    url: http://neoninc.org
+    url: http://neonscience.org
     external: true
-    
+
 # http://en.wikipedia.org/wiki/List_of_tz_database_time_zones
 timezone:    America/Denver
 future:      true
-# turning off pygments for the time being
-#pygments:    true
-#highlighter: pygments
-markdown:    kramdown
-#markdown: redcarpet
-#redcarpet:
-#  extensions: ["no_intra_emphasis", "fenced_code_blocks", "autolink", "tables", "with_toc_data"]
 
 
 # https://github.com/mojombo/jekyll/wiki/Permalinks
 permalink:   /:categories/:title/
 
+
+# Syntax highlighting
+markdown:    kramdown
+highlighter: rouge
+
+
 kramdown:
+  input: GFM
+  syntax_highlighter: rouge
   auto_ids: true
   footnote_nr: 1
   entity_output: as_char
-  toc_levels: 1..2
+  toc_levels: 1..3
   enable_coderay: false
 
-  coderay:
-    coderay_line_numbers: 
-    coderay_line_numbers_start: 1
-    coderay_tab_width: 4
-    coderay_bold_every: 10
-    coderay_css: class
+  #coderay:
+    #coderay_line_numbers: 
+    #coderay_line_numbers_start: 1
+    #coderay_tab_width: 4
+    #coderay_bold_every: 10
+    #coderay_css: class
 
 include: [".htaccess"]
-exclude: ["*.Rmd", "*.R", "lib", "config.rb", "Capfile", "config", "log", "Rakefile", "Rakefile.rb", "tmp", "less", "*.sublime-project", "*.sublime-workspace", "test", "spec", "Gruntfile.js", "package.json", "node_modules", "Gemfile", "Gemfile.lock", "LICENSE", "README.md"]
+exclude: ["*.Rmd", "lib", "config.rb", "Capfile", "config", "log", "Rakefile", "Rakefile.rb", "tmp", "less", "*.sublime-project", "*.sublime-workspace", "test", "spec", "Gruntfile.js", "package.json", "node_modules", "Gemfile", "Gemfile.lock", "LICENSE", "README.md"]

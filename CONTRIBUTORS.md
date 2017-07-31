@@ -71,7 +71,7 @@ All teaching data subsets can be found on the
 ### Spatio-temporal Series Teaching Data Subsets
 This data was curated into a teaching data subset by Leah A. Wasser. Original
 sources of the data include
-<a href="http://www.neoninc.org/data-resources/get-data/airborne-data" target="_blank"> NEON Airborne Data</a>,
+<a href="http://www.neonscience.org/data-resources/get-data/airborne-data" target="_blank"> NEON Airborne Data</a>,
 the <a href="http://landsat.usgs.gov" target="_blank" > U.S. Geological Survey (USGS) Landsat Satellite</a>, 
 the <a href="http://harvardforest.fas.harvard.edu/" target="_blank">Harvard Forest</a>,
 and the <a href="https://www.census.gov/geo/maps-data/data/tiger-cart-boundary.html" target="_blank">US Census Bureau</a> 

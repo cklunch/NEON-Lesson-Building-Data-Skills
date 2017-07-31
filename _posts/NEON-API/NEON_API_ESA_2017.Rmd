@@ -1,0 +1,244 @@
+---
+layout: post
+title: "Using the NEON API in R"
+description: "Tutorial for getting data from the NEON API, using R and the R package httr"
+date:   2017-08-07
+dateCreated:  2017-07-07
+lastModified: `r format(Sys.time(), "%Y-%m-%d")`
+estimatedTime: 1 - 1.5 hours
+packagesLibraries: [httr, devtools, neonDataStackR]
+authors: [Claire K. Lunch]
+contributors: [Claire Lunch, Christine Laney, Megan A. Jones]
+categories: [self-paced-tutorial]
+mainTag: API
+tags: [R, API]
+code1: 
+image:
+  feature:
+  credit:
+  creditlink:
+permalink: /R/neon-api/
+comments: false
+---
+
+{% include _toc.html %}
+
+## About
+This is a lesson in pulling data from the NEON API, using base R 
+and the R package httr. There are 3 basic categories of NEON data:
+
+1. Observational - Data collected by a human in the field, or in an analytical laboratory, e.g. beetle identification, foliar isotopes
+1. Instrumentation - Data collected by an automated, streaming sensor, e.g. net radiation, soil carbon dioxide
+1. Remote sensing - Data collected by the airborne observation platform, e.g. LIDAR, surface reflectance
+
+This lesson covers the first two types of data. NEON remote sensing data are not currently available through the API.
+
+**R Skill Level:** Intermediate - you've got the basics of `R` down.
+
+**API Skill Level:** Beginner - you have little to no experience with APIs.
+
+<div id="objectives" markdown="1">
+
+# Goals / Objectives
+After completing this activity, you will:
+
+* Be able to pull observational, instrumentation, and geolocation data from the NEON API.
+* Be able to transform API-accessed data from JSON to tabular format for analyses.
+
+## Things You’ll Need To Complete This Tutorial
+To complete this tutorial you will need the most current version of R and, 
+preferably, RStudio loaded on your computer.
+
+### Install R Packages
+
+* **httr:** `install.packages("httr")`
+* **jsonlite:** `install.packages("jsonlite")`
+* **devtools:** `install.packages("devtools")`
+* **neonDataStackR:** `devtools::install_github("NEONScience/NEON-utilities/neonDataStackR")`
+
+### Additional Resources
+
+* [Website for the NEON API](http://data.neonscience.org/data-api)
+* [GitHub repository for the NEON API](https://github.com/NEONScience/neon-data-api)
+* [ROpenSci wrapper for the NEON API](https://github.com/ropenscilabs/nneo) (not covered in this tutorial)
+
+</div>
+
+## Anatomy of an API call
+### Base URL: 
+Specifics are appended to this in order to get the data or 
+metadata you're looking for, but all calls to this API will include 
+the base URL. For the NEON API, this is http://data.neonscience.org/api/v0 
+(not clickable, because the base URL by itself will take you nowhere!)
+
+### Endpoints: 
+What type of data or metadata are you looking for?
+
+* **~/products**
+  Information about one or all of NEON's data products
+
+* **~/sites**
+  Information about data availability at the site specified in the call
+
+* **~/locations**
+  Spatial data for the NEON locations specified in the call
+
+* **~/data**
+  Data! By product, site, and date (in monthly chunks).
+
+### Targets:
+The specific product, site, or location you want to get data for.
+
+
+## Observational data
+Which product do you want to get data for? Consult the <a href="http://data.neonscience.org/data-product-catalog" target="_blank">data product catalog</a>.
+
+We'll pick Breeding landbird point counts, DP1.10003.001
+
+First query the products endpoint of the API to find out which sites and dates have data available. 
+The structure of the URL for the call is base/endpoint/DPID, where DPID is the numbered identifier 
+for the data product:
+
+``` {r os-avail-query}
+
+library(httr)
+library(jsonlite)
+req <- GET("http://data.neonscience.org/api/v0/products/DP1.10003.001")
+
+```
+
+The object returned from the GET has many layers of information. Entering the name of 
+the object gives you some basic information about what you downloaded. The content() 
+function returns the contents in the form of a highly nested list. This is typical of 
+JSON-formatted data returned by APIs:
+
+``` {r os-query-contents}
+
+req
+req.content <- content(req, as="parsed")
+req.content
+
+```
+
+To get a more accessible view of which sites have data for which months, you'll 
+need to extract data from the nested list. There are a variety of ways to do this, 
+in this tutorial we'll explore a couple of them. Here we'll use fromJSON(), in the 
+jsonlite package, which doesn't fully flatten the nested list, but gets us the part 
+we need. To use it, we need a text version of the content:
+
+``` {r os-query-fromJSON}
+
+req.text <- content(req, as="text")
+avail <- fromJSON(req.text, simplifyDataFrame=T, flatten=T)
+avail
+
+```
+
+There is a lot of info in the object, but we're looking for data availability, to 
+tell us what we can download. 
+
+``` {r os-query-avail-data}
+
+avail$data
+avail$data$siteCodes
+avail$data$siteCodes$availableDataUrls
+bird.urls <- unlist(avail$data$siteCodes$availableDataUrls)
+bird.urls
+
+```
+
+These are the URLs showing us what files are available for each month where 
+there are data. For simplicity, we'll only query one month now.
+
+``` {r os-query-bird-data-urls}
+
+brd <- GET(bird.urls[6])
+brd.files <- fromJSON(content(brd, as="text"))
+brd.files$data$files
+
+```
+
+And now we have the URLs where we can get the data files themselves. We'll use 
+the file names to pick which ones we want. To translate, available files for 
+July 2015 at Woodworth are all of the following: 
+
+1. zip of all data files in the expanded package
+1. readme for the data product (not specific to dates or location)
+1. count data table, expanded package version
+1. point data table, expanded package version
+1. validation file for the data product: lists input data and data entry rules
+1. variables file for the data product: lists data fields in downloaded tables
+1. personnel data table
+1. Ecological Metadata Language (EML) file
+1. zip of all data files in the basic package
+1. point data table, basic package version
+1. Ecological Metadata Language (EML) file (?)
+1. validation file for the data product: lists input data and data entry rules (?)
+1. variables file for the data product: lists data fields in downloaded tables (?)
+1. readme for the data product (not specific to dates or location) (?)
+1. count data table, basic package version
+
+We'll get the data tables for the point data and count data in the basic 
+package.
+
+``` {r os-get-bird-data}
+
+brd.count <- read.delim(brd.files$data$files$url
+                        [intersect(grep("countdata", brd.files$data$files$name),
+                                    grep("basic", brd.files$data$files$name))], sep=",")
+
+brd.point <- read.delim(brd.files$data$files$url
+                        [intersect(grep("perpoint", brd.files$data$files$name),
+                                    grep("basic", brd.files$data$files$name))], sep=",")
+
+```
+
+Just to prove the files we pulled have actual data in them, a quick graphic:
+
+``` {r os-plot-bird-data}
+
+```
+
+
+## Instrumentation data
+The process is essentially the same for sensor data. We'll do the same series of 
+queries for Soil temperature, DP1.00041.001
+
+``` {r soil-data}
+
+req <- GET("http://data.neonscience.org/api/v0/products/DP1.00041.001")
+avail <- fromJSON(content(req, as="text"), simplifyDataFrame=T, flatten=T)
+temp.urls <- unlist(avail$data$siteCodes$availableDataUrls)
+tmp <- GET(temp.urls[20])
+tmp.files <- fromJSON(content(tmp, as="text"))
+tmp.files$data$files$name
+
+```
+
+These are a little more cryptic. The part after the 00000 is: 
+soil plot number.depth.time interval.data table name
+
+So NEON.D13.NIWO.DP1.00041.001.00000.003.505.030.ST_30_minute.csv is 
+the 30-minute mean of soil temperature at Niwot Ridge in soil plot 3, 
+depth 5.
+
+Go get it:
+
+``` {r os-get-soil-data}
+
+soil.temp <- read.delim(tmp.files$data$files$url
+                        [grep("003.505.030", tmp.files$data$files$name)], sep=",")
+
+```
+
+And again, a plot to show we've downloaded something with data in it:
+
+``` {r os-plot-soil-data}
+
+```
+
+
+
+
+
+
