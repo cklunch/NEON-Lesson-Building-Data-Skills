@@ -101,6 +101,7 @@ for the data product:
 
 ``` {r os-avail-query}
 
+library(dplyr)
 library(httr)
 library(jsonlite)
 req <- GET("http://data.neonscience.org/api/v0/products/DP1.10003.001")
@@ -122,7 +123,7 @@ req.content
 
 To get a more accessible view of which sites have data for which months, you'll 
 need to extract data from the nested list. There are a variety of ways to do this, 
-in this tutorial we'll explore a couple of them. Here we'll use fromJSON(), in the 
+in this tutorial we'll explore a couple of them. Here we'll use `fromJSON()`, in the 
 jsonlite package, which doesn't fully flatten the nested list, but gets us the part 
 we need. To use it, we need a text version of the content:
 
@@ -134,14 +135,12 @@ avail
 
 ```
 
-There is a lot of info in the object, but we're looking for data availability, to 
-tell us what we can download. 
+The object contains keywords, general info about the data product, and 
+references for documentation, as well as data availability, which is what we 
+need to tell us what we can download. 
 
 ``` {r os-query-avail-data}
 
-avail$data
-avail$data$siteCodes
-avail$data$siteCodes$availableDataUrls
 bird.urls <- unlist(avail$data$siteCodes$availableDataUrls)
 bird.urls
 
@@ -158,28 +157,44 @@ brd.files$data$files
 
 ```
 
-And now we have the URLs where we can get the data files themselves. We'll use 
+And now we have the names of the data files available for this site and 
+month, and URLs where we can get the data files themselves. We'll use 
 the file names to pick which ones we want. To translate, available files for 
 July 2015 at Woodworth are all of the following: 
 
-1. zip of all data files in the expanded package
-1. readme for the data product (not specific to dates or location)
-1. count data table, expanded package version
-1. point data table, expanded package version
-1. validation file for the data product: lists input data and data entry rules
-1. variables file for the data product: lists data fields in downloaded tables
-1. personnel data table
-1. Ecological Metadata Language (EML) file
-1. zip of all data files in the basic package
-1. point data table, basic package version
-1. Ecological Metadata Language (EML) file (?)
-1. validation file for the data product: lists input data and data entry rules (?)
-1. variables file for the data product: lists data fields in downloaded tables (?)
-1. readme for the data product (not specific to dates or location) (?)
-1. count data table, basic package version
+* NEON.D09.WOOD.DP1.10003.001.2015-07.expanded.20170720T182547Z.zip
+  + zip of all files in the expanded package
+* NEON.D09.WOOD.DP1.10003.001.brd_countdata.2015-07.expanded.20170720T182547Z.csv
+  + count data table, expanded package version: counts of birds at each point
+* NEON.D09.WOOD.DP1.10003.001.brd_perpoint.2015-07.expanded.20170720T182547Z.csv
+  + point data table, expanded package version: metadata at each observation point
+* NEON.Bird Conservancy of the Rockies.brd_personnel.csv
+  + personnel data table: accuracy scores for bird observers
+* NEON.D09.WOOD.DP1.10003.001.2015-07.basic.20170720T182547Z.zip
+  + zip of all files in the basic package
+* NEON.D09.WOOD.DP1.10003.001.brd_countdata.2015-07.basic.20170720T182547Z.csv
+  + count data table, basic package version: counts of birds at each point
+* NEON.D09.WOOD.DP1.10003.001.brd_perpoint.2015-07.basic.20170720T182547Z.csv
+  + point data table, basic package version: metadata at each observation point
+* NEON.DP1.10003.001_readme.txt
+  + readme for the data product (not specific to dates or location)
+  + appears twice in the list, since it's in both the basic and expanded package
+* NEON.D09.WOOD.DP1.10003.001.20150101-20160613.xml
+  + Ecological Metadata Language (EML) file
+  + appears twice in the list, since it's in both the basic and expanded package
+* NEON.D09.WOOD.DP0.10003.001.validation.20170720T182547Z.csv
+  + validation file for the data product: lists input data and data entry rules
+  + appears twice in the list, since it's in both the basic and expanded package
+* NEON.D09.WOOD.DP1.10003.001.variables.20170720T182547Z.csv
+  + variables file for the data product: lists data fields in downloaded tables
+  + appears twice in the list, since it's in both the basic and expanded package
+
 
 We'll get the data tables for the point data and count data in the basic 
-package.
+package. The list of files doesn't return in the same order every time, so we 
+won't use position in the list to select. Plus, we want code we can re-use 
+when getting data from other sites and other months. So we select files 
+based on the data table name and the package name:
 
 ``` {r os-get-bird-data}
 
@@ -196,6 +211,11 @@ brd.point <- read.delim(brd.files$data$files$url
 Just to prove the files we pulled have actual data in them, a quick graphic:
 
 ``` {r os-plot-bird-data}
+
+clusterBySp <- brd.count %>% group_by(scientificName) %>% filter(plotID=="WOOD_013") %>%
+  summarize(total=sum(clusterSize))
+clusterBySp <- clusterBySp[order(clusterBySp$total, decreasing=T),]
+barplot(clusterBySp$total, names.arg=clusterBySp$scientificName, ylab="Total")
 
 ```
 
@@ -227,13 +247,16 @@ Go get it:
 ``` {r os-get-soil-data}
 
 soil.temp <- read.delim(tmp.files$data$files$url
-                        [grep("003.505.030", tmp.files$data$files$name)], sep=",")
+                        [grep("003.505.030", tmp.files$data$files$name)], sep=",",
+                        stringsAsFactors=F)
 
 ```
 
 And again, a plot to show we've downloaded something with data in it:
 
 ``` {r os-plot-soil-data}
+
+plot(soil.temp$soilTempMean~soil.temp$startDateTime, pch=".", xlab="Date", ylab="T", tck=0.01)
 
 ```
 
