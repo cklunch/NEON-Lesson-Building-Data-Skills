@@ -53,6 +53,7 @@ preferably, RStudio loaded on your computer.
 
 * **httr:** `install.packages("httr")`
 * **jsonlite:** `install.packages("jsonlite")`
+* **dplyr:** `install.packages("dplyr")`
 * **devtools:** `install.packages("devtools")`
 * **neonDataStackR:** `devtools::install_github("NEONScience/NEON-utilities/neonDataStackR")`
 
@@ -101,9 +102,9 @@ for the data product:
 
 ``` {r os-avail-query}
 
-library(dplyr)
 library(httr)
 library(jsonlite)
+library(dplyr)
 req <- GET("http://data.neonscience.org/api/v0/products/DP1.10003.001")
 
 ```
@@ -236,19 +237,18 @@ tmp.files$data$files$name
 ```
 
 These are a little more cryptic. The part after the 00000 is: 
-soil plot number.depth.time interval.data table name
+[soil plot number].[depth].[averaging interval].[data table name]
 
-So NEON.D13.NIWO.DP1.00041.001.00000.003.505.030.ST_30_minute.csv is 
+So NEON.D13.NIWO.DP1.00041.001.00000.003.502.030.ST_30_minute.csv is 
 the 30-minute mean of soil temperature at Niwot Ridge in soil plot 3, 
-depth 5.
+2nd depth below the surface.
 
 Go get it:
 
 ``` {r os-get-soil-data}
 
 soil.temp <- read.delim(tmp.files$data$files$url
-                        [grep("003.505.030", tmp.files$data$files$name)], sep=",",
-                        stringsAsFactors=F)
+                        [grep("003.502.030", tmp.files$data$files$name)], sep=",")
 
 ```
 
@@ -256,7 +256,7 @@ And again, a plot to show we've downloaded something with data in it:
 
 ``` {r os-plot-soil-data}
 
-plot(soil.temp$soilTempMean~soil.temp$startDateTime, pch=".", xlab="Date", ylab="T", tck=0.01)
+plot(soil.temp$soilTempMean~soil.temp$startDateTime, pch=".", xlab="Date", ylab="T")
 
 ```
 
