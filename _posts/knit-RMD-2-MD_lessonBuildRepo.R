@@ -10,14 +10,14 @@ require(knitr)
 
 dirs <- c("NEON-mosquito-data-viz",
           "OSIS-phenology-series",
-          "R/dc-tabular-time-series",
+          "neonDataStackR-temp",
           "R/tutorial-setup")
 
 
 #################### Set up Input Variables #############################
 
 # set directory (order above) that you'd like to build
-dir <- dirs[1]
+dir <- dirs[3]
 
 # Inputs - Where the git repo is on your computer
 gitRepoPath <-"~/Documents/GitHub/NEON-Lesson-Building-Data-Skills"
