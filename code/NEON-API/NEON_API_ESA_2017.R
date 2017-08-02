@@ -2,6 +2,7 @@
 
 library(httr)
 library(jsonlite)
+library(dplyr)
 req <- GET("http://data.neonscience.org/api/v0/products/DP1.10003.001")
 
 
@@ -21,9 +22,6 @@ avail
 
 ## ----os-query-avail-data-------------------------------------------------
 
-avail$data
-avail$data$siteCodes
-avail$data$siteCodes$availableDataUrls
 bird.urls <- unlist(avail$data$siteCodes$availableDataUrls)
 bird.urls
 
@@ -48,6 +46,11 @@ brd.point <- read.delim(brd.files$data$files$url
 
 ## ----os-plot-bird-data---------------------------------------------------
 
+clusterBySp <- brd.count %>% group_by(scientificName) %>% filter(plotID=="WOOD_013") %>%
+  summarize(total=sum(clusterSize))
+clusterBySp <- clusterBySp[order(clusterBySp$total, decreasing=T),]
+barplot(clusterBySp$total, names.arg=clusterBySp$scientificName, ylab="Total")
+
 
 ## ----soil-data-----------------------------------------------------------
 
@@ -62,9 +65,11 @@ tmp.files$data$files$name
 ## ----os-get-soil-data----------------------------------------------------
 
 soil.temp <- read.delim(tmp.files$data$files$url
-                        [grep("003.505.030", tmp.files$data$files$name)], sep=",")
+                        [grep("003.502.030", tmp.files$data$files$name)], sep=",")
 
 
 ## ----os-plot-soil-data---------------------------------------------------
+
+plot(soil.temp$soilTempMean~soil.temp$startDateTime, pch=".", xlab="Date", ylab="T")
 
 
