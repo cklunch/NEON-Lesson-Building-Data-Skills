@@ -280,10 +280,10 @@ Build a DF of interest with sinlgle site, species, and phenophase called `phe_1s
 ```{r filter-site}
 
 # set site of interest
-#subset to just the SCBI & SERC
 siteOfInterest <- "SCBI"
 
-# as you know these are the only phenophases you want to work with for now
+# use filter to select only the site of Interest 
+# using %in% allows one to add a vector if you want more than one site. 
 phe_1sp <- filter(phe_ind, siteID %in% siteOfInterest)
 
 ```
@@ -299,6 +299,7 @@ unique(phe_AOI$taxonID)
 speciesOfInterest <- "LITU"
 
 #subset to just "LITU"
+# here just use == but could also use %in%
 phe_1sp <- filter(phe_AOI, taxonID==speciesOfInterest)
 
 # check that it worked
@@ -316,8 +317,8 @@ unique(phe_1sp$phenophaseName)
 
 phenophaseOfInterest <- "Leaves"
 
-#subset to just "LITU"
-phe_1sp <- filter(phe_AOI, phenophaseName==phenophaseOfInterest)
+#subset to just the phenosphase of Interest 
+phe_1sp <- filter(phe_AOI, phenophaseName %in% phenophaseOfInterest)
 
 # check that it worked
 unique(phe_1sp$phenophaseName)
@@ -329,6 +330,9 @@ unique(phe_1sp$phenophaseName)
 Calculate the phenophase total Yes of total Individuals
 
 ```{r calc-percent-yes}
+
+inLeaf <- phe_1sp %>%
+	group_by(phenophaseStatus) # check name 
 
 ```
 
