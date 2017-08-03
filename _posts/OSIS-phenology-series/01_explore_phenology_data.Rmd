@@ -105,7 +105,7 @@ PerIndividualPerYear - once a year, "metadata" about the plants
 library(dplyr)
 library(ggplot2)
 library(lubridate)
-
+setwd('/Users/lstanish/Downloads/')
 ind <- read.csv('NEON-pheno-temp-timeseries/pheno/phe_perindividual.csv', stringsAsFactors = FALSE )
 status <- read.csv('NEON-pheno-temp-timeseries/pheno/phe_statusintensity.csv', stringsAsFactors = FALSE)
 
@@ -182,12 +182,12 @@ nrow(status_noD)
 
 ```{r same-fieldnames}
 
-sameName <- intersect(names(status_noD), names(ind_last))
+sameName <- intersect(names(status_noD), names(ind_noD))
 sameName
 
 ```
 
-Which are different: 
+These fields have different values we want to keep. Rename common fields before joining: 
 * editedDate
 * measuredBy
 * recordedBy
@@ -273,7 +273,7 @@ phe_ind <- left_join(status_noD, ind_lastnoD)
 ### What do we do with the data?  
 
 
-Build a DF of interest with sinlgle site, species, and phenophase called `phe_1sp`.
+Build a DF of interest with single site, species, and phenophase called `phe_1sp`.
 
 
 ## Select Site(s) of Interest
@@ -333,9 +333,11 @@ Calculate the phenophase total Yes of total Individuals
 ```{r calc-total-yes}
 
 # Total in status by day
+sampSize <- count(phe_1sp, date)
 inStat <- phe_1sp %>%
 	group_by(date) %>%
-	count(phenophaseStatus)
+  count(phenophaseStatus)
+inStat <- full_join(sampSize, inStat, by="date")
 
 # Retain only Yes
 inStat_T <- filter(inStat, phenophaseStatus %in% "yes")
@@ -375,9 +377,9 @@ We can use `geom_bar(stat="identity")` to force ggplot to plot actual values.
 
 ```{r plot-leaves-total}
 
-# plot precip
+# plot number of individuals in leaf
 
-phenoPlot <- ggplot(inStat_T, aes(date, n)) +
+phenoPlot <- ggplot(inStat_T, aes(date, n.y)) +
     geom_bar(stat="identity", na.rm = TRUE) +
     ggtitle("Total Individuals in Leaf") +
     xlab("Date") + ylab("Number of Individuals") +
@@ -393,9 +395,9 @@ phenoPlot
 ```{r plot-leaves-percentage}
 
 
-inStat_T$percent<- ((inStat_T$n)/30)*100
+inStat_T$percent<- ((inStat_T$n.y)/inStat_T$n.x)*100
 
-# plot precip
+# plot percent of leaves
 
 phenoPlot_P <- ggplot(inStat_T, aes(date, percent)) +
     geom_bar(stat="identity", na.rm = TRUE) +
@@ -410,9 +412,25 @@ phenoPlot_P
 ```
 
 
+## Re-evaluate dataset
+The plots demonstrate that, while the 2016 data show the nice expected pattern of increasing leaf-out, peak, and drop-off, we seem to be missing the increase in leaf-out in 2015. That may create problems with downstream analyses. Let's filter the dataset to include just 2016.
+
+
+## Select 2016 SCBI data
+
+```{r filter-to-2016}
+
+# use filter to select only the site of Interest 
+# using %in% allows one to add a vector if you want more than one site. 
+phe_1sp_2016 <- filter(phe_1sp, date >= "2016-01-01")
+
+```
+
+
+
 ```{r write-csv, echo = FALSE}
 # Write .csv (this will be read in new in subsuquent lessons)
-write.csv(inStat_T, file="NEONpheno_LITU_Leaves_SCBI_2015-2017.csv")
+write.csv(phe_1sp_2016, file="NEONpheno_LITU_Leaves_SCBI_2016.csv")
 ```
 
 
