@@ -217,3 +217,141 @@ name <- ggplot(harMetDaily.09.11, aes(date, airt)) +
 
 ```
 
+
+
+### Set/Remove No Data Values
+
+## Managing Missing Data: NoData values
+
+### Find NoData Values
+
+If we are lucky when working with external data, the `NoData` value is clearly
+specified
+in the metadata. No data values can be stored differently:
+
+* **NA / nan:** Sometimes this value is `NA` or `nan` (not a number). 
+* **A Designated Numeric Value (e.g. -9999):** Character strings such as `NA` can 
+not always be stored along side of numeric values in some file formats. Sometimes 
+you'll encounter numeric placeholders for `noData` values such as
+`-9999` (a value often used in the GIS / Remote Sensing and Micrometerology 
+domains.
+* **Blank Values:** sometimes `noData` values are left blank. Blanks are 
+particularly problematic because we can't be certain if a data value is 
+purposefully missing (not measured that day or a bad measurement) or if someone 
+unintentionally deleted it.
+
+Because the actual value used to designate missing data can vary depending upon 
+what data we are working with, it is important to always check the metadata for
+the files associated `NoData` value. If the value is `NA`, we are in luck, `R`
+will recognize and flag this value as `NoData`. If the value is numeric (e.g.,
+`-9999`), then we might need to assign this value to `NA`.
+
+<i class="fa fa-star"></i> **Data Tip:** `NA` values will be ignored when
+performing calculations in `R`. However a `NoData` value of `-9999` will be
+recognized as an integer and processed accordingly. If you encounter a numeric
+`NoData` value be sure to assign it to `NA` in `R`:
+`objectName[objectName==-9999] <- NA`
+{: .notice}
+
+In the
+[Why Metadata Are Important: How to Work with Metadata in Text & EML Format]({{ site.baseurl }}/R/why-metadata-are-important/)
+we viewed the metadata for these data and discovered that missing values are
+designated using `NA` - a common `NoData` value placeholder. 
+
+>**Excerpt from the metadata:** `airt: average air temperature. Average of daily 
+>averages. (unit: celsius, missing value: NA)`
+
+
+### Check For NoData Values  
+
+We can quickly check for `NoData` values in our data using the`is.na()` 
+function. By asking for the `sum()` of `is.na()` we can see how many NA/ missing
+values we have. 
+
+```{r missing values}
+
+# Check for NA values
+sum(is.na(phe_ind$date))
+sum(is.na(phe_ind$individualID))
+
+```
+
+The results above tell us there are `NoData` values in the `datetime` column.
+However, there are `NoData` values in other variables.  
+
+<div id="challenge" markdown="1">
+
+### Deal with NoData Values
+When we encounter `NoData` values (blank, NaN, -9999, etc.) in our data we
+need to decide how to deal with them. By default `R` treats `NoData` values
+designated with a `NA` as a missing value rather than a zero. This is good, as a
+value of zero (no rain today) is not the same as missing data (e.g. we didn't
+measure the amount of rainfall today). 
+
+How we deal with `NoData` values will depend on:
+
+* the data type we are working with
+* the analysis we are conducting 
+* the significance of the gap or missing value
+
+Many functions in `R` contains a `na.rm=` option which will allow you to tell R
+to ignore `NA` values in your data when performing calculations.
+
+### To Gap Fill? Or Not?
+
+Sometimes we might need to "gap fill" our data. This means we will interpolate 
+or estimate missing values often using statistical methods. Gap filling can be 
+complex and is beyond the scope of this tutorial. The take away from this
+is simply that it is important to acknowledge missing values in your data and to 
+carefully consider how you wish to account for them during analysis. 
+
+Other resources:
+
+1. R code for dealing with missing data: 
+<a href="http://www.statmethods.net/input/missingdata.html" target="_blank"> Quick-R: Missing Data</a> 
+ 
+2. The Institute for Digital Research and Education has an 
+<a href="http://www.ats.ucla.edu/stat/r/faq/missing.htm" target="_blank"> R FAQ on Missing Values</a>.
+
+### Managing NoData Values in Our Data
+For this tutorial, we are exploring the patterns of precipitation,
+and temperature as they relate to green-up and brown-down of vegetation at 
+Harvard Forest. To view overall trends during these early exploration stages, it 
+is okay for us to leave out the `NoData` values in our plots. 
+
+<i class="fa fa-star"></i> **Data Tip:** If we wanted to perform more advanced 
+statistical analysis, we might consider gap-filling as our next step. Many data 
+products, from towers such as FluxNet include a higher level, gap-filled
+product that we can download. 
+<a href="http://www.archive.arm.gov/Carbon/gapfilling/gapfilling.html"
+target="_blank">More on Gap Filling</a>
+{: .notice}
+
+### NoData Values Can Impact Calculations
+It is important to consider `NoData` values when performing calculations on our
+data. For example, `R` will not properly calculate certain functions if there
+are `NA` values in the data, unless we explicitly tell it to ignore them. 
+
+``` {r na-in-calculations}
+
+# calculate mean of air temperature
+mean(harMet15.09.11$airt)
+
+# are there NA values in our data?
+sum(is.na(harMet15.09.11$airt))
+
+```
+
+`R` will not return a value for the mean as there `NA` values in the air 
+temperature column. Because there are only 2 missing values (out of 105,108) for 
+air temperature, we aren't that worried about a skewed 3 year mean. We can tell 
+`R` to ignore noData values in the mean calculations using `na.rm=`
+(NA.remove).
+
+``` {r na-rm}
+# calculate mean of air temperature, ignore NA values
+mean(harMet15.09.11$airt, 
+     na.rm=TRUE)
+
+```
+
