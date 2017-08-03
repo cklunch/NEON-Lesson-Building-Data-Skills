@@ -12,7 +12,7 @@ tags: [ ]
 mainTag: 
 tutorialSeries: [ ]
 description: "Brief description in plain text."
-code1: use-if-associated-code.R
+code1: 
 image:
   feature: lidar_GrandMesa.png
   credit: LiDAR data collected over Grand Mesa, Colorado - National Ecological Observatory Network (NEON)
@@ -74,7 +74,7 @@ Briefly:
 * Which plants/growth form should we choose? 
 * growth-form vs. species discussion
 
-Final choice: - ACER
+Final choice: - LITU
 
 
 But how do we choose what aspect of phenophase to look at: 
@@ -106,6 +106,8 @@ library(dplyr)
 library(ggplot2)
 library(lubridate)
 
+
+# Read in data
 ind <- read.csv('NEON-pheno-temp-timeseries/pheno/phe_perindividual.csv', stringsAsFactors = FALSE )
 status <- read.csv('NEON-pheno-temp-timeseries/pheno/phe_statusintensity.csv', stringsAsFactors = FALSE)
 
@@ -386,7 +388,6 @@ phenoPlot <- ggplot(inStat_T, aes(date, n)) +
 
 phenoPlot
 
-
 ```
 
 
@@ -406,13 +407,12 @@ phenoPlot_P <- ggplot(inStat_T, aes(date, percent)) +
 
 phenoPlot_P
 
-
 ```
 
 
-```{r write-csv, echo = FALSE}
+```{r write-csv }
 # Write .csv (this will be read in new in subsuquent lessons)
-write.csv(inStat_T, file="NEONpheno_LITU_Leaves_SCBI_2015-2017.csv")
+write.csv(inStat_T, file="NEONpheno_LITU_Leaves_SCBI_2015-2016.csv")
 ```
 
 
