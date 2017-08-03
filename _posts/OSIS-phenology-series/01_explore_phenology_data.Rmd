@@ -104,9 +104,10 @@ PerIndividualPerYear - once a year, "metadata" about the plants
 
 library(dplyr)
 library(ggplot2)
+library(lubridate)
 
-ind <- read.csv('pheno-data/phe_perindividual.csv', stringsAsFactors = FALSE )
-status <- read.csv('pheno-data/phe_statusintensity.csv', stringsAsFactors = FALSE)
+ind <- read.csv('NEON-pheno-temp-timeseries/pheno/phe_perindividual.csv', stringsAsFactors = FALSE )
+status <- read.csv('NEON-pheno-temp-timeseries/pheno/phe_statusintensity.csv', stringsAsFactors = FALSE)
 
 ```
 
@@ -294,13 +295,13 @@ phe_1sp <- filter(phe_ind, siteID %in% siteOfInterest)
 ```{r filter-species}
 
 # see which species are present
-unique(phe_AOI$taxonID)
+unique(phe_1sp$taxonID)
 
 speciesOfInterest <- "LITU"
 
 #subset to just "LITU"
 # here just use == but could also use %in%
-phe_1sp <- filter(phe_AOI, taxonID==speciesOfInterest)
+phe_1sp <- filter(phe_1sp, taxonID==speciesOfInterest)
 
 # check that it worked
 unique(phe_1sp$taxonID)
@@ -318,167 +319,100 @@ unique(phe_1sp$phenophaseName)
 phenophaseOfInterest <- "Leaves"
 
 #subset to just the phenosphase of Interest 
-phe_1sp <- filter(phe_AOI, phenophaseName %in% phenophaseOfInterest)
+phe_1sp <- filter(phe_1sp, phenophaseName %in% phenophaseOfInterest)
 
 # check that it worked
 unique(phe_1sp$phenophaseName)
 
 ```
 
-## 
+## Total in Phenophase of Interest
 
 Calculate the phenophase total Yes of total Individuals
 
-```{r calc-percent-yes}
+```{r calc-total-yes}
 
-inLeaf <- phe_1sp %>%
-	group_by(phenophaseStatus) # check name 
+# Total in status by day
+inStat <- phe_1sp %>%
+	group_by(date) %>%
+	count(phenophaseStatus)
 
-```
-
-Plot - bar graph of % of individuals in different phenophase over course of year. Interval = Daily. 
-
-
-```{r}
+# Retain only Yes
+inStat_T <- filter(inStat, phenophaseStatus %in% "yes")
 
 ```
 
+## Plot with ggplot
+The `ggplot()` function within the `ggplot2` package gives us more control
+over plot appearance. However, to use `ggplot` we need to learn a slightly 
+different syntax. Three basic elements are needed for `ggplot()` to work:
 
-Write csv (this will be read in new in subsuquent lessons)
-
-
-### Set/Remove No Data Values
-
-## Managing Missing Data: NoData values
-
-### Find NoData Values
-
-If we are lucky when working with external data, the `NoData` value is clearly
-specified
-in the metadata. No data values can be stored differently:
-
-* **NA / nan:** Sometimes this value is `NA` or `nan` (not a number). 
-* **A Designated Numeric Value (e.g. -9999):** Character strings such as `NA` can 
-not always be stored along side of numeric values in some file formats. Sometimes 
-you'll encounter numeric placeholders for `noData` values such as
-`-9999` (a value often used in the GIS / Remote Sensing and Micrometerology 
-domains.
-* **Blank Values:** sometimes `noData` values are left blank. Blanks are 
-particularly problematic because we can't be certain if a data value is 
-purposefully missing (not measured that day or a bad measurement) or if someone 
-unintentionally deleted it.
-
-Because the actual value used to designate missing data can vary depending upon 
-what data we are working with, it is important to always check the metadata for
-the files associated `NoData` value. If the value is `NA`, we are in luck, `R`
-will recognize and flag this value as `NoData`. If the value is numeric (e.g.,
-`-9999`), then we might need to assign this value to `NA`.
-
-<i class="fa fa-star"></i> **Data Tip:** `NA` values will be ignored when
-performing calculations in `R`. However a `NoData` value of `-9999` will be
-recognized as an integer and processed accordingly. If you encounter a numeric
-`NoData` value be sure to assign it to `NA` in `R`:
-`objectName[objectName==-9999] <- NA`
-{: .notice}
-
-In the
-[Why Metadata Are Important: How to Work with Metadata in Text & EML Format]({{ site.baseurl }}/R/why-metadata-are-important/)
-we viewed the metadata for these data and discovered that missing values are
-designated using `NA` - a common `NoData` value placeholder. 
-
->**Excerpt from the metadata:** `airt: average air temperature. Average of daily 
->averages. (unit: celsius, missing value: NA)`
-
-
-### Check For NoData Values  
-
-We can quickly check for `NoData` values in our data using the`is.na()` 
-function. By asking for the `sum()` of `is.na()` we can see how many NA/ missing
-values we have. 
-
-```{r missing values}
-
-# Check for NA values
-sum(is.na(phe_ind$date))
-sum(is.na(phe_ind$individualID))
-
-```
-
-The results above tell us there are `NoData` values in the `datetime` column.
-However, there are `NoData` values in other variables.  
-
-<div id="challenge" markdown="1">
-
-### Deal with NoData Values
-When we encounter `NoData` values (blank, NaN, -9999, etc.) in our data we
-need to decide how to deal with them. By default `R` treats `NoData` values
-designated with a `NA` as a missing value rather than a zero. This is good, as a
-value of zero (no rain today) is not the same as missing data (e.g. we didn't
-measure the amount of rainfall today). 
-
-How we deal with `NoData` values will depend on:
-
-* the data type we are working with
-* the analysis we are conducting 
-* the significance of the gap or missing value
-
-Many functions in `R` contains a `na.rm=` option which will allow you to tell R
-to ignore `NA` values in your data when performing calculations.
-
-### To Gap Fill? Or Not?
-
-Sometimes we might need to "gap fill" our data. This means we will interpolate 
-or estimate missing values often using statistical methods. Gap filling can be 
-complex and is beyond the scope of this tutorial. The take away from this
-is simply that it is important to acknowledge missing values in your data and to 
-carefully consider how you wish to account for them during analysis. 
-
-Other resources:
-
-1. R code for dealing with missing data: 
-<a href="http://www.statmethods.net/input/missingdata.html" target="_blank"> Quick-R: Missing Data</a> 
+ 1. The **data_frame:** containing the variables that we wish to plot,
+ 2. **`aes` (aesthetics):** which denotes which variables will map to the x-, y-
+ (and other) axes,  
+ 3. **`geom_XXXX` (geometry):** which defines the data's graphical representation
+ (e.g. points (`geom_point`), bars (`geom_bar`), lines (`geom_line`), etc).
  
-2. The Institute for Digital Research and Education has an 
-<a href="http://www.ats.ucla.edu/stat/r/faq/missing.htm" target="_blank"> R FAQ on Missing Values</a>.
+The syntax begins with the base statement that includes the `data_frame`
+(`inStat_T`) and associated x (`date`) and y (`n`) variables to be
+plotted:
 
-### Managing NoData Values in Our Data
-For this tutorial, we are exploring the patterns of precipitation,
-and temperature as they relate to green-up and brown-down of vegetation at 
-Harvard Forest. To view overall trends during these early exploration stages, it 
-is okay for us to leave out the `NoData` values in our plots. 
+`ggplot(inStat_T, aes(date, n))`
 
-<i class="fa fa-star"></i> **Data Tip:** If we wanted to perform more advanced 
-statistical analysis, we might consider gap-filling as our next step. Many data 
-products, from towers such as FluxNet include a higher level, gap-filled
-product that we can download. 
-<a href="http://www.archive.arm.gov/Carbon/gapfilling/gapfilling.html"
-target="_blank">More on Gap Filling</a>
-{: .notice}
+To successfully plot, the last piece that is needed is the `geom`etry type. In 
+this case, we want to create a scatterplot so we can add `+ geom_point()`.
 
-### NoData Values Can Impact Calculations
-It is important to consider `NoData` values when performing calculations on our
-data. For example, `R` will not properly calculate certain functions if there
-are `NA` values in the data, unless we explicitly tell it to ignore them. 
+## Bar Plots with ggplot
+We can use ggplot to create bar plots too. Let's create a bar plot of total 
+daily precipitation next. A bar plot might be a better way to represent a total
+daily value. To create a bar plot, we change the `geom` element from
+`geom_point()` to `geom_bar()`.  
 
-``` {r na-in-calculations}
+The default setting for a ggplot bar plot -  `geom_bar()` - is a histogram
+designated by `stat="bin"`. However, in this case, we want to plot count values. 
+We can use `geom_bar(stat="identity")` to force ggplot to plot actual values.
 
-# calculate mean of air temperature
-mean(harMet15.09.11$airt)
 
-# are there NA values in our data?
-sum(is.na(harMet15.09.11$airt))
+```{r plot-leaves-total}
+
+# plot precip
+
+phenoPlot <- ggplot(inStat_T, aes(date, n)) +
+    geom_bar(stat="identity", na.rm = TRUE) +
+    ggtitle("Total Individuals in Leaf") +
+    xlab("Date") + ylab("Number of Individuals") +
+    theme(plot.title = element_text(lineheight=.8, face="bold", size = 20)) +
+    theme(text = element_text(size=18))
+
+phenoPlot
+
+
+```
+
+
+```{r plot-leaves-percentage}
+
+
+inStat_T$percent<- ((inStat_T$n)/30)*100
+
+# plot precip
+
+phenoPlot_P <- ggplot(inStat_T, aes(date, percent)) +
+    geom_bar(stat="identity", na.rm = TRUE) +
+    ggtitle("Proportion in Leaf") +
+    xlab("Date") + ylab("% of Individuals") +
+    theme(plot.title = element_text(lineheight=.8, face="bold", size = 20)) +
+    theme(text = element_text(size=18))
+
+phenoPlot_P
+
 
 ```
 
-`R` will not return a value for the mean as there `NA` values in the air 
-temperature column. Because there are only 2 missing values (out of 105,108) for 
-air temperature, we aren't that worried about a skewed 3 year mean. We can tell 
-`R` to ignore noData values in the mean calculations using `na.rm=`
-(NA.remove).
 
-``` {r na-rm}
-# calculate mean of air temperature, ignore NA values
-mean(harMet15.09.11$airt, 
-     na.rm=TRUE)
-
+```{r write-csv, echo = FALSE}
+# Write .csv (this will be read in new in subsuquent lessons)
+write.csv(inStat_T, file="NEONpheno_LITU_Leaves_SCBI_2015-2017.csv")
 ```
+
+
