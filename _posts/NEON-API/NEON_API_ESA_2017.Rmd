@@ -6,9 +6,9 @@ date:   2017-08-07
 dateCreated:  2017-07-07
 lastModified: `r format(Sys.time(), "%Y-%m-%d")`
 estimatedTime: 1 - 1.5 hours
-packagesLibraries: [httr, devtools, neonDataStackR]
+packagesLibraries: [httr, jsonlite, devtools, geoNEON, neonDataStackR]
 authors: [Claire K. Lunch]
-contributors: [Claire Lunch, Christine Laney, Megan A. Jones]
+contributors: [Christine Laney, Megan A. Jones]
 categories: [self-paced-tutorial]
 mainTag: API
 tags: [R, API]
@@ -319,7 +319,8 @@ can be used to calculate precise spatial data for bird observations.
 
 For convenience, we'll use the geoNEON package to make the calculations. 
 First we'll use `def.extr.geo.os()` to get the additional spatial information 
-available through the API:
+available through the API, and look at the spatial resolution available in the 
+initial download:
 
 ```{r brd-extr-NL}
 
@@ -327,8 +328,8 @@ library(geoNEON)
 brd.point.loc <- def.extr.geo.os(brd.point)
 
 symbols(brd.point.loc$easting, brd.point.loc$northing, 
-        circles=brd.point.loc$coordinateUncertainty, 
-        xlab="Easting", ylab="Northing", tck=0.01)
+        circles=brd.point.loc$uncorr.coordinateUncertainty, 
+        xlab="Easting", ylab="Northing", tck=0.01, inches=F)
 
 ```
 
@@ -340,13 +341,10 @@ observations:
 brd.point.pt <- def.calc.geo.os(brd.point, "brd_perpoint")
 
 symbols(brd.point.pt$easting, brd.point.pt$northing, 
-        circles=brd.point.pt$adjCoordinateUncertainty, 
-        xlab="Easting", ylab="Northing", tck=0.01)
+        circles=brd.point.pt$coordinateUncertainty, 
+        xlab="Easting", ylab="Northing", tck=0.01, inches=F)
 
 ```
-
-(Need to fix geoNEON bird code so B2 points calculate correctly, 
-large circles should be gone from the second plot)
 
 
 ## Coming soon
