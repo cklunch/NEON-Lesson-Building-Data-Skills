@@ -6,7 +6,6 @@
 
 ### Set working directory
 setwd("/Volumes/TOS/OSIS_dataLessons/temp_data/")
-library(lubridate)
 
 site <- "HARV"
 
@@ -25,39 +24,16 @@ temp30$endDateTime <- gsub("2016","2015", temp30$endDateTime)
 ## Add a remarks field
 temp30$remarks <- "Teaching data only. Do not use for other purposes"
 
+## Change QF codes: all non-NA records = 0 and all NA records = 1
+temp30$finalQF[!is.na(temp30$tempTripleMean)] <- 0
+temp30$finalQF[is.na(temp30$tempTripleMean)] <- 1
+sum(temp30$finalQF==1)     # all good
 
-## Export data set with re-jiggered years
+## Export data set with re-jiggered years, remarks, and new QF vals
 write.csv(temp30, paste("NEON.D01.", site, 
                         ".DP1.00003.001.00000.000.060.030.TAAT_30min_teaching.csv",
                         sep=""), row.names=FALSE)
 
 
-
-
-
-# Convert to correct time zone, default for this code is MST when code
-# is run in Boulder. Assign time zone to date time fields
-temp30$startDateTime <- as.POSIXct(temp30$startDateTime,
-                                format = "%Y-%m-%dT%H:%M", tz = "GMT")
-temp30$endDateTime <- as.POSIXct(temp30$endDateTime,
-                                format = "%Y-%m-%dT%H:%M", tz = "GMT")
-
-# Move all dates for startDateTime back 1 year
-yr2015 <- which(year(temp30$startDateTime)==2015)
-yr2016 <- which(year(temp30$startDateTime)==2016)
-
-year(temp30$startDateTime[yr2015]) <- 2014
-year(temp30$startDateTime[yr2016]) <- 2015
-
-# Move all dates for endDateTime back 1 year
-yr2015 <- which(year(temp30$endDateTime)==2015)
-yr2016 <- which(year(temp30$endDateTime)==2016)
-
-year(temp30$endDateTime[yr2015]) <- 2014
-year(temp30$endDateTime[yr2016]) <- 2015
-
-
-temp30$startDateTime <- as.character(temp30$startDateTime)
-temp30$endDateTime <- as.character(temp30$endDateTime)
 
 
