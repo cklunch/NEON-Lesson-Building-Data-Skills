@@ -76,7 +76,7 @@ An example API call: http://data.neonscience.org/api/v0/data/DP1.10003.001/WOOD/
 This includes the base URL, endpoint, and target.
 
 ### Base URL: 
-<span style="color:red">http://data.neonscience.org/api/v0</span><span style="color:gray">/data/DP1.10003.001/WOOD/2015-07</span>
+<span style="color:#A00606;font-weight:bold">http://data.neonscience.org/api/v0</span><span style="color:#C6C5C5">/data/DP1.10003.001/WOOD/2015-07</span>
 
 Specifics are appended to this in order to get the data or 
 metadata you're looking for, but all calls to this API will include 
@@ -84,7 +84,7 @@ the base URL. For the NEON API, this is http://data.neonscience.org/api/v0
 (not clickable, because the base URL by itself will take you nowhere!)
 
 ### Endpoints: 
-<span style="color:gray">http://data.neonscience.org/api/v0</span><span style="color:red">/data</span><span style="color:gray">/DP1.10003.001/WOOD/2015-07</span>
+<span style="color:#C6C5C5">http://data.neonscience.org/api/v0</span><span style="color:#A00606;font-weight:bold">/data</span><span style="color:#C6C5C5">/DP1.10003.001/WOOD/2015-07</span>
 
 What type of data or metadata are you looking for?
 
@@ -101,9 +101,9 @@ What type of data or metadata are you looking for?
   Data! By product, site, and date (in monthly chunks).
 
 ### Targets:
-<span style="color:gray">http://data.neonscience.org/api/v0/data</span><span style="color:red">/DP1.10003.001/WOOD/2015-07</span>
+<span style="color:#C6C5C5">http://data.neonscience.org/api/v0/data</span><span style="color:#A00606;font-weight:bold">/DP1.10003.001/WOOD/2015-07</span>
 
-The specific product, site, or location you want to get data for.
+The specific data product, site, or location you want to get data for.
 
 
 ## Observational data
@@ -181,30 +181,62 @@ July 2015 at Woodworth are all of the following:
 
 * **NEON.D09.WOOD.DP1.10003.001.2015-07.expanded.20170720T182547Z.zip**
   + zip of all files in the expanded package
+  
 * **NEON.D09.WOOD.DP1.10003.001.brd_countdata.2015-07.expanded.20170720T182547Z.csv**
   + count data table, expanded package version: counts of birds at each point
+  
 * **NEON.D09.WOOD.DP1.10003.001.brd_perpoint.2015-07.expanded.20170720T182547Z.csv**
   + point data table, expanded package version: metadata at each observation point
+  
 * **NEON.Bird Conservancy of the Rockies.brd_personnel.csv**
   + personnel data table: accuracy scores for bird observers
+  
 * **NEON.D09.WOOD.DP1.10003.001.2015-07.basic.20170720T182547Z.zip**
   + zip of all files in the basic package
+  
 * **NEON.D09.WOOD.DP1.10003.001.brd_countdata.2015-07.basic.20170720T182547Z.csv**
   + count data table, basic package version: counts of birds at each point
+  
 * **NEON.D09.WOOD.DP1.10003.001.brd_perpoint.2015-07.basic.20170720T182547Z.csv**
   + point data table, basic package version: metadata at each observation point
+  
 * **NEON.DP1.10003.001_readme.txt**
   + readme for the data product (not specific to dates or location)
   + appears twice in the list, since it's in both the basic and expanded package
+  
 * **NEON.D09.WOOD.DP1.10003.001.20150101-20160613.xml**
   + Ecological Metadata Language (EML) file
   + appears twice in the list, since it's in both the basic and expanded package
+  
 * **NEON.D09.WOOD.DP0.10003.001.validation.20170720T182547Z.csv**
   + validation file for the data product: lists input data and data entry rules
   + appears twice in the list, since it's in both the basic and expanded package
+  
 * **NEON.D09.WOOD.DP1.10003.001.variables.20170720T182547Z.csv**
   + variables file for the data product: lists data fields in downloaded tables
   + appears twice in the list, since it's in both the basic and expanded package
+
+* **NEON.D09.WOOD.DP1.10003.001.2015-07.expanded.20170720T182547Z.zip:** zip of all files in the expanded package
+  
+* **NEON.D09.WOOD.DP1.10003.001.brd_countdata.2015-07.expanded.20170720T182547Z.csv:** count data table, expanded package version: counts of birds at each point
+  
+* **NEON.D09.WOOD.DP1.10003.001.brd_perpoint.2015-07.expanded.20170720T182547Z.csv:** point data table, expanded package version: metadata at each observation point
+  
+* **NEON.Bird Conservancy of the Rockies.brd_personnel.csv:** personnel data table: accuracy scores for bird observers
+  
+* **NEON.D09.WOOD.DP1.10003.001.2015-07.basic.20170720T182547Z.zip:** zip of all files in the basic package
+  
+* **NEON.D09.WOOD.DP1.10003.001.brd_countdata.2015-07.basic.20170720T182547Z.csv:** count data table, basic package version: counts of birds at each point
+  
+* **NEON.D09.WOOD.DP1.10003.001.brd_perpoint.2015-07.basic.20170720T182547Z.csv:** point data table, basic package version: metadata at each observation point
+  
+* **NEON.DP1.10003.001_readme.txt:** readme for the data product (not specific to dates or location). Appears twice in the list, since it's in both the basic and expanded package
+  
+* **NEON.D09.WOOD.DP1.10003.001.20150101-20160613.xml:** Ecological Metadata Language (EML) file. Appears twice in the list, since it's in both the basic and expanded package
+  
+* **NEON.D09.WOOD.DP0.10003.001.validation.20170720T182547Z.csv:** validation file for the data product: lists input data and data entry rules. Appears twice in the list, since it's in both the basic and expanded package
+  
+* **NEON.D09.WOOD.DP1.10003.001.variables.20170720T182547Z.csv:** variables file for the data product: lists data fields in downloaded tables. Appears twice in the list, since it's in both the basic and expanded package
 
 
 We'll get the data tables for the point data and count data in the basic 
