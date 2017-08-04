@@ -151,9 +151,13 @@ avail
 
 ```
 
-The object contains keywords, general info about the data product, and 
-references for documentation, as well as data availability, which is what we 
-need to tell us what we can download. 
+The object contains a lot of information about the data product, including 
+keywords under `$data$keywords`, references for documentation under `$data$specs`, 
+and data availability by site and month under `$data$siteCodes`, 
+which is what we need to tell us what we can download. The specific 
+URLs for the API calls for each site and month are listed under 
+`$data$siteCodes$availableDataUrls`, so we don't even have to write the calls 
+ourselves in the next steps.
 
 ``` {r os-query-avail-data}
 
@@ -174,69 +178,50 @@ brd.files$data$files
 
 ```
 
-And now we have the names of the data files available for this site and 
-month, and URLs where we can get the data files themselves. We'll use 
-the file names to pick which ones we want. To translate, available files for 
+And now we have the names of the files available for this site and 
+month, and URLs where we can get the files. We'll use 
+the file names to pick which ones we want.
+
+The available files include both data and metadata, and both the basic and 
+expanded data packages. Metadata are described by file name below. Basic 
+and expanded data packages are available for most NEON data products 
+(some only have basic). Typically the expanded package includes additional 
+quality or uncertainty data, either in additional files or additional 
+fields in the basic files.
+
+The format for most of the file names is 
+NEON.[domain number].[site code].[data product ID].[file-specific name].
+[date of file creation] 
+
+Some files omit the domain and site, since they're not specific to a 
+location, like the data product readme. The date of file creation, in 
+this case 20170720T182547Z, can be used to determine whether data have 
+been updated since the last time you downloaded.
+
+Leaving off NEON.D09.WOOD.10003.001, available files in our query for 
 July 2015 at Woodworth are all of the following: 
 
-* **NEON.D09.WOOD.DP1.10003.001.2015-07.expanded.20170720T182547Z.zip**
-  + zip of all files in the expanded package
+* **~.2015-07.expanded.20170720T182547Z.zip:** zip of all files in the expanded package
   
-* **NEON.D09.WOOD.DP1.10003.001.brd_countdata.2015-07.expanded.20170720T182547Z.csv**
-  + count data table, expanded package version: counts of birds at each point
+* **~.brd_countdata.2015-07.expanded.20170720T182547Z.csv:** count data table, expanded package version: counts of birds at each point
   
-* **NEON.D09.WOOD.DP1.10003.001.brd_perpoint.2015-07.expanded.20170720T182547Z.csv**
-  + point data table, expanded package version: metadata at each observation point
-  
-* **NEON.Bird Conservancy of the Rockies.brd_personnel.csv**
-  + personnel data table: accuracy scores for bird observers
-  
-* **NEON.D09.WOOD.DP1.10003.001.2015-07.basic.20170720T182547Z.zip**
-  + zip of all files in the basic package
-  
-* **NEON.D09.WOOD.DP1.10003.001.brd_countdata.2015-07.basic.20170720T182547Z.csv**
-  + count data table, basic package version: counts of birds at each point
-  
-* **NEON.D09.WOOD.DP1.10003.001.brd_perpoint.2015-07.basic.20170720T182547Z.csv**
-  + point data table, basic package version: metadata at each observation point
-  
-* **NEON.DP1.10003.001_readme.txt**
-  + readme for the data product (not specific to dates or location)
-  + appears twice in the list, since it's in both the basic and expanded package
-  
-* **NEON.D09.WOOD.DP1.10003.001.20150101-20160613.xml**
-  + Ecological Metadata Language (EML) file
-  + appears twice in the list, since it's in both the basic and expanded package
-  
-* **NEON.D09.WOOD.DP0.10003.001.validation.20170720T182547Z.csv**
-  + validation file for the data product: lists input data and data entry rules
-  + appears twice in the list, since it's in both the basic and expanded package
-  
-* **NEON.D09.WOOD.DP1.10003.001.variables.20170720T182547Z.csv**
-  + variables file for the data product: lists data fields in downloaded tables
-  + appears twice in the list, since it's in both the basic and expanded package
-
-* **NEON.D09.WOOD.DP1.10003.001.2015-07.expanded.20170720T182547Z.zip:** zip of all files in the expanded package
-  
-* **NEON.D09.WOOD.DP1.10003.001.brd_countdata.2015-07.expanded.20170720T182547Z.csv:** count data table, expanded package version: counts of birds at each point
-  
-* **NEON.D09.WOOD.DP1.10003.001.brd_perpoint.2015-07.expanded.20170720T182547Z.csv:** point data table, expanded package version: metadata at each observation point
+* **~.brd_perpoint.2015-07.expanded.20170720T182547Z.csv:** point data table, expanded package version: metadata at each observation point
   
 * **NEON.Bird Conservancy of the Rockies.brd_personnel.csv:** personnel data table: accuracy scores for bird observers
   
-* **NEON.D09.WOOD.DP1.10003.001.2015-07.basic.20170720T182547Z.zip:** zip of all files in the basic package
+* **~.2015-07.basic.20170720T182547Z.zip:** zip of all files in the basic package
   
-* **NEON.D09.WOOD.DP1.10003.001.brd_countdata.2015-07.basic.20170720T182547Z.csv:** count data table, basic package version: counts of birds at each point
+* **~.brd_countdata.2015-07.basic.20170720T182547Z.csv:** count data table, basic package version: counts of birds at each point
   
-* **NEON.D09.WOOD.DP1.10003.001.brd_perpoint.2015-07.basic.20170720T182547Z.csv:** point data table, basic package version: metadata at each observation point
+* **~.brd_perpoint.2015-07.basic.20170720T182547Z.csv:** point data table, basic package version: metadata at each observation point
   
 * **NEON.DP1.10003.001_readme.txt:** readme for the data product (not specific to dates or location). Appears twice in the list, since it's in both the basic and expanded package
   
-* **NEON.D09.WOOD.DP1.10003.001.20150101-20160613.xml:** Ecological Metadata Language (EML) file. Appears twice in the list, since it's in both the basic and expanded package
+* **~.20150101-20160613.xml:** Ecological Metadata Language (EML) file. Appears twice in the list, since it's in both the basic and expanded package
   
-* **NEON.D09.WOOD.DP0.10003.001.validation.20170720T182547Z.csv:** validation file for the data product: lists input data and data entry rules. Appears twice in the list, since it's in both the basic and expanded package
+* **~.validation.20170720T182547Z.csv:** validation file for the data product: lists input data and data entry rules. Appears twice in the list, since it's in both the basic and expanded package
   
-* **NEON.D09.WOOD.DP1.10003.001.variables.20170720T182547Z.csv:** variables file for the data product: lists data fields in downloaded tables. Appears twice in the list, since it's in both the basic and expanded package
+* **~.variables.20170720T182547Z.csv:** variables file for the data product: lists data fields in downloaded tables. Appears twice in the list, since it's in both the basic and expanded package
 
 
 We'll get the data tables for the point data and count data in the basic 
@@ -261,9 +246,11 @@ Just to prove the files we pulled have actual data in them, a quick graphic:
 
 ``` {r os-plot-bird-data}
 
-clusterBySp <- brd.count %>% group_by(scientificName) %>% summarize(total=sum(clusterSize))
+clusterBySp <- brd.count %>% group_by(scientificName) %>% 
+  summarize(total=sum(clusterSize))
 clusterBySp <- clusterBySp[order(clusterBySp$total, decreasing=T),]
-barplot(clusterBySp$total, names.arg=clusterBySp$scientificName, ylab="Total", cex.names=0.5, las=2)
+barplot(clusterBySp$total, names.arg=clusterBySp$scientificName, 
+        ylab="Total", cex.names=0.5, las=2)
 
 ```
 
@@ -274,17 +261,19 @@ queries for Soil temperature, DP1.00041.001, and get data from Moab in April.
 
 ``` {r soil-data}
 
-req <- GET("http://data.neonscience.org/api/v0/products/DP1.00041.001")
-avail <- fromJSON(content(req, as="text"), simplifyDataFrame=T, flatten=T)
-temp.urls <- unlist(avail$data$siteCodes$availableDataUrls)
+req.soil <- GET("http://data.neonscience.org/api/v0/products/DP1.00041.001")
+avail.soil <- fromJSON(content(req.soil, as="text"), simplifyDataFrame=T, flatten=T)
+temp.urls <- unlist(avail.soil$data$siteCodes$availableDataUrls)
 tmp <- GET(temp.urls[grep("MOAB/2017-04", temp.urls)])
 tmp.files <- fromJSON(content(tmp, as="text"))
 tmp.files$data$files$name
 
 ```
 
-These are a little more cryptic. The part after the 00000 is: 
-[soil plot number].[depth].[averaging interval].[data table name]
+These file names start out the same as the observational files, then 
+are a little more cryptic. The structure is: NEON.[domain number].
+[site code].[data product ID].00000.[soil plot number].[depth].
+[averaging interval].[data table name]
 
 So NEON.D13.MOAB.DP1.00041.001.00000.002.504.030.ST_30_minute.csv is 
 the 30-minute mean of soil temperature at Moab in soil plot 2, 
@@ -353,8 +342,8 @@ WOOD_013.birdGrid.brd
 
 ```{r brd-ex-NL}
 
-req <- GET("http://data.neonscience.org/api/v0/locations/WOOD_013.birdGrid.brd")
-brd.WOOD_013 <- fromJSON(content(req, as="text"))
+req.loc <- GET("http://data.neonscience.org/api/v0/locations/WOOD_013.birdGrid.brd")
+brd.WOOD_013 <- fromJSON(content(req.loc, as="text"))
 brd.WOOD_013
 
 ```
@@ -363,7 +352,7 @@ Note spatial information under `$data` and under `$data$locationProperties`.
 Also note `$data$locationChildren`: these are the finer scale locations that 
 can be used to calculate precise spatial data for bird observations.
 
-For convenience, we'll use the geoNEON package to make the calculations. 
+For convenience, we'll use the `geoNEON` package to make the calculations. 
 First we'll use `def.extr.geo.os()` to get the additional spatial information 
 available through the API, and look at the spatial resolution available in the 
 initial download:
@@ -394,12 +383,15 @@ symbols(brd.point.pt$easting, brd.point.pt$northing,
 
 
 ## Coming soon
-At the top of this tutorial, we installed the neonDataStackR package. 
+At the top of this tutorial, we installed the `neonDataStackR` package. 
 This is a custom R package that stacks the monthly files provided by 
 the NEON data portal into a single continuous file for each type of 
 data table in the download. It currently handles files downloaded from 
 the data portal, but not files pulled from the API. That functionality 
 will be added soon!
+
+For a guide to using `neonDataStackR` on data downloaded from the portal, 
+look <a href="http://neondataskills.org/R/neonDataStackR-temp" target="_blank">here</a>.
 
 
 

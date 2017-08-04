@@ -46,16 +46,18 @@ brd.point <- read.delim(brd.files$data$files$url
 
 ## ----os-plot-bird-data---------------------------------------------------
 
-clusterBySp <- brd.count %>% group_by(scientificName) %>% summarize(total=sum(clusterSize))
+clusterBySp <- brd.count %>% group_by(scientificName) %>% 
+  summarize(total=sum(clusterSize))
 clusterBySp <- clusterBySp[order(clusterBySp$total, decreasing=T),]
-barplot(clusterBySp$total, names.arg=clusterBySp$scientificName, ylab="Total", cex.names=0.5, las=2)
+barplot(clusterBySp$total, names.arg=clusterBySp$scientificName, 
+        ylab="Total", cex.names=0.5, las=2)
 
 
 ## ----soil-data-----------------------------------------------------------
 
-req <- GET("http://data.neonscience.org/api/v0/products/DP1.00041.001")
-avail <- fromJSON(content(req, as="text"), simplifyDataFrame=T, flatten=T)
-temp.urls <- unlist(avail$data$siteCodes$availableDataUrls)
+req.soil <- GET("http://data.neonscience.org/api/v0/products/DP1.00041.001")
+avail.soil <- fromJSON(content(req.soil, as="text"), simplifyDataFrame=T, flatten=T)
+temp.urls <- unlist(avail.soil$data$siteCodes$availableDataUrls)
 tmp <- GET(temp.urls[grep("MOAB/2017-04", temp.urls)])
 tmp.files <- fromJSON(content(tmp, as="text"))
 tmp.files$data$files$name
@@ -79,8 +81,8 @@ head(brd.point$namedLocation)
 
 ## ----brd-ex-NL-----------------------------------------------------------
 
-req <- GET("http://data.neonscience.org/api/v0/locations/WOOD_013.birdGrid.brd")
-brd.WOOD_013 <- fromJSON(content(req, as="text"))
+req.loc <- GET("http://data.neonscience.org/api/v0/locations/WOOD_013.birdGrid.brd")
+brd.WOOD_013 <- fromJSON(content(req.loc, as="text"))
 brd.WOOD_013
 
 
