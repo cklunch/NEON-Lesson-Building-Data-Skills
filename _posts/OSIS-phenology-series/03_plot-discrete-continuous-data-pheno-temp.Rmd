@@ -1,23 +1,24 @@
 ---
 layout: post
 title: "Plot Continuous & Discrete Data Together"
-date:   2016-01-01
+date:   2017-08-01
 authors: [ ]
 contributors: [ ] 
-dateCreated: 2016-01-01
+dateCreated: 2017-08-01
 lastModified: `r format(Sys.time(), "%Y-%m-%d")`
 packagesLibraries: [ ]
 category: [self-paced-tutorial]
 tags: [ ]
-mainTag: 
-tutorialSeries: [ ]
-description: "Brief description in plain text."
-code1: use-if-associated-code.R
+mainTag:  neon-pheno-temp-series
+tutorialSeries:  [neon-pheno-temp-series]
+description: "This tutorial discusses ways to plot plant phenology (discrete time
+series) and single-aspirated temperature (continuous time series) together."
+code1: 
 image:
-  feature: lidar_GrandMesa.png
-  credit: LiDAR data collected over Grand Mesa, Colorado - National Ecological Observatory Network (NEON)
+  feature: codedFieldJournal.png
+  credit: National Ecological Observatory Network (NEON)
   creditlink: 
-permalink: 
+permalink: /R/neon-pheno-temp-plot/
 comments: true
 ---
 

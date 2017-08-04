@@ -1,21 +1,21 @@
 ---
 layout: post
 title: "NEON's Plant Phenology Data"
-date:   2016-01-01
-authors: [ ]
+date:   2017-08-01
+authors: [Megan A. Jones, Natalie Robinson, Lee Stanish]
 contributors: [ ] 
-dateCreated: 2016-01-01
+dateCreated: 2017-08-01
 lastModified: `r format(Sys.time(), "%Y-%m-%d")`
-packagesLibraries: [ ]
+packagesLibraries: [ dplyr, ggplot2]
 category: [self-paced-tutorial]
-tags: [ ]
-mainTag: 
-tutorialSeries: [ ]
-description: "Brief description in plain text."
+tags: [ time-series, phenology, organisms]
+mainTag:  neon-pheno-temp-series
+tutorialSeries:  [neon-pheno-temp-series]
+description: "Learn to work with NEON plant phenology observation data."
 code1: 
 image:
-  feature: lidar_GrandMesa.png
-  credit: LiDAR data collected over Grand Mesa, Colorado - National Ecological Observatory Network (NEON)
+  feature: codedFieldJournal.png
+  credit: National Ecological Observatory Network (NEON)
   creditlink: 
 permalink: /R/plant-pheno-data
 comments: true
