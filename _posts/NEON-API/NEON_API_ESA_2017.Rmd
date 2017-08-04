@@ -24,8 +24,11 @@ comments: false
 {% include _toc.html %}
 
 ## About
-This is a lesson in pulling data from the NEON API, using base R 
-and the R package httr. There are 3 basic categories of NEON data:
+This is a lesson in pulling data from the NEON API. The lesson uses R 
+and the R package httr, but the core information about the API is applicable 
+to other languages and approaches.
+
+There are 3 basic categories of NEON data:
 
 1. Observational - Data collected by a human in the field, or in an analytical laboratory, e.g. beetle identification, foliar isotopes
 1. Instrumentation - Data collected by an automated, streaming sensor, e.g. net radiation, soil carbon dioxide
@@ -67,13 +70,22 @@ preferably, RStudio loaded on your computer.
 </div>
 
 ## Anatomy of an API call
+
+An example API call: http://data.neonscience.org/api/v0/data/DP1.10003.001/WOOD/2015-07
+
+This includes the base URL, endpoint, and target.
+
 ### Base URL: 
+<span style="color:red">http://data.neonscience.org/api/v0</span><span style="color:gray">/data/DP1.10003.001/WOOD/2015-07</span>
+
 Specifics are appended to this in order to get the data or 
 metadata you're looking for, but all calls to this API will include 
 the base URL. For the NEON API, this is http://data.neonscience.org/api/v0 
 (not clickable, because the base URL by itself will take you nowhere!)
 
 ### Endpoints: 
+<span style="color:gray">http://data.neonscience.org/api/v0</span><span style="color:red">/data</span><span style="color:gray">/DP1.10003.001/WOOD/2015-07</span>
+
 What type of data or metadata are you looking for?
 
 * **~/products**
@@ -89,6 +101,8 @@ What type of data or metadata are you looking for?
   Data! By product, site, and date (in monthly chunks).
 
 ### Targets:
+<span style="color:gray">http://data.neonscience.org/api/v0/data</span><span style="color:red">/DP1.10003.001/WOOD/2015-07</span>
+
 The specific product, site, or location you want to get data for.
 
 
@@ -97,9 +111,9 @@ Which product do you want to get data for? Consult the <a href="http://data.neon
 
 We'll pick Breeding landbird point counts, DP1.10003.001
 
-First query the products endpoint of the API to find out which sites and dates have data available. 
-The structure of the URL for the call is base/endpoint/DPID, where DPID is the numbered identifier 
-for the data product:
+First query the products endpoint of the API to find out which sites and dates 
+have data available. In the products endpoint, the target is the numbered 
+identifier for the data product:
 
 ``` {r os-avail-query}
 
@@ -110,7 +124,7 @@ req <- GET("http://data.neonscience.org/api/v0/products/DP1.10003.001")
 
 ```
 
-The object returned from the GET has many layers of information. Entering the name of 
+The object returned from `GET()` has many layers of information. Entering the name of 
 the object gives you some basic information about what you downloaded. The `content()` 
 function returns the contents in the form of a highly nested list. This is typical of 
 JSON-formatted data returned by APIs:
@@ -150,7 +164,7 @@ bird.urls
 
 These are the URLs showing us what files are available for each month where 
 there are data. For simplicity, we'll just query the single month of data 
-available at the Woodworth site.
+available at the Woodworth (WOOD) site.
 
 ``` {r os-query-bird-data-urls}
 
@@ -165,30 +179,30 @@ month, and URLs where we can get the data files themselves. We'll use
 the file names to pick which ones we want. To translate, available files for 
 July 2015 at Woodworth are all of the following: 
 
-* NEON.D09.WOOD.DP1.10003.001.2015-07.expanded.20170720T182547Z.zip
+* **NEON.D09.WOOD.DP1.10003.001.2015-07.expanded.20170720T182547Z.zip**
   + zip of all files in the expanded package
-* NEON.D09.WOOD.DP1.10003.001.brd_countdata.2015-07.expanded.20170720T182547Z.csv
+* **NEON.D09.WOOD.DP1.10003.001.brd_countdata.2015-07.expanded.20170720T182547Z.csv**
   + count data table, expanded package version: counts of birds at each point
-* NEON.D09.WOOD.DP1.10003.001.brd_perpoint.2015-07.expanded.20170720T182547Z.csv
+* **NEON.D09.WOOD.DP1.10003.001.brd_perpoint.2015-07.expanded.20170720T182547Z.csv**
   + point data table, expanded package version: metadata at each observation point
-* NEON.Bird Conservancy of the Rockies.brd_personnel.csv
+* **NEON.Bird Conservancy of the Rockies.brd_personnel.csv**
   + personnel data table: accuracy scores for bird observers
-* NEON.D09.WOOD.DP1.10003.001.2015-07.basic.20170720T182547Z.zip
+* **NEON.D09.WOOD.DP1.10003.001.2015-07.basic.20170720T182547Z.zip**
   + zip of all files in the basic package
-* NEON.D09.WOOD.DP1.10003.001.brd_countdata.2015-07.basic.20170720T182547Z.csv
+* **NEON.D09.WOOD.DP1.10003.001.brd_countdata.2015-07.basic.20170720T182547Z.csv**
   + count data table, basic package version: counts of birds at each point
-* NEON.D09.WOOD.DP1.10003.001.brd_perpoint.2015-07.basic.20170720T182547Z.csv
+* **NEON.D09.WOOD.DP1.10003.001.brd_perpoint.2015-07.basic.20170720T182547Z.csv**
   + point data table, basic package version: metadata at each observation point
-* NEON.DP1.10003.001_readme.txt
+* **NEON.DP1.10003.001_readme.txt**
   + readme for the data product (not specific to dates or location)
   + appears twice in the list, since it's in both the basic and expanded package
-* NEON.D09.WOOD.DP1.10003.001.20150101-20160613.xml
+* **NEON.D09.WOOD.DP1.10003.001.20150101-20160613.xml**
   + Ecological Metadata Language (EML) file
   + appears twice in the list, since it's in both the basic and expanded package
-* NEON.D09.WOOD.DP0.10003.001.validation.20170720T182547Z.csv
+* **NEON.D09.WOOD.DP0.10003.001.validation.20170720T182547Z.csv**
   + validation file for the data product: lists input data and data entry rules
   + appears twice in the list, since it's in both the basic and expanded package
-* NEON.D09.WOOD.DP1.10003.001.variables.20170720T182547Z.csv
+* **NEON.D09.WOOD.DP1.10003.001.variables.20170720T182547Z.csv**
   + variables file for the data product: lists data fields in downloaded tables
   + appears twice in the list, since it's in both the basic and expanded package
 

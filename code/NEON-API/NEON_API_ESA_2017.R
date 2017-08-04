@@ -90,8 +90,8 @@ library(geoNEON)
 brd.point.loc <- def.extr.geo.os(brd.point)
 
 symbols(brd.point.loc$easting, brd.point.loc$northing, 
-        circles=brd.point.loc$coordinateUncertainty, 
-        xlab="Easting", ylab="Northing", tck=0.01)
+        circles=brd.point.loc$uncorr.coordinateUncertainty, 
+        xlab="Easting", ylab="Northing", tck=0.01, inches=F)
 
 
 ## ----brd-calc-NL---------------------------------------------------------
@@ -99,7 +99,7 @@ symbols(brd.point.loc$easting, brd.point.loc$northing,
 brd.point.pt <- def.calc.geo.os(brd.point, "brd_perpoint")
 
 symbols(brd.point.pt$easting, brd.point.pt$northing, 
-        circles=brd.point.pt$adjCoordinateUncertainty, 
-        xlab="Easting", ylab="Northing", tck=0.01)
+        circles=brd.point.pt$coordinateUncertainty, 
+        xlab="Easting", ylab="Northing", tck=0.01, inches=F)
 
 
