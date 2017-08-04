@@ -1,24 +1,23 @@
 ---
 layout: post
 title: "Temperature as a Driver of Phenological Change"
-date: 2016-04-01
-authors: [Lee Stanish, Megan A. Jones]
+date: 2017-08-01
+authors: [Lee Stanish, Megan A. Jones, Natalie Robinson]
 contributors: [ ] 
-dateCreated: 2016-01-01
-packagesLibraries: [dplyr, ggplot2]
+dateCreated: 2017-08-01
+packagesLibraries: [dplyr, ggplot2, lubridate]
 category: [self-paced-tutorial]
 tags: [ ]
 lastModified: `r format(Sys.time(), "%Y-%m-%d")`
-mainTag: 
+mainTag:  neon-pheno-temp-series
 tutorialSeries: [neon-pheno-temp-series]
-description: "This tutorial discusses common drivers of phenological change. And
-then demonstrates how to load and use NEON triple-asperated temperature data. 
-Specific tasks include conversion to POSIX date/time class, subsetting by date, 
-and plotting the data."
+description: "This tutorial demonstrates how to work with NEON single-asperated 
+air temperature data. Specific tasks include conversion to POSIX date/time class,
+subsetting by date, and plotting the data."
 code1: 
 image:
-  feature: lidar_GrandMesa.png
-  credit: LiDAR data collected over Grand Mesa, Colorado - National Ecological Observatory Network (NEON)
+  feature: codedFieldJournal.png
+  credit: National Ecological Observatory Network (NEON)
   creditlink: 
 permalink: /R/neon-SAAT-temp/
 comments: true
@@ -276,6 +275,8 @@ tempPlot_dayMax
 
 ```
 
+## Add graphing only a part of the year on x-axis
+
 
 
 ```{r write-csv }
@@ -283,4 +284,4 @@ tempPlot_dayMax
 write.csv(temp_day, file="NEON-pheno-temp-timeseries/temp/NEONsaat_daily_SCBI_2016.csv")
 ```
 
-= 
+
