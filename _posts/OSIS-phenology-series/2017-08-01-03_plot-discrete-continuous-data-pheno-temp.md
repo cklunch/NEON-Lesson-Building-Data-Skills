@@ -44,10 +44,8 @@ on your computer to complete this tutorial.
 [More on Packages in R - Adapted from Software Carpentry.]({{site.baseurl}}R/Packages-In-R/)
 
 ###Download Data 
-(include file that inserts a button to download data from Figshare & text about
-data.  Feel free to just add text until the data set is finalized and uploaded).
 
-{% include/dataSubsets/_data_NAME.html %}  
+{% include/dataSubsets/_data_NEON-pheno-temp-timeseries.html %}
 
 ****
 {% include/_greyBox-wd-rscript.html %}
@@ -68,14 +66,7 @@ data.  Feel free to just add text until the data set is finalized and uploaded).
     library(tidyr)
     library(lubridate)
     library(gridExtra)
-
-    ## 
-    ## Attaching package: 'gridExtra'
-
-    ## The following object is masked from 'package:dplyr':
-    ## 
-    ##     combine
-
+    
     # Set working directory
     
     # Read in data
