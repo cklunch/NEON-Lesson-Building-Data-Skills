@@ -8,7 +8,7 @@ dateCreated: 2017-08-01
 lastModified: 2017-08-04
 packagesLibraries: [ dplyr, ggplot2]
 category: [self-paced-tutorial]
-tags: [ time-series, phenology, organisms]
+tags: [time-series, phenology, organisms]
 mainTag:  neon-pheno-temp-series
 tutorialSeries:  [neon-pheno-temp-series]
 description: "Learn to work with NEON plant phenology observation data."
@@ -43,10 +43,8 @@ on your computer to complete this tutorial.
 [More on Packages in R - Adapted from Software Carpentry.]({{site.baseurl}}R/Packages-In-R/)
 
 ### Download Data 
-(include file that inserts a button to download data from Figshare & text about
-data.  Feel free to just add text until the data set is finalized and uploaded).
 
-{% include/dataSubsets/_data_NAME.html %}  
+{% include/dataSubsets/_data_NEON-pheno-temp-timeseries.html %}
 
 ****
 {% include/_greyBox-wd-rscript.html %}
@@ -102,30 +100,10 @@ PerIndividualPerYear - once a year, "metadata" about the plants
 
 
     library(dplyr)
-
-    ## Warning: package 'dplyr' was built under R version 3.4.1
-
-    ## 
-    ## Attaching package: 'dplyr'
-
-    ## The following objects are masked from 'package:stats':
-    ## 
-    ##     filter, lag
-
-    ## The following objects are masked from 'package:base':
-    ## 
-    ##     intersect, setdiff, setequal, union
-
     library(ggplot2)
     library(lubridate)
-
-    ## 
-    ## Attaching package: 'lubridate'
-
-    ## The following object is masked from 'package:base':
-    ## 
-    ##     date
-
+    
+    
     # set working directory 
     setwd('/Users/lstanish/Downloads/')
 
