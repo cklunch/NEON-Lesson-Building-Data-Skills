@@ -257,14 +257,14 @@ barplot(clusterBySp$total, names.arg=clusterBySp$scientificName,
 
 ## Instrumentation data
 The process is essentially the same for sensor data. We'll do the same series of 
-queries for Soil temperature, DP1.00041.001, and get data from Moab in April.
+queries for Soil temperature, DP1.00041.001, and get data from Moab in March.
 
 ``` {r soil-data}
 
 req.soil <- GET("http://data.neonscience.org/api/v0/products/DP1.00041.001")
 avail.soil <- fromJSON(content(req.soil, as="text"), simplifyDataFrame=T, flatten=T)
 temp.urls <- unlist(avail.soil$data$siteCodes$availableDataUrls)
-tmp <- GET(temp.urls[grep("MOAB/2017-04", temp.urls)])
+tmp <- GET(temp.urls[grep("MOAB/2017-03", temp.urls)])
 tmp.files <- fromJSON(content(tmp, as="text"))
 tmp.files$data$files$name
 
@@ -279,12 +279,17 @@ So NEON.D13.MOAB.DP1.00041.001.00000.002.504.030.ST_30_minute.csv is
 the 30-minute mean of soil temperature at Moab in soil plot 2, 
 4th depth below the surface.
 
+Each file name is listed twice, for the basic and expanded packages. 
+We'll pull out the URL for the plot and depth above by selecting the 
+file name and the word "basic" in the URL.
+
 Go get it:
 
 ``` {r os-get-soil-data}
 
 soil.temp <- read.delim(tmp.files$data$files$url
-                        [grep("002.504.030", tmp.files$data$files$name)], sep=",")
+                        [intersect(grep("002.504.030", tmp.files$data$files$name),
+                                   grep("basic", tmp.files$data$files$url))], sep=",")
 
 ```
 

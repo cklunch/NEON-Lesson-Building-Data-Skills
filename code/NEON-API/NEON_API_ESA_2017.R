@@ -58,7 +58,7 @@ barplot(clusterBySp$total, names.arg=clusterBySp$scientificName,
 req.soil <- GET("http://data.neonscience.org/api/v0/products/DP1.00041.001")
 avail.soil <- fromJSON(content(req.soil, as="text"), simplifyDataFrame=T, flatten=T)
 temp.urls <- unlist(avail.soil$data$siteCodes$availableDataUrls)
-tmp <- GET(temp.urls[grep("MOAB/2017-04", temp.urls)])
+tmp <- GET(temp.urls[grep("MOAB/2017-03", temp.urls)])
 tmp.files <- fromJSON(content(tmp, as="text"))
 tmp.files$data$files$name
 
@@ -66,7 +66,8 @@ tmp.files$data$files$name
 ## ----os-get-soil-data----------------------------------------------------
 
 soil.temp <- read.delim(tmp.files$data$files$url
-                        [grep("002.504.030", tmp.files$data$files$name)], sep=",")
+                        [intersect(grep("002.504.030", tmp.files$data$files$name),
+                                   grep("basic", tmp.files$data$files$url))], sep=",")
 
 
 ## ----os-plot-soil-data---------------------------------------------------
