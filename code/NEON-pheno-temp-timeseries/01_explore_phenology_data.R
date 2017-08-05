@@ -2,7 +2,7 @@
 
 library(dplyr)
 library(ggplot2)
-library(lubridate)
+library(lubridate)  
 
 
 # set working directory to ensure R can find the file we wish to import
@@ -11,10 +11,10 @@ library(lubridate)
 
 # Read in data
 ind <- read.csv('NEON-pheno-temp-timeseries/pheno/phe_perindividual.csv', 
-								stringsAsFactors = FALSE )
+		stringsAsFactors = FALSE )
 
 status <- read.csv('NEON-pheno-temp-timeseries/pheno/phe_statusintensity.csv', 
-									 stringsAsFactors = FALSE)
+		stringsAsFactors = FALSE)
 
 
 ## ----look-ind------------------------------------------------------------
@@ -63,6 +63,7 @@ nrow(status_noD)
 
 ## ----same-fieldnames-----------------------------------------------------
 
+# where is there an intersection of names
 sameName <- intersect(names(status_noD), names(ind_noD))
 sameName
 
@@ -71,9 +72,9 @@ sameName
 
 # rename status editedDate
 status_noD <- rename(status_noD, editedDateStat=editedDate, 
-										 measuredByStat=measuredBy, recordedByStat=recordedBy, 
-										 samplingProtocolVersionStat=samplingProtocolVersion, 
-										 remarksStat=remarks, dataQFStat=dataQF)
+		measuredByStat=measuredBy, recordedByStat=recordedBy, 
+		samplingProtocolVersionStat=samplingProtocolVersion, 
+		remarksStat=remarks, dataQFStat=dataQF)
 
 
 

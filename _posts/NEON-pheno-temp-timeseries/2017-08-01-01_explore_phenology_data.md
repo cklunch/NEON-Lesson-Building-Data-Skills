@@ -183,40 +183,20 @@ Let's start by loading our data of interest.
 
 
     library(dplyr)
-
-    ## Warning: package 'dplyr' was built under R version 3.4.1
-
-    ## 
-    ## Attaching package: 'dplyr'
-
-    ## The following objects are masked from 'package:stats':
-    ## 
-    ##     filter, lag
-
-    ## The following objects are masked from 'package:base':
-    ## 
-    ##     intersect, setdiff, setequal, union
-
     library(ggplot2)
-    library(lubridate)
-
-    ## 
-    ## Attaching package: 'lubridate'
-
-    ## The following object is masked from 'package:base':
-    ## 
-    ##     date
-
+    library(lubridate)  
+    
+    
     # set working directory to ensure R can find the file we wish to import
     # setwd("working-dir-path-here")
     
     
     # Read in data
     ind <- read.csv('NEON-pheno-temp-timeseries/pheno/phe_perindividual.csv', 
-    								stringsAsFactors = FALSE )
+    		stringsAsFactors = FALSE )
     
     status <- read.csv('NEON-pheno-temp-timeseries/pheno/phe_statusintensity.csv', 
-    									 stringsAsFactors = FALSE)
+    		stringsAsFactors = FALSE)
 
 Let's explore the data. Let's get to know what the `ind` dataframe looks like.
 
@@ -525,6 +505,7 @@ names between the fields.
 Let's see what they are.
 
 
+    # where is there an intersection of names
     sameName <- intersect(names(status_noD), names(ind_noD))
     sameName
 
@@ -558,9 +539,9 @@ variable name.
 
     # rename status editedDate
     status_noD <- rename(status_noD, editedDateStat=editedDate, 
-    										 measuredByStat=measuredBy, recordedByStat=recordedBy, 
-    										 samplingProtocolVersionStat=samplingProtocolVersion, 
-    										 remarksStat=remarks, dataQFStat=dataQF)
+    		measuredByStat=measuredBy, recordedByStat=recordedBy, 
+    		samplingProtocolVersionStat=samplingProtocolVersion, 
+    		remarksStat=remarks, dataQFStat=dataQF)
 
 
 ### Convert to Date
