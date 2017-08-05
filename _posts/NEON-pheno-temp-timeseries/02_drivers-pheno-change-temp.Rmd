@@ -1,0 +1,294 @@
+---
+layout: post
+title: "Work with NEON's Single-Aspirated Air Temperature Data"
+date: 2017-08-01
+authors: [Lee Stanish, Megan A. Jones, Natalie Robinson]
+contributors: [ Katie Jones, Cody Flagg, Josh Roberti] 
+dateCreated: 2017-08-01
+packagesLibraries: [dplyr, ggplot2, lubridate]
+category: [self-paced-tutorial]
+tags: [R, time-series, meteorology]
+lastModified: `r format(Sys.time(), "%Y-%m-%d")`
+mainTag:  neon-pheno-temp-series
+tutorialSeries: [neon-pheno-temp-series]
+description: "This tutorial demonstrates how to work with NEON single-asperated 
+air temperature data. Specific tasks include conversion to POSIX date/time class,
+subsetting by date, and plotting the data."
+languagesTool: R
+dataProduct: NEON.DP1.10055
+code1: 
+image:
+  feature: codedFieldJournal.png
+  credit: National Ecological Observatory Network (NEON)
+  creditlink: 
+permalink: /R/neon-SAAT-temp/
+comments: true
+---
+
+{% include _toc.html %}
+
+In this tutorial, we explore the NEON single-aspirated air temperature data. We
+start using data that has already been "stacked" using the 
+<a href="{{ site.baseurl }}/R/neonDataStackR" target="_blank"> neonDataStackR package</a>. 
+We then discuss how to interpret the variables, how to work with date-time and 
+date formats, and finally how to plot the data. 
+
+This lesson is part of a series on how to work with both discrete and continuous
+time series data. 
+
+**R Skill Level:** Intermediate - you've got the basics of `R` down.
+
+<div id="objectives" markdown="1">
+
+# Objectives
+After completing this activity, you will:
+
+* 
+
+## Things You’ll Need To Complete This Tutorial
+You will need the most current version of `R` and, preferably, `RStudio` loaded
+on your computer to complete this tutorial.
+
+### Install R Packages
+* **ggplot2:** `install.packages("ggplot2")`
+* **dplyr:** `install.packages("dplyr")`
+
+[More on Packages in R - Adapted from Software Carpentry.]({{site.baseurl}}R/Packages-In-R/)
+
+### Download Data
+
+{% include/dataSubsets/_data_NEON-pheno-temp-timeseries.html %}
+
+****
+{% include/_greyBox-wd-rscript.html %}
+
+****
+
+## Additional Resources
+
+</div>
+
+## Explore Phenology Data 
+
+The following sections provide a brief overview of the NEON plant phenology 
+observation data. When designing a research project using this data, you 
+need to consult the 
+<a href="http://data.neonscience.org/data-product-view?dpCode=DP1.10055.001" target="_blank">documents associated with this data product</a> and not rely soley on this summary. 
+
+
+
+## NEON Temperature Data 
+
+NEON collects single aspirated temperature at  intervals. Therefore, we could 
+look at many different temperature measures:
+
+* near continuous temperature across the days
+* aggregated data: min, mean, or max over a some duration
+* the number of days since a freezing temperatures
+
+Different species respond differently to the above measures. WHY high 
+temperature is important to plant phenophase. 
+
+Therefore, our research question going forward is: 
+
+**How does the mean high temperature per day affect the phenophase?** 
+
+
+## Import Data
+
+This lesson uses 30 minute temperature data from the triple aspirated
+temperature sensors mounted above the canopy on the NEON tower.
+
+To set the working directory on the Mac, you need to first mount
+the remote drive onto your computer
+
+```{r import-data}
+
+# Load required libraries
+library(ggplot2)
+library(dplyr)
+library(tidyr)
+library(lubridate)
+
+# set working directory to ensure R can find the file we wish to import
+# setwd("working-dir-path-here")
+
+# Read in data
+temp30_sites <- read.csv('NEON-pheno-temp-timeseries/temp/SAAT_30min.csv', stringsAsFactors = FALSE)
+
+```
+
+## Explore Temp. Data
+
+Now that you have the data, let's take a look at the readme and understand 
+what's in the data. View readme and variables file. This will guide you
+on how to import the data.
+
+```{r data-structure}
+# Get a general feel for the data: View structure of data frame
+str(temp30_sites)
+```
+
+## Select Site(s) of Interest
+
+```{r filter-site}
+
+# set site of interest
+siteOfInterest <- "SCBI"
+
+# use filter to select only the site of Interest 
+# using %in% allows one to add a vector if you want more than one site. 
+temp30 <- filter(temp30_sites, siteID %in% siteOfInterest)
+
+```
+
+
+what is a QF. ->metadata
+Check for Quality flags
+
+``` {r qf-data}
+# Review the data quality (are these data you trust?)
+#1. Are there quality flags in your data? Count 'em up
+
+sum(temp30$finalQF==1)
+
+```
+
+Do we have NA data?
+How to deal with? 
+
+``` {r na-data}
+
+# Are there NA's in your data? Count 'em up
+sum(is.na(temp30$tempSingleMean) )
+
+mean(temp30$tempSingleMean)
+```
+
+Why was there no output? 
+
+We had previously seen that there are NA values in the temperature data. Given 
+there are NA values, R, by default, won't calculate a mean (and many other 
+summary statistics) as the NA values could skew the data. 
+
+`na.rm=TRUE` #tells R to ignore them for calculaation,etc
+
+```{r new-df-noNA}
+
+# create new dataframe without NAs
+temp30_noNA <- temp30 %>%
+	drop_na(tempSingleMean)  # tidyr function
+
+# alternate base R
+# temp30_noNA <- temp30[!is.na(temp30$tempSingleMean),]
+
+# did it work?
+sum(is.na(temp30_noNA$tempSingleMean))
+
+```
+
+Convert to correct time zone, default for this code is MST
+ assign time zone to just the first entry
+ 
+``` {r convert-date-time}
+
+# View the date range
+range(temp30_noNA$startDateTime)
+```
+
+All NEON data is reported in UTC which is the same as GMT.  
+
+```{r convert-datetime}
+# convert to Date Time 
+temp30_noNA$startDateTime <- as.POSIXct(temp30_noNA$startDateTime,
+																				format = "%Y-%m-%dT%H:%M", tz = "GMT")
+# check that conversion worked
+str(temp30_noNA$startDateTime)
+```
+
+Subset by date
+
+``` {r subset-date}
+# Limit dataset to dates of interest (2016-01-01 to 2016-12-31)
+
+temp30_TOI <- filter(temp30_noNA, startDateTime>"2015-12-31 23:59")
+
+
+# View the date range
+range(temp30_TOI$startDateTime)
+
+```
+
+
+## plot 30-min data over year 
+
+```{r plot-temp}
+
+tempPlot <- ggplot(temp30_TOI, aes(startDateTime, tempSingleMean)) +
+    geom_point() +
+    ggtitle("Single Asperated Air Temperature") +
+    xlab("Date") + ylab("Temp (C)") +
+    theme(plot.title = element_text(lineheight=.8, face="bold", size = 20)) +
+    theme(text = element_text(size=18))
+
+tempPlot
+
+```
+
+
+## Daily Temperature
+
+aggregate by day & find max ->  dplyr 
+
+
+``` {r daily-max-dplyr}
+
+# convert to date
+temp30_TOI$sDate <- as.Date(temp30_TOI$startDateTime)
+
+# did it work
+str(temp30_TOI$sDate)
+
+# max of mean temp each day
+temp_day <- temp30_TOI %>%
+	group_by(sDate) %>%
+	distinct(sDate, .keep_all=T) %>%
+	mutate(dayMax=max(tempSingleMean))
+
+
+# rename column
+
+
+```
+
+## plot daily max over year
+
+To successfully plot, the last piece that is needed is the `geom`etry type. In 
+this case, we want to create a scatterplot so we can add `+ geom_point()`.
+
+Let's create an air temperature scatterplot. 
+
+``` {r basic-ggplot2}
+
+# plot Air Temperature Data across 2016 using daily data
+tempPlot_dayMax <- ggplot(temp_day, aes(sDate, dayMax)) +
+    geom_point() +
+    ggtitle("Daily Max Air Temperature") +
+    xlab("") + ylab("Temp (C)") +
+    theme(plot.title = element_text(lineheight=.8, face="bold", size = 20)) +
+    theme(text = element_text(size=18))
+
+tempPlot_dayMax
+
+```
+
+## Add graphing only a part of the year on x-axis
+
+
+
+```{r write-csv }
+# Write .csv (this will be read in new in subsuquent lessons)
+write.csv(temp_day, file="NEON-pheno-temp-timeseries/temp/NEONsaat_daily_SCBI_2016.csv")
+```
+
+
