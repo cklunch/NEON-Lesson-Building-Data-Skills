@@ -9,7 +9,7 @@
 require(knitr)
 
 dirs <- c("NEON-mosquito-data-viz",
-          "OSIS-phenology-series",
+          "NEON-pheno-temp-timeseries",
           "neonDataStackR-temp",
           "R/tutorial-setup")
 
