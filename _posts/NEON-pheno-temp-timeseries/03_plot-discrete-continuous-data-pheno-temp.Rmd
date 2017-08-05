@@ -2,17 +2,19 @@
 layout: post
 title: "Plot Continuous & Discrete Data Together"
 date:   2017-08-01
-authors: [ ]
-contributors: [ ] 
+authors: [Lee Stanish, Megan A. Jones, Natalie Robinson]
+contributors: [ Katie Jones, Cody Flagg] 
 dateCreated: 2017-08-01
 lastModified: `r format(Sys.time(), "%Y-%m-%d")`
 packagesLibraries: [ ]
 category: [self-paced-tutorial]
-tags: [ ]
+tags: [R, ]
 mainTag:  neon-pheno-temp-series
 tutorialSeries:  [neon-pheno-temp-series]
 description: "This tutorial discusses ways to plot plant phenology (discrete time
 series) and single-aspirated temperature (continuous time series) together."
+languagesTool: R
+dataProduct: NEON.DP1.10055, 
 code1: 
 image:
   feature: codedFieldJournal.png
@@ -23,6 +25,9 @@ comments: true
 ---
 
 {% include _toc.html %}
+
+
+
 
 **R Skill Level:** Intermediate - you've got the basics of `R` down.
 
@@ -126,8 +131,6 @@ tempPlot_dayMax <- ggplot(inStat_T, aes(date, n)) +
     add=TRUE
 
 phenoPlot
-
-
 
 ```
 

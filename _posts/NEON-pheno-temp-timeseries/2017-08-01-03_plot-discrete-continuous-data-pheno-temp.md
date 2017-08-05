@@ -2,17 +2,19 @@
 layout: post
 title: "Plot Continuous & Discrete Data Together"
 date:   2017-08-01
-authors: [ ]
-contributors: [ ] 
+authors: [Lee Stanish, Megan A. Jones, Natalie Robinson]
+contributors: [ Katie Jones, Cody Flagg] 
 dateCreated: 2017-08-01
 lastModified: 2017-08-04
 packagesLibraries: [ ]
 category: [self-paced-tutorial]
-tags: [ ]
+tags: [R, ]
 mainTag:  neon-pheno-temp-series
 tutorialSeries:  [neon-pheno-temp-series]
 description: "This tutorial discusses ways to plot plant phenology (discrete time
 series) and single-aspirated temperature (continuous time series) together."
+languagesTool: R
+dataProduct: NEON.DP1.10055, 
 code1: 
 image:
   feature: codedFieldJournal.png
@@ -23,6 +25,9 @@ comments: true
 ---
 
 {% include _toc.html %}
+
+
+
 
 **R Skill Level:** Intermediate - you've got the basics of `R` down.
 
@@ -66,7 +71,14 @@ on your computer to complete this tutorial.
     library(tidyr)
     library(lubridate)
     library(gridExtra)
-    
+
+    ## 
+    ## Attaching package: 'gridExtra'
+
+    ## The following object is masked from 'package:dplyr':
+    ## 
+    ##     combine
+
     # Set working directory
     
     # Read in data
@@ -101,7 +113,7 @@ Final Plot - combo of two plots stacked (e.g. not 2 y-axes on 1 plot)
     
     tempPlot_dayMax
 
-![ ]({{ site.baseurl }}/images/rfigs/OSIS-phenology-series/03_plot-discrete-continuous-data-pheno-temp/stacked-plots-1.png)
+![ ]({{ site.baseurl }}/images/rfigs/NEON-pheno-temp-timeseries/03_plot-discrete-continuous-data-pheno-temp/stacked-plots-1.png)
 
     # Output with both plots
     grid.arrange(phenoPlot, tempPlot_dayMax) 
@@ -133,7 +145,7 @@ Final Plot - combo of two plots stacked (e.g. not 2 y-axes on 1 plot)
 
     ## Error in (function (..., row.names = NULL, check.rows = FALSE, check.names = TRUE, : arguments imply differing number of rows: 86, 0
 
-![ ]({{ site.baseurl }}/images/rfigs/OSIS-phenology-series/03_plot-discrete-continuous-data-pheno-temp/scaled-plot-1.png)
+![ ]({{ site.baseurl }}/images/rfigs/NEON-pheno-temp-timeseries/03_plot-discrete-continuous-data-pheno-temp/scaled-plot-1.png)
 
 ### Format Dates in Axis Labels
 We can adjust the date display format (e.g. 2009-07 vs. Jul 09) and the number 
