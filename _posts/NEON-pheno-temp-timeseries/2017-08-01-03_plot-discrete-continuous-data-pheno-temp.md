@@ -8,7 +8,7 @@ dateCreated: 2017-08-01
 lastModified: 2017-08-04
 packagesLibraries: [ ]
 category: [self-paced-tutorial]
-tags: [R, ]
+tags: [R, timeseries]
 mainTag:  neon-pheno-temp-series
 tutorialSeries:  [neon-pheno-temp-series]
 description: "This tutorial discusses ways to plot plant phenology (discrete time
@@ -20,7 +20,7 @@ image:
   feature: codedFieldJournal.png
   credit: National Ecological Observatory Network (NEON)
   creditlink: 
-permalink: /R/neon-pheno-temp-plot/
+permalink: /R/neon-pheno-temp-plot
 comments: true
 ---
 
@@ -31,48 +31,47 @@ comments: true
 <div id="objectives" markdown="1">
 
 # Objectives
-After completing this activity, you will:
+After completing this tutorial, you will be able to:
 
- * 
+ * plot multiple figures together with grid.arrange()
+ * plot only a subset of dates
 
-##Things You’ll Need To Complete This Tutorial
+## Things You’ll Need To Complete This Tutorial
 You will need the most current version of `R` and, preferably, `RStudio` loaded
 on your computer to complete this tutorial.
 
-###Install R Packages
-* **NAME:** `install.packages("NAME")`
+### Install R Packages
+* **ggplot2:** `install.packages("ggplot2")`
+* **gridExtra:** `install.packages("gridExtra")`
+* **dplyr:** `install.packages("dplyr")`
+* **lubridate:** `install.packages("lubridate")`
+* **scales:** `install.packages("scales")`
 
 
 [More on Packages in R - Adapted from Software Carpentry.]({{site.baseurl}}R/Packages-In-R/)
 
-###Download Data 
+### Download Data 
 
 {% include/dataSubsets/_data_NEON-pheno-temp-timeseries.html %}
 
 ****
 {% include/_greyBox-wd-rscript.html %}
 
-****
-
-##Additional Resources
-
-* (links if you want to provide)
 
 </div>
+
 
 
 
     # Load required libraries
     library(ggplot2)
     library(dplyr)
-    library(tidyr)
     library(lubridate)
     library(gridExtra)
-    library(grid)
-    library(gtable)
-    library(scales)
+    library(scales)  # use with date_breaks
     
-    # Set working directory
+    # set working directory to ensure R can find the file we wish to import
+    # setwd("working-dir-path-here")
     
     # Read in data -> if in series this is unnecessary
     temp_day <- read.csv('NEON-pheno-temp-timeseries/temp/NEONsaat_daily_SCBI_2016.csv',
@@ -86,10 +85,12 @@ on your computer to complete this tutorial.
     phe_1sp_2016$date <- as.Date(phe_1sp_2016$date)
 
 
-Final Plot - combo of two plots stacked (e.g. not 2 y-axes on 1 plot)
+## Plot together
 
-### Fix - new pheno plot with only 2016
-### Dates on x-axis
+We've previously looked at the plots apart, but let's plot them in the same 
+pane. 
+
+We can do this with the `grid.arrange()` function from the gridExtra package. 
 
 
     phenoPlot <- ggplot(phe_1sp_2016, aes(date, n.y)) +
@@ -145,22 +146,22 @@ class (e.g. POSIXct), you can use `scale_x_datetime` instead of `scale_x_date`.
 
 
     # format x-axis: dates
-    phenoPlot_pretty <- phenoPlot + 
+    phenoPlot <- phenoPlot + 
       (scale_x_date(breaks = date_breaks("months"), labels = date_format("%b")))
     
-    phenoPlot_pretty
+    phenoPlot
 
 ![ ]({{ site.baseurl }}/images/rfigs/NEON-pheno-temp-timeseries/03_plot-discrete-continuous-data-pheno-temp/format-x-axis-labels-1.png)
 
-    tempPlot_dayMax_pretty <- tempPlot_dayMax +
+    tempPlot_dayMax <- tempPlot_dayMax +
       (scale_x_date(breaks = date_breaks("months"), labels = date_format("%b")))
     
-    tempPlot_dayMax_pretty
+    tempPlot_dayMax
 
 ![ ]({{ site.baseurl }}/images/rfigs/NEON-pheno-temp-timeseries/03_plot-discrete-continuous-data-pheno-temp/format-x-axis-labels-2.png)
 
     # Output with both plots
-    grid.arrange(phenoPlot_pretty, tempPlot_dayMax_pretty) 
+    grid.arrange(phenoPlot, tempPlot_dayMax) 
 
 ![ ]({{ site.baseurl }}/images/rfigs/NEON-pheno-temp-timeseries/03_plot-discrete-continuous-data-pheno-temp/format-x-axis-labels-3.png)
 
@@ -171,7 +172,7 @@ Let's align the datasets and replot
 
 
     # align dates
-    temp_day_fit <- filter(temp_day,sDate >= min(phe_1sp_2016$date) & sDate <= max(phe_1sp_2016$date))
+    temp_day_fit <- filter(temp_day, sDate >= min(phe_1sp_2016$date) & sDate <= max(phe_1sp_2016$date))
     
     # Check it
     range(phe_1sp_2016$date)
@@ -191,7 +192,7 @@ Let's align the datasets and replot
         theme(plot.title = element_text(lineheight=.8, face="bold", size = 20)) +
         theme(text = element_text(size=18))
     
-    grid.arrange(phenoPlot_pretty, tempPlot_dayMax_corr)
+    grid.arrange(phenoPlot, tempPlot_dayMax_corr)
 
 ![ ]({{ site.baseurl }}/images/rfigs/NEON-pheno-temp-timeseries/03_plot-discrete-continuous-data-pheno-temp/align-datasets-replot-1.png)
 
@@ -205,4 +206,4 @@ can distort what is actually going on with the data. The author of the ggplot2
 package is one of these individuals. Therefore, you cannot use `ggplot()` to 
 create a single plot with multiple Y scales. You can read his own discussion of
 the topic on this 
-<a href="https://stackoverflow.com/questions/3099219/plot-with-2-y-axes-one-y-axis-on-the-left-and-another-y-axis-on-the-right/3101876#3101876"> target="_blank" StackOverflow post</a>.
+<a href="https://stackoverflow.com/questions/3099219/plot-with-2-y-axes-one-y-axis-on-the-left-and-another-y-axis-on-the-right/3101876#3101876" target="_blank"> StackOverflow post</a>.

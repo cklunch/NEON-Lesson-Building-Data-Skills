@@ -21,7 +21,7 @@ image:
   feature: codedFieldJournal.png
   credit: National Ecological Observatory Network (NEON)
   creditlink: 
-permalink: /R/neon-SAAT-temp/
+permalink: /R/neon-SAAT-temp
 comments: true
 ---
 
