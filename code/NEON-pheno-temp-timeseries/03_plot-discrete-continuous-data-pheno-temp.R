@@ -6,16 +6,27 @@ library(dplyr)
 library(tidyr)
 library(lubridate)
 library(gridExtra)
+library(grid)
+library(gtable)
+library(scales)
 
 # Set working directory
 
-# Read in data
-temp_day <- read.csv('NEON-pheno-temp-timeseries/temp/NEONsaat_daily_SCBI_2016.csv', stringsAsFactors = FALSE)
+# Read in data -> if in series this is unnecessary
+temp_day <- read.csv('NEON-pheno-temp-timeseries/temp/NEONsaat_daily_SCBI_2016.csv',
+		stringsAsFactors = FALSE)
+
+phe_1sp_2016 <- read.csv('NEON-pheno-temp-timeseries/pheno/NEONpheno_LITU_Leaves_SCBI_2016.csv',
+		stringsAsFactors = FALSE)
+
+# Convert dates
+temp_day$sDate <- as.Date(temp_day$sDate)
+phe_1sp_2016$date <- as.Date(phe_1sp_2016$date)
 
 
 ## ----stacked-plots-------------------------------------------------------
 
-phenoPlot <- ggplot(inStat_T, aes(date, n)) +
+phenoPlot <- ggplot(phe_1sp_2016, aes(date, n.y)) +
     geom_bar(stat="identity", na.rm = TRUE) +
     ggtitle("Total Individuals in Leaf") +
     xlab("Date") + ylab("Number of Individuals") +
@@ -23,7 +34,6 @@ phenoPlot <- ggplot(inStat_T, aes(date, n)) +
     theme(text = element_text(size=18))
 
 phenoPlot
-
 
 tempPlot_dayMax <- ggplot(temp_day, aes(sDate, dayMax)) +
     geom_point() +
@@ -39,33 +49,39 @@ tempPlot_dayMax
 grid.arrange(phenoPlot, tempPlot_dayMax) 
 
 
-## ----scaled-plot---------------------------------------------------------
+## ----format-x-axis-labels------------------------------------------------
+# format x-axis: dates
+phenoPlot_pretty <- phenoPlot + 
+  (scale_x_date(breaks = date_breaks("months"), labels = date_format("%b")))
+
+phenoPlot_pretty
+
+tempPlot_dayMax_pretty <- tempPlot_dayMax +
+  (scale_x_date(breaks = date_breaks("months"), labels = date_format("%b")))
+
+tempPlot_dayMax_pretty
+
+# Output with both plots
+grid.arrange(phenoPlot_pretty, tempPlot_dayMax_pretty) 
 
 
-tempPlot_dayMax <- ggplot(temp_day, aes(sDate, dayMax)) +
+## ----align-datasets-replot-----------------------------------------------
+# align dates
+temp_day_fit <- filter(temp_day,sDate >= min(phe_1sp_2016$date) & sDate <= max(phe_1sp_2016$date))
+
+# Check it
+range(phe_1sp_2016$date)
+range(temp_day_fit$sDate)
+
+#plot again
+tempPlot_dayMax_corr <- ggplot(temp_day_fit, aes(sDate, dayMax)) +
     geom_point() +
+    scale_x_date(breaks = date_breaks("months"), labels = date_format("%b")) +
     ggtitle("Daily Max Air Temperature") +
     xlab("") + ylab("Temp (C)") +
     theme(plot.title = element_text(lineheight=.8, face="bold", size = 20)) +
     theme(text = element_text(size=18))
 
-tempPlot_dayMax <- ggplot(inStat_T, aes(date, n)) +
-    geom_bar(stat="identity", na.rm = TRUE)+
-    add=TRUE
-
-phenoPlot
-
-
-## ----format-x-axis-labels------------------------------------------------
-# format x-axis: dates
-AirTempDailyb <- AirTempDaily + 
-  (scale_x_date(labels=date_format("%b %y")))
-
-AirTempDailyb
-
-## ----write-csv-----------------------------------------------------------
-# write harMet15 subset data to .csv
-write.csv(harMet15.09.11, 
-          file="Met_HARV_15min_2009_2011.csv")
+grid.arrange(phenoPlot_pretty, tempPlot_dayMax_corr)
 
 

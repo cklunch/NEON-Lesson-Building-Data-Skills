@@ -231,6 +231,6 @@ phenoPlot16
 
 ## ----write-csv, echo = FALSE---------------------------------------------
 # Write .csv (this will be read in new in subsuquent lessons)
-write.csv(phe_1sp_2016, file="NEONpheno_LITU_Leaves_SCBI_2016.csv")
+write.csv( phe_1sp_2016 , file="NEON-pheno-temp-timeseries/pheno/NEONpheno_LITU_Leaves_SCBI_2016.csv")
 
 
