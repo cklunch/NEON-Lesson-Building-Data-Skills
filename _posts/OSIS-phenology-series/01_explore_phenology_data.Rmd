@@ -333,7 +333,7 @@ unique(phe_1sp$phenophaseName)
 
 ## Total in Phenophase of Interest
 
-Calculate the phenophase total Yes of total Individuals
+Calculate the phenophaseStatus total Yes of total Individuals
 
 ```{r calc-total-yes}
 
@@ -366,13 +366,11 @@ plotted:
 
 `ggplot(inStat_T, aes(date, n))`
 
-To successfully plot, the last piece that is needed is the `geom`etry type. In 
-this case, we want to create a scatterplot so we can add `+ geom_point()`.
+To successfully plot, the last piece that is needed is the `geom`etry type. For example, if we want to create a scatterplot, we can add `+ geom_point()`.
 
 ## Bar Plots with ggplot
 We can use ggplot to create bar plots too. Let's create a bar plot of total 
-daily precipitation next. A bar plot might be a better way to represent a total
-daily value. To create a bar plot, we change the `geom` element from
+number of individuals with a phenophase of "leaves". A bar plot might be a better way to represent a total value. To create a bar plot, we change the `geom` element from
 `geom_point()` to `geom_bar()`.  
 
 The default setting for a ggplot bar plot -  `geom_bar()` - is a histogram
@@ -413,6 +411,8 @@ phenoPlot_P <- ggplot(inStat_T, aes(date, percent)) +
 phenoPlot_P
 
 ```
+
+Why don't we have the nice drop-off in % leaves at the end of the year like we do when we plot individual counts? This is when it's important to understand the protocol, because once a plant falls below 5% of green or colored leaves, it stops being monitored. This makes it look like the percentages stay high, when in reality it's just because non-leafy plants aren't being counted. 
 
 ## Re-evaluate dataset
 The plots demonstrate that, while the 2016 data show the nice expected pattern 

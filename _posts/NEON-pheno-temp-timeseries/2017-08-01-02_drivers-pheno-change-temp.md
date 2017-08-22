@@ -1,29 +1,40 @@
 ---
 layout: post
-title: "Temperature as a Driver of Phenological Change"
+title: "Work with NEON's Single-Aspirated Air Temperature Data"
 date: 2017-08-01
 authors: [Lee Stanish, Megan A. Jones, Natalie Robinson]
-contributors: [ ] 
+contributors: [ Katie Jones, Cody Flagg, Josh Roberti] 
 dateCreated: 2017-08-01
 packagesLibraries: [dplyr, ggplot2, lubridate]
 category: [self-paced-tutorial]
-tags: [ ]
+tags: [R, time-series, meteorology]
 lastModified: 2017-08-04
 mainTag:  neon-pheno-temp-series
 tutorialSeries: [neon-pheno-temp-series]
 description: "This tutorial demonstrates how to work with NEON single-asperated 
 air temperature data. Specific tasks include conversion to POSIX date/time class,
 subsetting by date, and plotting the data."
+languagesTool: R
+dataProduct: NEON.DP1.10055
 code1: 
 image:
   feature: codedFieldJournal.png
   credit: National Ecological Observatory Network (NEON)
   creditlink: 
-permalink: /R/neon-SAAT-temp/
+permalink: /R/neon-SAAT-temp
 comments: true
 ---
 
 {% include _toc.html %}
+
+In this tutorial, we explore the NEON single-aspirated air temperature data. We
+start using data that has already been "stacked" using the 
+<a href="{{ site.baseurl }}/R/neonDataStackR" target="_blank"> neonDataStackR package</a>. 
+We then discuss how to interpret the variables, how to work with date-time and 
+date formats, and finally how to plot the data. 
+
+This lesson is part of a series on how to work with both discrete and continuous
+time series data. 
 
 **R Skill Level:** Intermediate - you've got the basics of `R` down.
 
@@ -57,21 +68,13 @@ on your computer to complete this tutorial.
 
 </div>
 
-## Drivers of phenology
+## Explore Phenology Data 
 
-Now that we see that there are differences in and shifts in phenophases, what 
-are the drivers of phenophases?
+The following sections provide a brief overview of the NEON plant phenology 
+observation data. When designing a research project using this data, you 
+need to consult the 
+<a href="http://data.neonscience.org/data-product-view?dpCode=DP1.10055.001" target="_blank">documents associated with this data product</a> and not rely soley on this summary. 
 
-Commonly studied drivers of phenophase change include:
-	
-* precipitation - how much rain/snow falls and the timing of the precipitation
-* day length - day length effects the amount of sun the plants recieve and can 
-use to photosynthesis and grow
-* temperature - growth rates change depending on the temperature for different 
-species
-
-To continue our exploration of what might be a driver to the changes in
-phenosphase that we saw in the previous tutorial, we will focus on temperature.
 
 
 ## NEON Temperature Data 
@@ -106,7 +109,8 @@ the remote drive onto your computer
     library(tidyr)
     library(lubridate)
     
-    # Set working directory
+    # set working directory to ensure R can find the file we wish to import
+    # setwd("working-dir-path-here")
     
     # Read in data
     temp30_sites <- read.csv('NEON-pheno-temp-timeseries/temp/SAAT_30min.csv', stringsAsFactors = FALSE)
@@ -183,7 +187,10 @@ summary statistics) as the NA values could skew the data.
 
     # create new dataframe without NAs
     temp30_noNA <- temp30 %>%
-    	drop_na(tempSingleMean)
+    	drop_na(tempSingleMean)  # tidyr function
+    
+    # alternate base R
+    # temp30_noNA <- temp30[!is.na(temp30$tempSingleMean),]
     
     # did it work?
     sum(is.na(temp30_noNA$tempSingleMean))
@@ -236,7 +243,7 @@ Subset by date
     
     tempPlot
 
-![ ]({{ site.baseurl }}/images/rfigs/OSIS-phenology-series/02_drivers-pheno-change-temp/plot-temp-1.png)
+![ ]({{ site.baseurl }}/images/rfigs/NEON-pheno-temp-timeseries/02_drivers-pheno-change-temp/plot-temp-1.png)
 
 
 ## Daily Temperature
@@ -280,7 +287,7 @@ Let's create an air temperature scatterplot.
     
     tempPlot_dayMax
 
-![ ]({{ site.baseurl }}/images/rfigs/OSIS-phenology-series/02_drivers-pheno-change-temp/basic-ggplot2-1.png)
+![ ]({{ site.baseurl }}/images/rfigs/NEON-pheno-temp-timeseries/02_drivers-pheno-change-temp/basic-ggplot2-1.png)
 
 ## Add graphing only a part of the year on x-axis
 
